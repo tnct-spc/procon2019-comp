@@ -29,6 +29,8 @@ struct Point
     friend bool operator>(const Point& p, const Point& q){return !(p <= q);}
     friend bool operator>=(const Point& p, const Point& q){return !(p < q);}
 
+    explicit operator bool() const{return x || y;}
+
     int x, y;
 };
 
