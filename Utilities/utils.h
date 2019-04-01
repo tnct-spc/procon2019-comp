@@ -34,6 +34,14 @@ struct Point
 constexpr Point getMove(int move_index);
 
 struct MoveState{
+
+    constexpr MoveState(int move_index, bool is_delete = false) : move_index(move_index), is_delete(is_delete){}
+
+    int move_index;
+    bool is_delete;
+
+    constexpr bool isDelete(){return is_delete;}
+    constexpr Point getMove(){return procon::getMove(move_index);}
 };
 
 
