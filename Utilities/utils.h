@@ -2,13 +2,13 @@
 #define UTILS_H
 
 #include <vector>
+#include <array>
 #include <limits>
 
 namespace procon{
 
-// constexprのために生配列を使う (C++20ならstd::vectorがconstexprで使える)
-constexpr int dx[9] = {-1, -1, -1, 0, 0, 1, 1, 1, 0};
-constexpr int dy[9] = {-1, 0, 1, -1, 1, -1, 0, 1, 0};
+constexpr std::array<int, 9> dx = {-1, -1, -1, 0, 0, 1, 1, 1, 0};
+constexpr std::array<int, 9> dy = {-1, 0, 1, -1, 1, -1, 0, 1, 0};
 
 struct Point
 {
