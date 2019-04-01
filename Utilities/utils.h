@@ -1,7 +1,8 @@
-#ifndef STATES_H
-#define STATES_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <vector>
+#include <limits>
 
 namespace procon{
 
