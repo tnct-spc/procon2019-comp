@@ -28,7 +28,7 @@ struct Point
     friend bool operator>(const Point& p, const Point& q){return !(p <= q);}
     friend bool operator>=(const Point& p, const Point& q){return !(p < q);}
 
-    constexpr Point getMove(int move_index);
+    static constexpr Point getMove(int move_index);
 
     int x, y;
 };
