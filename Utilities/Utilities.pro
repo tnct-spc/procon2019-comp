@@ -22,11 +22,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         field.cpp \
-        states.cpp
+        utils.cpp
 
 HEADERS += \
         field.h \
-        states.h
+        utils.h
 
 unix {
     target.path = /usr/lib
