@@ -1,6 +1,6 @@
 #include "states.h"
 
 
-Point::Point()
+procon::Point::Point()
 {
 }
