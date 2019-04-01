@@ -3,6 +3,7 @@
 
 #include <bitset>
 #include <cassert>
+#include <vector>
 #include "utils.h"
 
 namespace procon{
@@ -10,8 +11,8 @@ namespace procon{
 class Field
 {
 public:
-    constexpr Field(Point size = Point(10, 10));
-    constexpr Field(int size_x, int size_y);
+    Field(Point size = Point(10, 10));
+    Field(int size_x, int size_y);
 
     constexpr int getState(Point p) const;
     constexpr int getState(int x, int y) const{return getState(Point(x, y));}
@@ -22,6 +23,7 @@ public:
 private:
 
     Point size;
+    std::vector<std::vector<Point>> agents;
     std::bitset<800> data;
 };
 

@@ -2,13 +2,15 @@
 
 namespace procon{
 
-constexpr procon::Field::Field(Point size) :
-    size(size)
+procon::Field::Field(Point size) :
+    size(size),
+    agents(2)
 {
 }
 
-constexpr procon::Field::Field(int size_x, int size_y) :
-    size(size_x, size_y)
+procon::Field::Field(int size_x, int size_y) :
+    size(size_x, size_y),
+    agents(2)
 {
 }
 
