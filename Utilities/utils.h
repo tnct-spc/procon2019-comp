@@ -31,7 +31,7 @@ struct Point
     int x, y;
 };
 
-constexpr Point getMove(int move_index);
+constexpr Point getMove(int move_index){return Point(dx[move_index], dy[move_index]);}
 
 struct MoveState{
 
@@ -44,7 +44,13 @@ struct MoveState{
     constexpr Point getMove(){return procon::getMove(move_index);}
 };
 
+namespace random{
+
+    extern unsigned long x, y, z, w;
+
+    unsigned long call(unsigned long mod = std::numeric_limits<unsigned long>::max());
+}
 
 }
 
-#endif // STATES_H
+#endif // UTILS_H
