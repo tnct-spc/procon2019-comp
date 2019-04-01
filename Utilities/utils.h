@@ -28,11 +28,10 @@ struct Point
     friend bool operator>(const Point& p, const Point& q){return !(p <= q);}
     friend bool operator>=(const Point& p, const Point& q){return !(p < q);}
 
-    static constexpr Point getMove(int move_index);
-
     int x, y;
 };
 
+constexpr Point getMove(int move_index);
 
 struct MoveState{
 };
