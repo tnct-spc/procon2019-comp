@@ -35,7 +35,7 @@ void Field::setAgent(bool team, int agent_index, Point agent_data){
     agents.at(agent_index)[team] = agent_data;
 }
 
-Field Field::generateRandomField(Point size, int agent_count, int min_value, int max_value){
+Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value){
 
     if(static_cast<bool>(size) == false){
         size.x = 10 + random::call(11);
