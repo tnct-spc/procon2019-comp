@@ -14,11 +14,11 @@ public:
     Field(Point size = Point(10, 10));
     Field(int size_x, int size_y);
 
-    int getState(Point p) const;
-    int getState(int x, int y) const{return getState(Point(x, y));}
+    const FieldState& getState(Point p) const;
+    const FieldState& getState(int x, int y) const{return getState(Point(x, y));}
 
-    void setState(Point p, int value);
-    void setState(int x, int y, int value){setState(Point(x, y), value);}
+    void setTile(Point p, int value);
+    void setTile(int x, int y, int value){setTile(Point(x, y), value);}
 
     const Point& getSize() const{return size;}
     int getAgentCount() const{return agents.size();}
@@ -39,10 +39,8 @@ private:
 
     Point size;
     std::array<Score, 2> scores;
-    // ここは6bitあれば足りる(33の状態を表せればよい)ため、signed charとかに変えるかもしれない
-    std::vector<std::vector<int>> values;
+    std::vector<std::vector<FieldState>> states;
     std::vector<std::array<Point, 2>> agents;
-    std::bitset<800> data;
 };
 
 }

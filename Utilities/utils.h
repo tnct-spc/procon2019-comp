@@ -47,6 +47,11 @@ struct MoveState{
     constexpr Point getMove(){return procon::getMove(move_index);}
 };
 
+struct FieldState{
+    constexpr FieldState(int value, int tile = 0) : tile(tile), value(value){}
+    int tile, value;
+};
+
 struct Score{
     constexpr Score(int tile = 0, int region = 0) : tile(tile), region(region){}
     int tile, region;

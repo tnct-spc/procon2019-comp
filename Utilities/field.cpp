@@ -4,30 +4,27 @@ namespace procon{
 
 procon::Field::Field(Point size) :
     size(size),
-    values(size.x, std::vector<int>(size.y, 0)),
+    states(size.x, std::vector<FieldState>(size.y)),
     agents(2)
 {
 }
 
 procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
-    values(size.x, std::vector<int>(size.y, 0)),
+    states(size.x, std::vector<FieldState>(size.y)),
     agents(2)
 {
 }
 
-void Field::setState(Point p, int value){
+void Field::setTile(Point p, int value){
     assert(0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y);
     assert(value <= 0 && value <= 2);
-    auto shift_count = pointToInt(p) * 2;
-    data.set(shift_count, value & 1);
-    data.set(shift_count + 1, value & 2);
+    states[p.x][p.y].tile = value;
 }
 
-int Field::getState(Point p) const{
+const FieldState& Field::getState(Point p) const{
     assert(0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y);
-    auto shift_count = pointToInt(p) * 2;
-    return (data[shift_count + 1] << 1) + data[shift_count];
+    return states[p.x][p.y];
 }
 
 void Field::setAgent(bool team, int agent_index, Point agent_data){
@@ -56,11 +53,11 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
 
     for(int x_index = 0; x_index < random_x_size; ++x_index)
         for(int y_index = 0; y_index < random_y_size; ++y_index){
-            field.values[x_index][y_index] = min_value + random::call(random_length);
+            field.states[x_index][y_index].value = min_value + random::call(random_length);
             if(is_x_symmetry)
-                field.values[size.x - x_index - 1][y_index] = min_value + random::call(random_length);
+                field.states[size.x - x_index - 1][y_index].value = min_value + random::call(random_length);
             else
-                field.values[x_index][size.y - y_index - 1] = min_value + random::call(random_length);
+                field.states[x_index][size.y - y_index - 1].value = min_value + random::call(random_length);
         }
 
     if(is_x_symmetry && size.x % 2 == 1)
@@ -83,6 +80,8 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         inverse_point.x = is_x_symmetry ? size.x - it->x - 1 : it->x;
         inverse_point.y = is_x_symmetry ? it->y : size.y - it->y - 1;
 
+        field.scores[mask].tile += field.getState(*it).tile;
+        field.scores[!mask].tile += field.getState(inverse_point).tile;
         field.setAgent(mask, index, *it);
         field.setAgent(!mask, index, inverse_point);
     }
