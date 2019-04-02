@@ -7,13 +7,17 @@ GameSimulator::GameSimulator(Args... args)
     acts.resize(2, std::vector<procon::MoveState>(field.getAgentCount()));
 }
 
-void GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>& moves){
+bool GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>& moves){
     acts_flag.set(side);
 
     acts[side] = moves;
 
-    if(acts_flag.all())
+    if(acts_flag.all()){
         changeTurn();
+        return true;
+    }else{
+        return false;
+    }
 }
 
 void GameSimulator::changeTurn(){
