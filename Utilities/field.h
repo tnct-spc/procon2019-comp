@@ -21,7 +21,7 @@ public:
     void setAgent(bool team, int agent_index, Point agent_data){agents.at(agent_index)[team] = agent_data;}
 
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
-    constexpr Point IntToPoint(const int i) const{return Point(i / size.y, i % size.y);}
+    constexpr Point intToPoint(const int i) const{return Point(i / size.y, i % size.y);}
 
 private:
 
