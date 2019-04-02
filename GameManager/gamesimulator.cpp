@@ -22,4 +22,5 @@ bool GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>&
 
 void GameSimulator::changeTurn(){
     acts_flag.reset();
+    field.incrementTurn();
 }
