@@ -3,4 +3,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
         Utilities \
-        Visualizer
+        Visualizer \
+    GameManager
