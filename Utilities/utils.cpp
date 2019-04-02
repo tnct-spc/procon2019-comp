@@ -32,6 +32,7 @@ namespace random{
         y = z;
         z = w;
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
+        // 剰余をとっている都合上正確な分布にはならないが、64bitの範囲で均等に取られているので誤差の範囲内
         return w > mod ? w % mod : mod;
     }
 }
