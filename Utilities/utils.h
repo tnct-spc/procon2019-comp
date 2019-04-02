@@ -10,6 +10,8 @@ namespace procon{
 constexpr std::array<int, 9> dx = {-1, -1, -1, 0, 0, 1, 1, 1, 0};
 constexpr std::array<int, 9> dy = {-1, 0, 1, -1, 1, -1, 0, 1, 0};
 
+struct MoveState;
+
 struct Point
 {
     constexpr Point() : x(0), y(0){}
@@ -28,6 +30,9 @@ struct Point
     friend bool operator<=(const Point& p, const Point& q){return p == q || p < q;}
     friend bool operator>(const Point& p, const Point& q){return !(p <= q);}
     friend bool operator>=(const Point& p, const Point& q){return !(p < q);}
+
+    Point getAppliedPosition(int move_index) const;
+    Point getAppliedPosition(const MoveState& m) const;
 
     explicit operator bool() const{return x || y;}
 

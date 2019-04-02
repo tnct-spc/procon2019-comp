@@ -34,6 +34,27 @@ void Field::setAgent(bool team, int agent_index, Point agent_data){
     agents.at(agent_index)[team] = agent_data;
 }
 
+std::pair<bool, Point> Field::outOfRangeCheck(Point p) const{
+    bool out_of_range = false;
+    if(p.x < 0){
+        out_of_range = true;
+        ++p.x;
+    }
+    if(p.y < 0){
+        out_of_range = true;
+        ++p.y;
+    }
+    if(size.x <= p.y){
+        out_of_range = true;
+        --p.x;
+    }
+    if(size.y <= p.y){
+        out_of_range = true;
+        --p.y;
+    }
+    return std::make_pair(out_of_range, p);
+}
+
 void Field::setNowTurn(int now_turn){
     assert(0 <= now_turn && now_turn <= turn.final);
     turn.now = now_turn;

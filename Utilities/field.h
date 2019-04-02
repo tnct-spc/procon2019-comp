@@ -30,6 +30,8 @@ public:
     const Score& getScore(bool side) const{return scores[side];}
     void setScore(bool side, Score score){scores[side] = score;}
 
+    std::pair<bool, Point> outOfRangeCheck(Point p) const;
+
     void setNowTurn(int now_turn);
     void setFinalTurn(int final_turn);
     void incrementTurn();
