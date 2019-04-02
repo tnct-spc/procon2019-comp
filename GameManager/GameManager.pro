@@ -23,10 +23,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        gamemanager.cpp
+        gamemanager.cpp \
+    gamesimulator.cpp
 
 HEADERS += \
-        gamemanager.h
+        gamemanager.h \
+    gamesimulator.h
 
 unix {
     target.path = /usr/lib
@@ -37,6 +39,6 @@ LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
 INCLUDEPATH += $$PWD/../Utilities
 DEPENDPATH += $$PWD/../Utilities
 
-LIBS += -L$$OUT_PWD/../Algoritms/ -lAlgoritms
-INCLUDEPATH += $$PWD/../Algoritms
-DEPENDPATH += $$PWD/../Algoritms
+LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
+INCLUDEPATH += $$PWD/../Algorithms
+DEPENDPATH += $$PWD/../Algorithms
