@@ -34,6 +34,16 @@ void Field::setAgent(bool team, int agent_index, Point agent_data){
     agents.at(agent_index)[team] = agent_data;
 }
 
+void Field::setNowTurn(int now_turn){
+    assert(0 <= now_turn && now_turn <= turn.final);
+    turn.now = now_turn;
+}
+
+void Field::setFinalTurn(int final_turn){
+    assert(0 <= final_turn && turn.now <= final_turn);
+    turn.final = final_turn;
+}
+
 Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value){
 
     if(static_cast<bool>(size) == false){

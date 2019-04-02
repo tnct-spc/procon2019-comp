@@ -27,8 +27,13 @@ public:
     void setAgent(bool team, int agent_index, Point agent_data);
     void setAgent(bool team, int agent_index, int agent_x, int agent_y){setAgent(team, agent_index, Point(agent_x, agent_y));}
 
-    const Score& getScore(bool side)const {return scores[side];}
+    const Score& getScore(bool side) const{return scores[side];}
     void setScore(bool side, Score score){scores[side] = score;}
+
+    void setNowTurn(int now_turn);
+    void setFinalTurn(int final_turn);
+
+    const Turn& getTurn() const{return turn;}
 
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
     constexpr Point intToPoint(const int i) const{return Point(i / size.y, i % size.y);}
