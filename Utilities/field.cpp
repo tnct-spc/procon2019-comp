@@ -29,9 +29,9 @@ const FieldState& Field::getState(Point p) const{
     return states[p.x][p.y];
 }
 
-void Field::setAgent(bool team, int agent_index, Point agent_data){
+void Field::setAgent(bool side, int agent_index, Point agent_data){
     assert(0 <= agent_index && agent_index < getAgentCount());
-    agents.at(agent_index)[team] = agent_data;
+    agents.at(agent_index)[side] = agent_data;
 }
 
 std::pair<bool, Point> Field::outOfRangeCheck(Point p) const{
@@ -109,11 +109,11 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         agent_values.emplace(random::call(random_x_size), random::call(random_y_size));
 
     auto it = agent_values.begin();
-    auto is_first_team_left = random::call();
+    auto is_first_side_left = random::call();
 
     for(int index = 0; it != agent_values.end(); ++it, ++index){
 
-        bool mask = (is_first_team_left >> index) & 1;
+        bool mask = (is_first_side_left >> index) & 1;
 
         Point inverse_point;
         inverse_point.x = is_x_symmetry ? size.x - it->x - 1 : it->x;

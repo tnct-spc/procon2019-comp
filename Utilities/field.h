@@ -23,9 +23,9 @@ public:
     const Point& getSize() const{return size;}
     int getAgentCount() const{return agents.size();}
 
-    const Point& getAgent(bool team, int agent_index) const{return agents.at(agent_index)[team];}
-    void setAgent(bool team, int agent_index, Point agent_data);
-    void setAgent(bool team, int agent_index, int agent_x, int agent_y){setAgent(team, agent_index, Point(agent_x, agent_y));}
+    const Point& getAgent(bool side, int agent_index) const{return agents.at(agent_index)[side];}
+    void setAgent(bool side, int agent_index, Point agent_data);
+    void setAgent(bool side, int agent_index, int agent_x, int agent_y){setAgent(side, agent_index, Point(agent_x, agent_y));}
 
     const Score& getScore(bool side) const{return scores[side];}
     void setScore(bool side, Score score){scores[side] = score;}
