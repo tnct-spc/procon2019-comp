@@ -17,6 +17,9 @@ public:
     constexpr int getState(Point p) const;
     constexpr int getState(int x, int y) const{return getState(Point(x, y));}
 
+    void setState(Point p, int value);
+    void setState(int x, int y, int value){setState(Point(x, y), value);}
+
     const Point& getAgent(bool team, int agent_index) const{return agents.at(agent_index)[team];}
     void setAgent(bool team, int agent_index, Point agent_data){agents.at(agent_index)[team] = agent_data;}
 
