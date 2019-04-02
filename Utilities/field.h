@@ -29,6 +29,8 @@ public:
 private:
 
     Point size;
+    // ここは6bitあれば足りる(33の状態を表せればよい)ため、signed charとかに変えるかもしれない
+    std::vector<std::vector<int>> points;
     std::vector<std::array<Point, 2>> agents;
     std::bitset<800> data;
 };

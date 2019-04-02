@@ -4,12 +4,14 @@ namespace procon{
 
 procon::Field::Field(Point size) :
     size(size),
+    points(size.x, std::vector<int>(size.y, 0)),
     agents(2)
 {
 }
 
 procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
+    points(size.x, std::vector<int>(size.y, 0)),
     agents(2)
 {
 }
