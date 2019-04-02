@@ -32,6 +32,7 @@ public:
 
     void setNowTurn(int now_turn);
     void setFinalTurn(int final_turn);
+    void incrementTurn();
 
     const Turn& getTurn() const{return turn;}
 

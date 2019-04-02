@@ -44,6 +44,11 @@ void Field::setFinalTurn(int final_turn){
     turn.final = final_turn;
 }
 
+void Field::incrementTurn(){
+    assert(turn.now < turn.final);
+    ++turn.now;
+}
+
 Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value){
 
     if(static_cast<bool>(size) == false){
