@@ -17,8 +17,8 @@ public:
     constexpr int getState(Point p) const;
     constexpr int getState(int x, int y) const{return getState(Point(x, y));}
 
-    const Point& getAgent(bool team, int agent_index) const{return agents.at(team).at(agent_index);}
-    void setAgent(bool team, int agent_index, Point agent_data){agents.at(team).at(agent_index) = agent_data;}
+    const Point& getAgent(bool team, int agent_index) const{return agents.at(agent_index)[team];}
+    void setAgent(bool team, int agent_index, Point agent_data){agents.at(agent_index)[team] = agent_data;}
 
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
     constexpr Point IntToPoint(const int i) const{return Point(i / size.y, i % size.y);}
@@ -26,7 +26,7 @@ public:
 private:
 
     Point size;
-    std::vector<std::vector<Point>> agents;
+    std::vector<std::array<Point, 2>> agents;
     std::bitset<800> data;
 };
 
