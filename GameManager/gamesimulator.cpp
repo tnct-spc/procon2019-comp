@@ -1,8 +1,9 @@
 #include "gamesimulator.h"
 
-GameSimulator::GameSimulator()
+template <typename... Args>
+GameSimulator::GameSimulator(Args... args)
 {
-    field = procon::Field::generateRandomField();
+    field = procon::Field::generateRandomField(std::forward<Args>(args)...);
     acts.resize(2, std::vector<procon::MoveState>(field.getAgentCount()));
 }
 

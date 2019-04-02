@@ -6,7 +6,8 @@
 class GameSimulator
 {
 public:
-    GameSimulator();
+    template<typename... Args>
+    GameSimulator(Args... args);
 
     void addAgentAct(bool side, const std::vector<procon::MoveState>& moves);
 
