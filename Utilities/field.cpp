@@ -4,6 +4,7 @@ namespace procon{
 
 procon::Field::Field(Point size) :
     size(size),
+    turn(0, 30),
     states(size.x, std::vector<FieldState>(size.y)),
     agents(2)
 {
@@ -11,6 +12,7 @@ procon::Field::Field(Point size) :
 
 procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
+    turn(0, 30),
     states(size.x, std::vector<FieldState>(size.y)),
     agents(2)
 {
@@ -42,6 +44,7 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         agent_count = 2 + random::call(7);
 
     Field field(size);
+    field.turn.final = 30 + random::call(31);
     field.agents.resize(agent_count);
 
     int random_length = max_value - min_value + 1;

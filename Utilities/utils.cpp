@@ -26,6 +26,7 @@ namespace random{
 
     unsigned long x = 123456789, y = 362436069, z = 521288629, w = 88675123;
 
+    // TODO: randomの半開区間対応(random::call(st, en)で[st, en)の範囲を取り出したい)
     unsigned long call(unsigned long mod){
         unsigned long t = (x ^ (x << 11));
         x = y;

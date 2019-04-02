@@ -38,6 +38,7 @@ public:
 private:
 
     Point size;
+    Turn turn;
     std::array<Score, 2> scores;
     std::vector<std::vector<FieldState>> states;
     std::vector<std::array<Point, 2>> agents;

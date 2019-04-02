@@ -58,6 +58,12 @@ struct Score{
     constexpr int getSum() const{return tile + region;}
 };
 
+struct Turn{
+    constexpr Turn(int now, int final) : now(now), final(final){}
+    // 0-indexed, [0, final)
+    int now, final;
+};
+
 namespace random{
 
     extern unsigned long x, y, z, w;
