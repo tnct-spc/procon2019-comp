@@ -5,7 +5,7 @@ namespace procon{
 procon::Field::Field(Point size) :
     size(size),
     turn(0, 30),
-    states(size.x, std::vector<FieldState>(size.y)),
+    states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
     agents(2)
 {
 }
@@ -13,7 +13,7 @@ procon::Field::Field(Point size) :
 procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
     turn(0, 30),
-    states(size.x, std::vector<FieldState>(size.y)),
+    states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
     agents(2)
 {
 }
