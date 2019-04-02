@@ -32,3 +32,11 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
+INCLUDEPATH += $$PWD/../Utilities
+DEPENDPATH += $$PWD/../Utilities
+
+LIBS += -L$$OUT_PWD/../Algoritms/ -lAlgoritms
+INCLUDEPATH += $$PWD/../Algoritms
+DEPENDPATH += $$PWD/../Algoritms

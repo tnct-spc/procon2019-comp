@@ -3,6 +3,6 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
         Utilities \
+        Algorithms \
         Visualizer \
-    GameManager \
-    Algorithms
+        GameManager
