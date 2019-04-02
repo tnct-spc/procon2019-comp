@@ -47,6 +47,12 @@ struct MoveState{
     constexpr Point getMove(){return procon::getMove(move_index);}
 };
 
+struct Score{
+    constexpr Score(int tile = 0, int region = 0) : tile(tile), region(region){}
+    int tile, region;
+    constexpr int getSum() const{return tile + region;}
+};
+
 namespace random{
 
     extern unsigned long x, y, z, w;

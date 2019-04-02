@@ -4,14 +4,14 @@ namespace procon{
 
 procon::Field::Field(Point size) :
     size(size),
-    points(size.x, std::vector<int>(size.y, 0)),
+    values(size.x, std::vector<int>(size.y, 0)),
     agents(2)
 {
 }
 
 procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
-    points(size.x, std::vector<int>(size.y, 0)),
+    values(size.x, std::vector<int>(size.y, 0)),
     agents(2)
 {
 }
@@ -56,11 +56,11 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
 
     for(int x_index = 0; x_index < random_x_size; ++x_index)
         for(int y_index = 0; y_index < random_y_size; ++y_index){
-            field.points[x_index][y_index] = min_value + random::call(random_length);
+            field.values[x_index][y_index] = min_value + random::call(random_length);
             if(is_x_symmetry)
-                field.points[size.x - x_index - 1][y_index] = min_value + random::call(random_length);
+                field.values[size.x - x_index - 1][y_index] = min_value + random::call(random_length);
             else
-                field.points[x_index][size.y - y_index - 1] = min_value + random::call(random_length);
+                field.values[x_index][size.y - y_index - 1] = min_value + random::call(random_length);
         }
 
     if(is_x_symmetry && size.x % 2 == 1)
@@ -68,14 +68,14 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
     if(!is_x_symmetry && size.y % 2 == 1)
         --random_y_size;
 
-    std::set<Point> agent_points;
-    while(agent_points.size() != agent_count)
-        agent_points.emplace(random::call(random_x_size), random::call(random_y_size));
+    std::set<Point> agent_values;
+    while(agent_values.size() != agent_count)
+        agent_values.emplace(random::call(random_x_size), random::call(random_y_size));
 
-    auto it = agent_points.begin();
+    auto it = agent_values.begin();
     auto is_first_team_left = random::call();
 
-    for(int index = 0; it != agent_points.end(); ++it, ++index){
+    for(int index = 0; it != agent_values.end(); ++it, ++index){
 
         bool mask = (is_first_team_left >> index) & 1;
 

@@ -27,6 +27,9 @@ public:
     void setAgent(bool team, int agent_index, Point agent_data);
     void setAgent(bool team, int agent_index, int agent_x, int agent_y){setAgent(team, agent_index, Point(agent_x, agent_y));}
 
+    const Score& getScore(bool side)const {return scores[side];}
+    void setScore(bool side, Score score){scores[side] = score;}
+
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
     constexpr Point intToPoint(const int i) const{return Point(i / size.y, i % size.y);}
 
@@ -35,8 +38,9 @@ public:
 private:
 
     Point size;
+    std::array<Score, 2> scores;
     // ここは6bitあれば足りる(33の状態を表せればよい)ため、signed charとかに変えるかもしれない
-    std::vector<std::vector<int>> points;
+    std::vector<std::vector<int>> values;
     std::vector<std::array<Point, 2>> agents;
     std::bitset<800> data;
 };
