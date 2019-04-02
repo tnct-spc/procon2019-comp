@@ -30,4 +30,8 @@ constexpr int Field::getState(Point p) const{
     return (data[shift_count + 1] << 1) + data[shift_count];
 }
 
+void Field::setAgent(bool team, int agent_index, Point agent_data){
+    assert(0 <= agent_index && agent_index < getAgentCount());
+    agents.at(agent_index)[team] = agent_data;
+}
 }

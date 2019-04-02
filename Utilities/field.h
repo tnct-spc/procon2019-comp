@@ -20,8 +20,12 @@ public:
     void setState(Point p, int value);
     void setState(int x, int y, int value){setState(Point(x, y), value);}
 
+    const Point& getSize() const{return size;}
+    int getAgentCount() const{return agents.size();}
+
     const Point& getAgent(bool team, int agent_index) const{return agents.at(agent_index)[team];}
-    void setAgent(bool team, int agent_index, Point agent_data){agents.at(agent_index)[team] = agent_data;}
+    void setAgent(bool team, int agent_index, Point agent_data);
+    void setAgent(bool team, int agent_index, int agent_x, int agent_y){setAgent(team, agent_index, Point(agent_x, agent_y));}
 
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
     constexpr Point intToPoint(const int i) const{return Point(i / size.y, i % size.y);}
