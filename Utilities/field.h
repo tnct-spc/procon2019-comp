@@ -14,8 +14,8 @@ public:
     Field(Point size = Point(10, 10));
     Field(int size_x, int size_y);
 
-    constexpr int getState(Point p) const;
-    constexpr int getState(int x, int y) const{return getState(Point(x, y));}
+    int getState(Point p) const;
+    int getState(int x, int y) const{return getState(Point(x, y));}
 
     void setState(Point p, int value);
     void setState(int x, int y, int value){setState(Point(x, y), value);}
