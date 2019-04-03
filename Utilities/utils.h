@@ -74,8 +74,6 @@ struct Turn{
 
 namespace random{
 
-    extern unsigned long x, y, z, w;
-
     unsigned long call(unsigned long mod = std::numeric_limits<unsigned long>::max());
 }
 
