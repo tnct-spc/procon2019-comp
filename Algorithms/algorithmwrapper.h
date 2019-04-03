@@ -1,7 +1,6 @@
 #ifndef ALGORITHMWRAPPER_H
 #define ALGORITHMWRAPPER_H
 
-#include "utils.h"
 #include "field.h"
 
 class AlgorithmWrapper
@@ -9,9 +8,11 @@ class AlgorithmWrapper
 
 public:
     AlgorithmWrapper(const procon::Field& field, bool side);
-    virtual procon::MoveState agentAct() = 0;
+    virtual std::vector<procon::MoveState> agentAct() = 0;
 
-private:
+    bool getSide(){return side;}
+
+protected:
     const procon::Field& field;
     bool side;
 };

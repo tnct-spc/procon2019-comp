@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <queue>
 #include <tuple>
-#include "field.h"
+#include <memory>
+#include "algorithmwrapper.h"
 
 class GameSimulator
 {
@@ -15,6 +16,9 @@ public:
     bool addAgentAct(bool side, const std::vector<procon::MoveState>& moves);
 
     bool isSimulationEnded(){const auto& turn = field.getTurn(); return turn.now == turn.final;}
+
+    template<typename... Args>
+    static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args);
 
 private:
     void changeTurn();
