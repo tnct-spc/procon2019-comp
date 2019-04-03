@@ -5,4 +5,5 @@ SUBDIRS += \
         Utilities \
         Algorithms \
         Visualizer \
-        GameManager
+        GameManager \
+        Takao
