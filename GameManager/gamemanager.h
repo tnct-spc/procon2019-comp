@@ -6,18 +6,22 @@
 
 #include "testalgorithm.h"
 
-class GameManager
+class GameManager : public QObject
 {
 
 public:
     GameManager();
 
+public slots:
+    void runSimulation();
+
 private:
-    GameSimulator game;
+    std::shared_ptr<GameSimulator> game;
     Visualizer visualizer;
 
     std::shared_ptr<const procon::Field> field;
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
+
 };
 
 #endif // GAMEMANAGER_H

@@ -8,6 +8,7 @@ Takao::Takao(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    connect(ui->runButton, &QPushButton::clicked, manager.get(), &GameManager::runSimulation);
 }
 
 Takao::~Takao()
