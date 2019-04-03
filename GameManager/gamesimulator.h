@@ -1,6 +1,8 @@
 #ifndef GAMESIMULATOR_H
 #define GAMESIMULATOR_H
 
+#include <algorithm>
+#include <queue>
 #include "field.h"
 
 class GameSimulator

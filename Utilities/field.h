@@ -29,6 +29,7 @@ public:
 
     const Score& getScore(bool side) const{return scores[side];}
     void setScore(bool side, Score score){scores[side] = score;}
+    void addTileScore(bool side, int value){scores[side].tile += value;}
 
     std::pair<bool, Point> outOfRangeCheck(Point p) const;
 
