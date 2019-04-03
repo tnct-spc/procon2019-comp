@@ -95,9 +95,9 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         for(int y_index = 0; y_index < random_y_size; ++y_index){
             field.states[x_index][y_index].value = random::call(min_value, max_value);
             if(is_x_symmetry)
-                field.states[size.x - x_index - 1][y_index].value = random::call(min_value, max_value);
+                field.states[size.x - x_index - 1][y_index].value = field.states[x_index][y_index].value;
             else
-                field.states[x_index][size.y - y_index - 1].value = random::call(min_value, max_value);
+                field.states[x_index][size.y - y_index - 1].value = field.states[x_index][y_index].value;
         }
 
     if(is_x_symmetry && size.x % 2 == 1)
