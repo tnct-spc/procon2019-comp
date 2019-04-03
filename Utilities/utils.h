@@ -43,7 +43,7 @@ constexpr Point getMove(int move_index){return Point(dx[move_index], dy[move_ind
 
 struct MoveState{
 
-    constexpr MoveState(int move_index, bool is_delete = false) : move_index(move_index), is_delete(is_delete){}
+    constexpr MoveState(int move_index = 8, bool is_delete = false) : move_index(move_index), is_delete(is_delete){}
 
     int move_index;
     bool is_delete;
