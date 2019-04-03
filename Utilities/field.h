@@ -2,7 +2,6 @@
 #define FIELD_H
 
 #include <bitset>
-#include <cassert>
 #include <set>
 #include "utils.h"
 

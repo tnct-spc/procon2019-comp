@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <limits>
+#include <cassert>
 
 namespace procon{
 
@@ -75,6 +76,8 @@ struct Turn{
 namespace random{
 
     unsigned long call(unsigned long mod = std::numeric_limits<unsigned long>::max());
+    // 閉区間での設定
+    long call(long min_value, long max_value);
 }
 
 }

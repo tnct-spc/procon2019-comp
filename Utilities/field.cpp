@@ -73,14 +73,14 @@ void Field::incrementTurn(){
 Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value){
 
     if(static_cast<bool>(size) == false){
-        size.x = 10 + random::call(11);
-        size.y = 10 + random::call(11);
+        size.x = random::call(10, 20);
+        size.y = random::call(10, 20);
     }
     if(agent_count == 0)
-        agent_count = 2 + random::call(7);
+        agent_count = random::call(2, 8);
 
     Field field(size);
-    field.turn.final = 30 + random::call(31);
+    field.turn.final = random::call(30, 60);
     field.agents.resize(agent_count);
 
     int random_length = max_value - min_value + 1;
@@ -92,11 +92,11 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
 
     for(int x_index = 0; x_index < random_x_size; ++x_index)
         for(int y_index = 0; y_index < random_y_size; ++y_index){
-            field.states[x_index][y_index].value = min_value + random::call(random_length);
+            field.states[x_index][y_index].value = random::call(min_value, max_value);
             if(is_x_symmetry)
-                field.states[size.x - x_index - 1][y_index].value = min_value + random::call(random_length);
+                field.states[size.x - x_index - 1][y_index].value = random::call(min_value, max_value);
             else
-                field.states[x_index][size.y - y_index - 1].value = min_value + random::call(random_length);
+                field.states[x_index][size.y - y_index - 1].value = random::call(min_value, max_value);
         }
 
     if(is_x_symmetry && size.x % 2 == 1)
