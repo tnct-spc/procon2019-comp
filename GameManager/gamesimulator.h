@@ -6,6 +6,7 @@
 #include <tuple>
 #include <memory>
 #include "algorithmwrapper.h"
+#include "testalgorithm.h"
 
 class GameSimulator
 {
@@ -21,6 +22,7 @@ public:
 
     bool isSimulationEnded(){const auto& turn = field->getTurn(); return turn.now == turn.final;}
 
+    static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
     template<typename... Args>
     static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args);
 

@@ -123,3 +123,7 @@ procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> alg
     }
     return sim.getField();
 }
+
+procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2){
+    return runSimulation(algo_1, algo_2, procon::Point(0, 0));
+}
