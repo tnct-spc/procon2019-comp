@@ -19,8 +19,9 @@ procon::Field::Field(int size_x, int size_y) :
 }
 
 void Field::setTile(Point p, int value){
+
     assert(0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y);
-    assert(value <= 0 && value <= 2);
+    assert(0 <= value && value <= 2);
     states[p.x][p.y].tile = value;
 }
 
