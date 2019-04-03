@@ -48,7 +48,7 @@ namespace random{
         z = w;
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
         // 剰余をとっている都合上正確な分布にはならないが、64bitの範囲で均等に取られているので誤差の範囲内
-        return w > mod ? w % mod : mod;
+        return w > mod ? w % mod : w;
     }
     long call(long min_value, long max_value){
         assert(min_value <= max_value);
