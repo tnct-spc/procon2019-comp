@@ -84,8 +84,6 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
     field.turn.final = random::call(30, 60);
     field.agents.resize(agent_count);
 
-    int random_length = max_value - min_value + 1;
-
     bool is_x_symmetry = random::call(2);
 
     int random_x_size = is_x_symmetry ? (size.x + 1) / 2 : size.x;
@@ -116,14 +114,17 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
 
         bool mask = (is_first_side_left >> index) & 1;
 
-        Point inverse_point;
-        inverse_point.x = is_x_symmetry ? size.x - it->x - 1 : it->x;
-        inverse_point.y = is_x_symmetry ? it->y : size.y - it->y - 1;
+        Point inversed_point;
+        inversed_point.x = is_x_symmetry ? size.x - it->x - 1 : it->x;
+        inversed_point.y = is_x_symmetry ? it->y : size.y - it->y - 1;
 
         field.scores[mask].tile += field.getState(*it).tile;
-        field.scores[!mask].tile += field.getState(inverse_point).tile;
+        field.scores[!mask].tile += field.getState(inversed_point).tile;
         field.setAgent(mask, index, *it);
-        field.setAgent(!mask, index, inverse_point);
+        field.setAgent(!mask, index, inversed_point);
+
+        field.setTileSide(*it, mask);
+        field.setTileSide(inversed_point, !mask);
     }
 
     return field;
