@@ -13,6 +13,8 @@ public:
     template<typename... Args>
     GameSimulator(Args... args);
 
+    const procon::Field& getField(){return field;}
+
     void addAgentAct(bool side, const std::vector<procon::MoveState>& moves);
 
     bool isSimulationEnded(){const auto& turn = field.getTurn(); return turn.now == turn.final;}

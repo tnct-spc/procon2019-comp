@@ -9,7 +9,7 @@ GameSimulator::GameSimulator(Args... args) :
 
 void GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>& moves){
 
-    assert(moves.size() == field.getAgentCount());
+    assert(moves.size() == static_cast<size_t>(field.getAgentCount()));
     acts_flag.set(side);
     acts[side] = moves;
 }
