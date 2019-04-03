@@ -19,7 +19,7 @@ public:
     explicit Visualizer(std::shared_ptr<const procon::Field> field = nullptr, QWidget *parent = nullptr);
     ~Visualizer();
 
-    void setFieldPtr(std::shared_ptr<const procon::Field> field){this->field = field;}
+    void setFieldPtr(std::shared_ptr<const procon::Field> field);
 
 private:
 

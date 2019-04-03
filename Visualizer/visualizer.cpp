@@ -14,6 +14,12 @@ Visualizer::~Visualizer()
     delete ui;
 }
 
+void Visualizer::setFieldPtr(std::shared_ptr<const procon::Field> field){
+    this->field = field;
+    this->update();
+    this->repaint();
+}
+
 void Visualizer::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
 
