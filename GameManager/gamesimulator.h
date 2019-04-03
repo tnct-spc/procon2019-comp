@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <queue>
+#include <tuple>
 #include "field.h"
 
 class GameSimulator

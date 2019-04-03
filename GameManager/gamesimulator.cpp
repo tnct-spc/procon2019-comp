@@ -28,23 +28,24 @@ void GameSimulator::changeTurn(){
     std::vector<procon::Point> compressed_points;
 
     std::vector<std::vector<procon::Point>> before_positions(2, std::vector<procon::Point>(agent_count));
-    std::vector<std::vector<procon::Point>> moved_positions(2, std::vector<procon::Point>(agent_count));
+    std::vector<std::vector<procon::Point>> after_positions(2, std::vector<procon::Point>(agent_count));
 
     for(int side = 0; side < 2; ++side)
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
             auto before_position = field.getAgent(side, agent_index);
-            auto moved_position = before_position;
+            auto after_position = before_position;
 
-            if(acts.at(side).at(agent_index).isDelete() == false){
-                moved_position = moved_position.getAppliedPosition(acts.at(side).at(agent_index).move_index);
-                moved_position = field.outOfRangeCheck(moved_position).second;
-            }
+            after_position = after_position.getAppliedPosition(acts.at(side).at(agent_index).move_index);
+            bool is_out_of_range;
+            std::tie(is_out_of_range, after_position) = field.outOfRangeCheck(after_position);
+            if(is_out_of_range)
+                acts.at(side).at(agent_index).is_delete = false;
 
             before_positions.at(side).at(agent_index) = before_position;
-            moved_positions.at(side).at(agent_index) = moved_position;
+            after_positions.at(side).at(agent_index) = after_position;
 
             compressed_points.emplace_back(before_position);
-            compressed_points.emplace_back(moved_position);
+            compressed_points.emplace_back(after_position);
         }
 
     // 座標圧縮
@@ -65,7 +66,7 @@ void GameSimulator::changeTurn(){
 
     for(int side = 0; side < 2; ++side)
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-            candidate_points.at(get_index(moved_positions.at(side).at(agent_index))).emplace_back(side, agent_index);
+            candidate_points.at(get_index(after_positions.at(side).at(agent_index))).emplace_back(side, agent_index);
             ++in_count.at(get_index(before_positions.at(side).at(agent_index)));
         }
 
@@ -81,13 +82,25 @@ void GameSimulator::changeTurn(){
         if(candidate_points.at(elm).size() != 1)
             continue;
         auto [side, agent_index] = candidate_points.at(elm).front();
-        // TODO: ここで領域計算のdiffを取るか、最後に領域計算のやり直しをする
-        // TODO: タイル削除への対応がされていない！！！！！！！！
-        field.setAgent(side, agent_index, moved_positions.at(side).at(agent_index));
-        field.addTileScore(side, field.getState(moved_positions.at(side).at(agent_index)).tile);
-        int before_index = get_index(before_positions.at(side).at(agent_index));
-        if(--in_count.at(before_index) == 0)
-            ts_que.emplace(before_index);
+        const auto& position = after_positions.at(side).at(agent_index);
+        const auto& after_state = field.getState(position);
+
+        if(acts.at(side).at(agent_index).isDelete()){
+            if(after_state.isEmpty())
+                field.addTileScore(after_state.getDecrementedSide(), -1 * after_state.value);
+            field.setTileEmpty(position);
+        }else{
+            // 敵タイルでないなら
+            if(after_state.equalSide(!side) == false){
+                field.setAgent(side, agent_index, position);
+                field.setTileSide(position, side);
+                if(after_state.isEmpty())
+                    field.addTileScore(side, after_state.value);
+                int before_index = get_index(before_positions.at(side).at(agent_index));
+                if(--in_count.at(before_index) == 0)
+                    ts_que.emplace(before_index);
+            }
+        }
     }
 
     acts_flag.reset();
