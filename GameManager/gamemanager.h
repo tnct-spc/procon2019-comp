@@ -15,7 +15,7 @@ public:
 
 private:
     GameSimulator game;
-    const procon::Field& field;
+    std::shared_ptr<const procon::Field> field;
 };
 
 #endif // GAMEMANAGER_H

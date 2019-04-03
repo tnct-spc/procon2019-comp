@@ -18,6 +18,8 @@ public:
 
 private:
     Ui::Takao *ui;
+
+    std::shared_ptr<GameManager> manager;
 };
 
 #endif // TAKAO_H

@@ -1,7 +1,7 @@
 #include "visualizer.h"
 #include "ui_visualizer.h"
 
-Visualizer::Visualizer(const procon::Field& field, QWidget *parent) :
+Visualizer::Visualizer(std::shared_ptr<const procon::Field> field, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Visualizer),
     field(field)
@@ -22,7 +22,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
     int window_width = this->width();
     int window_height = this->height();
 
-    const procon::Point& size = field.getSize();
+    procon::Point size = field ? field->getSize() : procon::Point(10, 10);
 
     double grid_size = std::min(1.0 * window_width / ( (margin * 2) + size.x), 1.0 * window_height / ( (margin * 2) + size.y));
     double horizontal_margin = (window_width - grid_size * size.x) / 2;
@@ -48,8 +48,8 @@ void Visualizer::paintEvent(QPaintEvent *event){
         for(int x_pos = 0; x_pos < size.x; ++x_pos)
             for(int y_pos = 0; y_pos < size.y; ++y_pos){
 
-                if(field.getState(x_pos, y_pos).isEmpty() == false){
-                    QColor paint_color = team_colors.at(field.getState(x_pos, y_pos).getDecrementedSide());
+                if(field->getState(x_pos, y_pos).isEmpty() == false){
+                    QColor paint_color = team_colors.at(field->getState(x_pos, y_pos).getDecrementedSide());
                     paint_color.setAlpha(64);
 
                     painter.setBrush(QBrush(paint_color));
@@ -72,7 +72,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
         for(int x_pos = 0; x_pos < size.x; ++x_pos)
             for(int y_pos = 0; y_pos < size.y; ++y_pos){
-                int value = field.getState(x_pos, y_pos).value;
+                int value = field->getState(x_pos, y_pos).value;
 
                 QString text = QString::number(value);
                 painter.drawText(horizontal_margin + grid_size * x_pos + (grid_size * 0.2), vertical_margin + grid_size * y_pos + ( grid_size * 0.7 ) , text);
@@ -81,7 +81,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
     };
 
     auto drawAgents = [&]{
-        int agent_count = field.getAgentCount();
+        int agent_count = field->getAgentCount();
         for(int side = 0; side < 2; ++side){
             for(int agent_index = 0; agent_index < agent_count; ++agent_index){
                 QColor paint_color = team_colors.at(side);
@@ -89,14 +89,16 @@ void Visualizer::paintEvent(QPaintEvent *event){
                 paint_color.setAlpha(128);
                 painter.setBrush(QBrush(paint_color));
 
-                const procon::Point& position = field.getAgent(side, agent_index);
+                const procon::Point& position = field->getAgent(side, agent_index);
                 painter.drawEllipse(horizontal_margin + grid_size * (0.1 + position.x), vertical_margin + grid_size * (0.1 + position.y), 0.8 * grid_size, 0.8 * grid_size);
             }
         }
     };
 
     drawBackGround();
-    drawTiles();
-    drawValues();
-    drawAgents();
+    if(field){
+        drawTiles();
+        drawValues();
+        drawAgents();
+    }
 }
