@@ -7,22 +7,16 @@ GameSimulator::GameSimulator(Args... args) :
 {
 }
 
-bool GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>& moves){
+void GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>& moves){
 
     assert(moves.size() == field.getAgentCount());
-
     acts_flag.set(side);
     acts[side] = moves;
-
-    if(acts_flag.all()){
-        changeTurn();
-        return true;
-    }else{
-        return false;
-    }
 }
 
 void GameSimulator::changeTurn(){
+
+    assert(acts_flag.all());
     // 移動先 => 移動元 に逆辺を張り、トポロジカルソートをする
     // 移動が失敗する、もしくは移動しないなら移動元の頂点の入次数は減らない
 
@@ -118,6 +112,8 @@ procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> alg
         auto move_2 = algo_2->agentAct();
         sim.addAgentAct(0, move_1);
         sim.addAgentAct(1, move_2);
+
+        sim.changeTurn();
     }
     return sim.field;
 }
