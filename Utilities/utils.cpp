@@ -14,6 +14,15 @@ Point& Point::operator-=(const Point& p){
     return *this;
 }
 
+Point Point::getAppliedPosition(const int move_index) const{
+    return *this + getMove(move_index);
+}
+
+Point Point::getAppliedPosition(const MoveState &m) const{
+    return getAppliedPosition(m.move_index);
+}
+
+
 bool operator==(const Point& p, const Point& q){
     return p.x == q.x && p.y == q.y;
 }
@@ -26,6 +35,7 @@ namespace random{
 
     unsigned long x = 123456789, y = 362436069, z = 521288629, w = 88675123;
 
+    // TODO: randomの半開区間対応(random::call(st, en)で[st, en)の範囲を取り出したい)
     unsigned long call(unsigned long mod){
         unsigned long t = (x ^ (x << 11));
         x = y;

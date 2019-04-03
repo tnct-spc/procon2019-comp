@@ -10,6 +10,8 @@ namespace procon{
 constexpr std::array<int, 9> dx = {-1, -1, -1, 0, 0, 1, 1, 1, 0};
 constexpr std::array<int, 9> dy = {-1, 0, 1, -1, 1, -1, 0, 1, 0};
 
+struct MoveState;
+
 struct Point
 {
     constexpr Point() : x(0), y(0){}
@@ -29,6 +31,9 @@ struct Point
     friend bool operator>(const Point& p, const Point& q){return !(p <= q);}
     friend bool operator>=(const Point& p, const Point& q){return !(p < q);}
 
+    Point getAppliedPosition(int move_index) const;
+    Point getAppliedPosition(const MoveState& m) const;
+
     explicit operator bool() const{return x || y;}
 
     int x, y;
@@ -38,13 +43,33 @@ constexpr Point getMove(int move_index){return Point(dx[move_index], dy[move_ind
 
 struct MoveState{
 
-    constexpr MoveState(int move_index, bool is_delete = false) : move_index(move_index), is_delete(is_delete){}
+    constexpr MoveState(int move_index = 8, bool is_delete = false) : move_index(move_index), is_delete(is_delete){}
 
     int move_index;
     bool is_delete;
 
     constexpr bool isDelete(){return is_delete;}
     constexpr Point getMove(){return procon::getMove(move_index);}
+};
+
+struct FieldState{
+    constexpr FieldState(int value = 0, int tile = 0) : tile(tile), value(value){}
+    constexpr int getDecrementedSide() const{return tile - 1;}
+    constexpr bool equalSide(bool side) const{return tile == side + 1;}
+    constexpr bool isEmpty() const{return !tile;}
+    int tile, value;
+};
+
+struct Score{
+    constexpr Score(int tile = 0, int region = 0) : tile(tile), region(region){}
+    constexpr int getSum() const{return tile + region;}
+    int tile, region;
+};
+
+struct Turn{
+    constexpr Turn(int now, int final) : now(now), final(final){}
+    // 0-indexed, [0, final)
+    int now, final;
 };
 
 namespace random{

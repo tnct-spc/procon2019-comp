@@ -4,35 +4,70 @@ namespace procon{
 
 procon::Field::Field(Point size) :
     size(size),
-    points(size.x, std::vector<int>(size.y, 0)),
+    turn(0, 30),
+    states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
     agents(2)
 {
 }
 
 procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
-    points(size.x, std::vector<int>(size.y, 0)),
+    turn(0, 30),
+    states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
     agents(2)
 {
 }
 
-void Field::setState(Point p, int value){
+void Field::setTile(Point p, int value){
     assert(0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y);
     assert(value <= 0 && value <= 2);
-    auto shift_count = pointToInt(p) * 2;
-    data.set(shift_count, value & 1);
-    data.set(shift_count + 1, value & 2);
+    states[p.x][p.y].tile = value;
 }
 
-constexpr int Field::getState(Point p) const{
+const FieldState& Field::getState(Point p) const{
     assert(0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y);
-    auto shift_count = pointToInt(p) * 2;
-    return (data[shift_count + 1] << 1) + data[shift_count];
+    return states[p.x][p.y];
 }
 
-void Field::setAgent(bool team, int agent_index, Point agent_data){
+void Field::setAgent(bool side, int agent_index, Point agent_data){
     assert(0 <= agent_index && agent_index < getAgentCount());
-    agents.at(agent_index)[team] = agent_data;
+    agents.at(agent_index)[side] = agent_data;
+}
+
+std::pair<bool, Point> Field::outOfRangeCheck(Point p) const{
+    bool out_of_range = false;
+    if(p.x < 0){
+        out_of_range = true;
+        ++p.x;
+    }
+    if(p.y < 0){
+        out_of_range = true;
+        ++p.y;
+    }
+    if(size.x <= p.y){
+        out_of_range = true;
+        --p.x;
+    }
+    if(size.y <= p.y){
+        out_of_range = true;
+        --p.y;
+    }
+    return std::make_pair(out_of_range, p);
+}
+
+void Field::setNowTurn(int now_turn){
+    assert(0 <= now_turn && now_turn <= turn.final);
+    turn.now = now_turn;
+}
+
+void Field::setFinalTurn(int final_turn){
+    assert(0 <= final_turn && turn.now <= final_turn);
+    turn.final = final_turn;
+}
+
+void Field::incrementTurn(){
+    assert(turn.now < turn.final);
+    ++turn.now;
 }
 
 Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value){
@@ -45,6 +80,7 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         agent_count = 2 + random::call(7);
 
     Field field(size);
+    field.turn.final = 30 + random::call(31);
     field.agents.resize(agent_count);
 
     int random_length = max_value - min_value + 1;
@@ -56,11 +92,11 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
 
     for(int x_index = 0; x_index < random_x_size; ++x_index)
         for(int y_index = 0; y_index < random_y_size; ++y_index){
-            field.points[x_index][y_index] = min_value + random::call(random_length);
+            field.states[x_index][y_index].value = min_value + random::call(random_length);
             if(is_x_symmetry)
-                field.points[size.x - x_index - 1][y_index] = min_value + random::call(random_length);
+                field.states[size.x - x_index - 1][y_index].value = min_value + random::call(random_length);
             else
-                field.points[x_index][size.y - y_index - 1] = min_value + random::call(random_length);
+                field.states[x_index][size.y - y_index - 1].value = min_value + random::call(random_length);
         }
 
     if(is_x_symmetry && size.x % 2 == 1)
@@ -68,21 +104,23 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
     if(!is_x_symmetry && size.y % 2 == 1)
         --random_y_size;
 
-    std::set<Point> agent_points;
-    while(agent_points.size() != agent_count)
-        agent_points.emplace(random::call(random_x_size), random::call(random_y_size));
+    std::set<Point> agent_values;
+    while(agent_values.size() != agent_count)
+        agent_values.emplace(random::call(random_x_size), random::call(random_y_size));
 
-    auto it = agent_points.begin();
-    auto is_first_team_left = random::call();
+    auto it = agent_values.begin();
+    auto is_first_side_left = random::call();
 
-    for(int index = 0; it != agent_points.end(); ++it, ++index){
+    for(int index = 0; it != agent_values.end(); ++it, ++index){
 
-        bool mask = (is_first_team_left >> index) & 1;
+        bool mask = (is_first_side_left >> index) & 1;
 
         Point inverse_point;
         inverse_point.x = is_x_symmetry ? size.x - it->x - 1 : it->x;
         inverse_point.y = is_x_symmetry ? it->y : size.y - it->y - 1;
 
+        field.scores[mask].tile += field.getState(*it).tile;
+        field.scores[!mask].tile += field.getState(inverse_point).tile;
         field.setAgent(mask, index, *it);
         field.setAgent(!mask, index, inverse_point);
     }
