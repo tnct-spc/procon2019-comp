@@ -11,6 +11,8 @@ TEMPLATE = lib
 
 DEFINES += GAMEMANAGER_LIBRARY
 
+CONFIG += c++17
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -23,22 +25,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        gamemanager.cpp \
-    gamesimulator.cpp
+        gamesimulator.cpp \
+        gamemanager.cpp
 
 HEADERS += \
-        gamemanager.h \
-    gamesimulator.h
+        gamesimulator.h \
+        gamemanager.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
 
+LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
+INCLUDEPATH += $$PWD/../Algorithms
+DEPENDPATH += $$PWD/../Algorithms
+
 LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
 INCLUDEPATH += $$PWD/../Utilities
 DEPENDPATH += $$PWD/../Utilities
 
-LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
-INCLUDEPATH += $$PWD/../Algorithms
-DEPENDPATH += $$PWD/../Algorithms
+LIBS += -L$$OUT_PWD/../Visualizer/ -lVisualizer
+INCLUDEPATH += $$PWD/../Visualizer
+DEPENDPATH += $$PWD/../Visualizer

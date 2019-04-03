@@ -2,6 +2,7 @@
 #define TAKAO_H
 
 #include <QMainWindow>
+#include "gamemanager.h"
 
 namespace Ui {
 class Takao;

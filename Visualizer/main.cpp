@@ -6,8 +6,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    auto f = procon::Field::generateRandomField();
-    Visualizer w(f);
+    Visualizer w;
     w.show();
 
     return a.exec();

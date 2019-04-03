@@ -30,12 +30,12 @@
        <enum>QLayout::SetNoConstraint</enum>
       </property>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="RunButton">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Run</string>
         </property>
        </widget>
       </item>

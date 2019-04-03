@@ -3,9 +3,11 @@
 
 Takao::Takao(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::Takao)
+    ui(new Ui::Takao),
+    manager()
 {
     ui->setupUi(this);
+
 }
 
 Takao::~Takao()
