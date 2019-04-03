@@ -26,6 +26,8 @@ public:
     template<typename... Args>
     static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args);
 
+    void turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
+
 private:
     void changeTurn();
 

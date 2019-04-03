@@ -109,6 +109,15 @@ void GameSimulator::changeTurn(){
     field->incrementTurn();
 }
 
+void GameSimulator::turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2){
+    auto move_1 = algo_1->agentAct();
+    auto move_2 = algo_2->agentAct();
+
+    addAgentAct(0, move_1);
+    addAgentAct(1, move_2);
+    changeTurn();
+}
+
 template <typename... Args>
 procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args){
     assert(algo_1->getSide() == false && algo_2->getSide() == true);
