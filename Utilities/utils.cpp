@@ -33,17 +33,27 @@ bool operator<(const Point& p, const Point& q){
 
 namespace random{
 
-    unsigned long x = 123456789, y = 362436069, z = 521288629, w = 88675123;
+    bool once_called = false;
+    unsigned long x = 123456789, y = 362436069, z = 521288629, w;
 
-    // TODO: randomの半開区間対応(random::call(st, en)で[st, en)の範囲を取り出したい)
     unsigned long call(unsigned long mod){
+        if(!once_called){
+            w = time(nullptr);
+            once_called = true;
+            call();
+        }
         unsigned long t = (x ^ (x << 11));
         x = y;
         y = z;
         z = w;
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
         // 剰余をとっている都合上正確な分布にはならないが、64bitの範囲で均等に取られているので誤差の範囲内
-        return w > mod ? w % mod : mod;
+        return w > mod ? w % mod : w;
+    }
+    long call(long min_value, long max_value){
+        assert(min_value <= max_value);
+        unsigned long length = max_value - min_value + 1;
+        return min_value + call(length);
     }
 }
 
