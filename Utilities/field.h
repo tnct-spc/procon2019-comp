@@ -20,6 +20,12 @@ public:
     void setTile(Point p, int value);
     void setTile(int x, int y, int value){setTile(Point(x, y), value);}
 
+    void setTileSide(Point p, bool side){setTile(p, side + 1);}
+    void setTileSide(int x, int y, bool side){setTile(Point(x, y), side + 1);}
+
+    void setTileEmpty(Point p){setTile(p, 0);}
+    void setTileEmpty(int x, int y){setTile(Point(x, y), 0);}
+
     const Point& getSize() const{return size;}
     int getAgentCount() const{return agents.size();}
 

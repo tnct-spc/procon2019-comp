@@ -53,14 +53,17 @@ struct MoveState{
 };
 
 struct FieldState{
-    constexpr FieldState(int value, int tile = 0) : tile(tile), value(value){}
+    constexpr FieldState(int value = 0, int tile = 0) : tile(tile), value(value){}
+    constexpr int getDecrementedSide() const{return tile - 1;}
+    constexpr bool equalSide(bool side) const{return tile == side + 1;}
+    constexpr bool isEmpty() const{return !tile;}
     int tile, value;
 };
 
 struct Score{
     constexpr Score(int tile = 0, int region = 0) : tile(tile), region(region){}
-    int tile, region;
     constexpr int getSum() const{return tile + region;}
+    int tile, region;
 };
 
 struct Turn{
