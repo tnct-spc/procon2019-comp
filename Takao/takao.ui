@@ -30,7 +30,7 @@
        <enum>QLayout::SetNoConstraint</enum>
       </property>
       <item>
-       <widget class="QPushButton" name="RunButton">
+       <widget class="QPushButton" name="runButton">
         <property name="enabled">
          <bool>true</bool>
         </property>

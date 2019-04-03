@@ -28,19 +28,17 @@ void Visualizer::paintEvent(QPaintEvent *event){
     double horizontal_margin = (window_width - grid_size * size.x) / 2;
     double vertical_margin = (window_height - grid_size * size.y) / 2;
 
-    auto drawBackGround = [&]{
+    painter.setBrush(QBrush(background_color));
+    painter.drawRect(0, 0, window_width, window_height);
 
-        painter.setBrush(QBrush(background_color));
-        painter.drawRect(0, 0, window_width, window_height);
-
+    auto drawGrid = [&]{
         painter.setPen(QPen(QBrush(Qt::black), 0.5));
 
-        for(int count = 1; count <size.x; ++count)
+        for(int count = 1; count < size.x; ++count)
             painter.drawLine(horizontal_margin + grid_size * count, vertical_margin, horizontal_margin + grid_size * count, window_height - vertical_margin);
 
         for(int count = 1; count < size.y; ++count)
             painter.drawLine(horizontal_margin, vertical_margin + grid_size * count, window_width - horizontal_margin, vertical_margin + grid_size * count);
-
     };
 
     auto drawTiles = [&]{
@@ -95,8 +93,8 @@ void Visualizer::paintEvent(QPaintEvent *event){
         }
     };
 
-    drawBackGround();
     if(field){
+        drawGrid();
         drawTiles();
         drawValues();
         drawAgents();

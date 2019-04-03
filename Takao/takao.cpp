@@ -4,7 +4,7 @@
 Takao::Takao(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Takao),
-    manager()
+    manager(std::make_shared<GameManager>())
 {
     ui->setupUi(this);
 

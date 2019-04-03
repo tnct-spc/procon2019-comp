@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT       += core gui widgets
 
 TARGET = GameManager
 TEMPLATE = lib
