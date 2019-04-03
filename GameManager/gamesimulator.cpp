@@ -113,7 +113,7 @@ template <typename... Args>
 procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args){
     assert(algo_1->getSide() == false && algo_2->getSide() == true);
     static GameSimulator sim(std::forward<Args>(args)...);
-    while(sim.isSimulationEnded()){
+    while(!sim.isSimulationEnded()){
         auto move_1 = algo_1->agentAct();
         auto move_2 = algo_2->agentAct();
         sim.addAgentAct(0, move_1);
