@@ -33,11 +33,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.setBrush(QBrush(background_color));
         painter.drawRect(0, 0, window_width, window_height);
 
-        painter.setBrush(QBrush(grid_color));
-        painter.drawRect(horizontal_margin, vertical_margin, window_width - horizontal_margin * 2, window_height - vertical_margin * 2);
-
-
-        painter.setPen(QPen(QBrush(Qt::black),0.5));
+        painter.setPen(QPen(QBrush(Qt::black), 0.5));
 
         for(int count = 1; count <size.x; ++count)
             painter.drawLine(horizontal_margin + grid_size * count, vertical_margin, horizontal_margin + grid_size * count, window_height - vertical_margin);
@@ -48,12 +44,18 @@ void Visualizer::paintEvent(QPaintEvent *event){
     };
 
     auto drawTiles = [&]{
+        painter.setPen(QPen(QBrush(Qt::black), 0.3));
         for(int x_pos = 0; x_pos < size.x; ++x_pos)
             for(int y_pos = 0; y_pos < size.y; ++y_pos){
 
                 if(field.getState(x_pos, y_pos).isEmpty() == false){
                     QColor paint_color = team_colors.at(field.getState(x_pos, y_pos).getDecrementedSide());
                     paint_color.setAlpha(64);
+
+                    painter.setBrush(QBrush(paint_color));
+                    painter.drawRect(horizontal_margin + grid_size * x_pos, vertical_margin + grid_size * y_pos, grid_size, grid_size);
+                }else{
+                    QColor paint_color = grid_color;
 
                     painter.setBrush(QBrush(paint_color));
                     painter.drawRect(horizontal_margin + grid_size * x_pos, vertical_margin + grid_size * y_pos, grid_size, grid_size);
