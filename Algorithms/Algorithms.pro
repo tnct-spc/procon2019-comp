@@ -24,11 +24,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         algorithmwrapper.cpp \
-    testalgorithm.cpp
+        testalgorithm.cpp
 
 HEADERS += \
         algorithmwrapper.h \
-    testalgorithm.h
+        testalgorithm.h
 
 unix {
     target.path = /usr/lib

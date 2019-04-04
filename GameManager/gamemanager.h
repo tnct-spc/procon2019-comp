@@ -1,21 +1,27 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+#include "visualizer.h"
 #include "gamesimulator.h"
 
 #include "testalgorithm.h"
 
-class GameManager
+class GameManager : public QObject
 {
 
 public:
     GameManager();
 
-    std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
+public slots:
+    void runSimulation();
 
 private:
-    GameSimulator game;
-    const procon::Field& field;
+    std::shared_ptr<GameSimulator> game;
+    Visualizer visualizer;
+
+    std::shared_ptr<const procon::Field> field;
+    std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
+
 };
 
 #endif // GAMEMANAGER_H

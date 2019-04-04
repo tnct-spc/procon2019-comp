@@ -2,14 +2,20 @@
 
 template <typename... Args>
 GameSimulator::GameSimulator(Args... args) :
-    field(procon::Field::generateRandomField(std::forward<Args>(args)...)),
-    acts(2, std::vector<procon::MoveState>(field.getAgentCount()))
+    field(std::make_shared<procon::Field>(procon::Field::generateRandomField(std::forward<Args>(args)...))),
+    acts(2, std::vector<procon::MoveState>(field->getAgentCount()))
+{
+}
+
+GameSimulator::GameSimulator() :
+    field(std::make_shared<procon::Field>(procon::Field::generateRandomField())),
+    acts(2, std::vector<procon::MoveState>(field->getAgentCount()))
 {
 }
 
 void GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>& moves){
 
-    assert(moves.size() == static_cast<size_t>(field.getAgentCount()));
+    assert(moves.size() == static_cast<size_t>(field->getAgentCount()));
     acts_flag.set(side);
     acts[side] = moves;
 }
@@ -20,7 +26,7 @@ void GameSimulator::changeTurn(){
     // 移動先 => 移動元 に逆辺を張り、トポロジカルソートをする
     // 移動が失敗する、もしくは移動しないなら移動元の頂点の入次数は減らない
 
-    int agent_count = field.getAgentCount();
+    int agent_count = field->getAgentCount();
     std::vector<procon::Point> compressed_points;
 
     std::vector<std::vector<procon::Point>> before_positions(2, std::vector<procon::Point>(agent_count));
@@ -28,12 +34,12 @@ void GameSimulator::changeTurn(){
 
     for(int side = 0; side < 2; ++side)
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-            auto before_position = field.getAgent(side, agent_index);
+            auto before_position = field->getAgent(side, agent_index);
             auto after_position = before_position;
 
             after_position = after_position.getAppliedPosition(acts.at(side).at(agent_index).move_index);
             bool is_out_of_range;
-            std::tie(is_out_of_range, after_position) = field.outOfRangeCheck(after_position);
+            std::tie(is_out_of_range, after_position) = field->outOfRangeCheck(after_position);
             if(is_out_of_range)
                 acts.at(side).at(agent_index).is_delete = false;
 
@@ -79,19 +85,19 @@ void GameSimulator::changeTurn(){
             continue;
         auto [side, agent_index] = candidate_points.at(elm).front();
         const auto& position = after_positions.at(side).at(agent_index);
-        const auto& after_state = field.getState(position);
+        const auto& after_state = field->getState(position);
 
         if(acts.at(side).at(agent_index).isDelete()){
             if(after_state.isEmpty())
-                field.addTileScore(after_state.getDecrementedSide(), -1 * after_state.value);
-            field.setTileEmpty(position);
+                field->addTileScore(after_state.getDecrementedSide(), -1 * after_state.value);
+            field->setTileEmpty(position);
         }else{
             // 敵タイルでないなら
             if(after_state.equalSide(!side) == false){
-                field.setAgent(side, agent_index, position);
-                field.setTileSide(position, side);
+                field->setAgent(side, agent_index, position);
+                field->setTileSide(position, side);
                 if(after_state.isEmpty())
-                    field.addTileScore(side, after_state.value);
+                    field->addTileScore(side, after_state.value);
                 int before_index = get_index(before_positions.at(side).at(agent_index));
                 if(--in_count.at(before_index) == 0)
                     ts_que.emplace(before_index);
@@ -100,7 +106,16 @@ void GameSimulator::changeTurn(){
     }
 
     acts_flag.reset();
-    field.incrementTurn();
+    field->incrementTurn();
+}
+
+void GameSimulator::turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2){
+    auto move_1 = algo_1->agentAct();
+    auto move_2 = algo_2->agentAct();
+
+    addAgentAct(0, move_1);
+    addAgentAct(1, move_2);
+    changeTurn();
 }
 
 template <typename... Args>
@@ -115,5 +130,9 @@ procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> alg
 
         sim.changeTurn();
     }
-    return sim.field;
+    return sim.getField();
+}
+
+procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2){
+    return runSimulation(algo_1, algo_2, procon::Point(0, 0));
 }

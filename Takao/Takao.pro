@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-04-01T14:08:23
+# Project created by QtCreator 2019-04-04T06:09:54
 #
 #-------------------------------------------------
 
@@ -8,8 +8,8 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Visualizer
-TEMPLATE = lib
+TARGET = Takao
+TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -22,15 +22,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+CONFIG += c++17
+
 SOURCES += \
         main.cpp \
-        visualizer.cpp
+        takao.cpp
 
 HEADERS += \
-        visualizer.h
+        takao.h
 
 FORMS += \
-        visualizer.ui
+        takao.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -40,3 +42,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
 INCLUDEPATH += $$PWD/../Utilities
 DEPENDPATH += $$PWD/../Utilities
+
+LIBS += -L$$OUT_PWD/../GameManager/ -lGameManager
+INCLUDEPATH += $$PWD/../GameManager
+DEPENDPATH += $$PWD/../GameManager
+
+LIBS += -L$$OUT_PWD/../Visualizer/ -lVisualizer
+INCLUDEPATH += $$PWD/../Visualizer
+DEPENDPATH += $$PWD/../Visualizer
+
+LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
+INCLUDEPATH += $$PWD/../Algorithms
+DEPENDPATH += $$PWD/../Algorithms

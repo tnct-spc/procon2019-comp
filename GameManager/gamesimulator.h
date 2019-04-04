@@ -6,26 +6,32 @@
 #include <tuple>
 #include <memory>
 #include "algorithmwrapper.h"
+#include "testalgorithm.h"
 
 class GameSimulator
 {
 public:
+    GameSimulator();
     template<typename... Args>
     GameSimulator(Args... args);
 
-    const procon::Field& getField(){return field;}
+    const procon::Field& getField(){return *field;}
+    const std::shared_ptr<const procon::Field> getFieldPtr(){return field;}
 
     void addAgentAct(bool side, const std::vector<procon::MoveState>& moves);
 
-    bool isSimulationEnded(){const auto& turn = field.getTurn(); return turn.now == turn.final;}
+    bool isSimulationEnded(){const auto& turn = field->getTurn(); return turn.now == turn.final;}
 
+    static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
     template<typename... Args>
     static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args);
+
+    void turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
 
 private:
     void changeTurn();
 
-    procon::Field field;
+    std::shared_ptr<procon::Field> field;
     std::vector<std::vector<procon::MoveState>> acts;
     std::bitset<2> acts_flag;
 };

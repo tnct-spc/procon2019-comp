@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPaintEvent>
 #include <QPainter>
+#include <memory>
 #include "field.h"
 
 namespace Ui {
@@ -15,8 +16,10 @@ class Visualizer : public QMainWindow
     Q_OBJECT
 
 public:
-    Visualizer(const procon::Field& field, QWidget *parent = nullptr);
+    explicit Visualizer(std::shared_ptr<const procon::Field> field = nullptr, QWidget *parent = nullptr);
     ~Visualizer();
+
+    void setFieldPtr(std::shared_ptr<const procon::Field> field);
 
 private:
 
@@ -24,7 +27,7 @@ private:
 
 
     Ui::Visualizer *ui;
-    const procon::Field& field;
+    std::shared_ptr<const procon::Field> field;
 
     const double margin = 2;
 

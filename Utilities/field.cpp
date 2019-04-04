@@ -45,7 +45,7 @@ std::pair<bool, Point> Field::outOfRangeCheck(Point p) const{
         out_of_range = true;
         ++p.y;
     }
-    if(size.x <= p.y){
+    if(size.x <= p.x){
         out_of_range = true;
         --p.x;
     }
