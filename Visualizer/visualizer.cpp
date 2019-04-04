@@ -106,3 +106,14 @@ void Visualizer::paintEvent(QPaintEvent *event){
         drawAgents();
     }
 }
+
+void Visualizer::keyPressEvent(QKeyEvent *event){
+    if(event->key() == Qt::Key_R)
+        emit signalResetField();
+    if(event->key() == Qt::Key_S)
+        emit signalRunSimulator();
+    if(event->key() == Qt::Key_F)
+        emit signalRunFullSimulation();
+    if(event->key() == Qt::Key_N)
+        emit signalSimulateNextTurn();
+}
