@@ -99,11 +99,49 @@ void Visualizer::paintEvent(QPaintEvent *event){
         }
     };
 
+    auto drawTurnCount = [&]{
+        QPoint text_point;
+        text_point.setX(horizontal_margin + (size.x - 3) * grid_size);
+        text_point.setY(vertical_margin - 0.4 * grid_size);
+
+        painter.setPen(QPen(QBrush(score_color), 0.3));
+
+        QFont font = painter.font();
+        font.setPointSize(grid_size * 0.8);
+        painter.setFont(font);
+
+        auto turn = field->getTurn();
+        QString str(QString::number(turn.now) + QString::fromStdString(" / ") + QString::number(turn.final));
+        painter.drawText(text_point, str);
+    };
+
+    auto drawScores = [&]{
+        auto scores = field->getScores();
+
+        QPoint side_0_point, side_1_point;
+        side_0_point.setX(horizontal_margin);
+        side_1_point.setX(window_width - horizontal_margin - grid_size * 3.5);
+        side_0_point.setY(window_height - vertical_margin + grid_size * 1.3);
+        side_1_point.setY(window_height - vertical_margin + grid_size * 1.3);
+
+        QColor paint_color = team_colors.at(0);
+        paint_color.setAlpha(100);
+        painter.setPen(QPen(QBrush(paint_color), 0.3));
+        painter.drawText(side_0_point, QString::number(scores[0].tile) + QString::fromStdString(" + ") + QString::number(scores[0].region));
+
+        paint_color = team_colors.at(1);
+        paint_color.setAlpha(100);
+        painter.setPen(QPen(QBrush(paint_color), 0.3));
+        painter.drawText(side_1_point, QString::number(scores[1].tile) + QString::fromStdString(" + ") + QString::number(scores[1].region));
+    };
+
     if(field){
         drawGrid();
         drawTiles();
         drawValues();
         drawAgents();
+        drawTurnCount();
+        drawScores();
     }
 }
 
