@@ -1,11 +1,11 @@
 # procon2019-comp
 ## Description
 
-第29回全国高等専門学校プログラミングコンテスト競技部門のリポジトリです。
+第30回全国高等専門学校プログラミングコンテスト競技部門のリポジトリです。
 
 ### 開発環境
 
-C++とQtを使う はずです
+未定
 
 ### 大会Twitterタグ
 [#procon30](https://twitter.com/search?q=%23procon30)
