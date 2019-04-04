@@ -78,7 +78,14 @@ void Field::incrementTurn(){
     ++turn.now;
 }
 
-Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value){
+Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value, double minus_per){
+
+    assert(min_value <= max_value);
+    assert(0 <= max_value);
+    // [first, second]
+    std::pair<int, int> plus_range(std::max(min_value, 0), max_value);
+    std::pair<int, int> minus_range(std::min(min_value, 0), 0);
+    bool minus_flag = (minus_range.first != minus_range.second);
 
     if(static_cast<bool>(size) == false){
         size.x = random::call(10, 20);
@@ -96,14 +103,27 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
     int random_x_size = is_x_symmetry ? (size.x + 1) / 2 : size.x;
     int random_y_size = is_x_symmetry ? size.y : (size.y + 1) / 2;
 
-    for(int x_index = 0; x_index < random_x_size; ++x_index)
-        for(int y_index = 0; y_index < random_y_size; ++y_index){
-            field.states[x_index][y_index].value = random::call(min_value, max_value);
-            if(is_x_symmetry)
-                field.states[size.x - x_index - 1][y_index].value = field.states[x_index][y_index].value;
-            else
-                field.states[x_index][size.y - y_index - 1].value = field.states[x_index][y_index].value;
-        }
+    int point_sum;
+    do{
+        point_sum = 0;
+        for(int x_index = 0; x_index < random_x_size; ++x_index)
+            for(int y_index = 0; y_index < random_y_size; ++y_index){
+
+                int value;
+                if(minus_flag && (1.0 * random::call() / std::numeric_limits<unsigned long>::max()) <= minus_per)
+                    value = random::call(minus_range.first, minus_range.second);
+                else
+                    value = random::call(plus_range.first, plus_range.second);
+                field.states[x_index][y_index].value = value;
+
+                if(is_x_symmetry)
+                    field.states[size.x - x_index - 1][y_index].value = value;
+                else
+                    field.states[x_index][size.y - y_index - 1].value = value;
+
+                point_sum += 2 * value;
+            }
+    }while(point_sum < 0);
 
     if(is_x_symmetry && size.x % 2 == 1)
         --random_x_size;
