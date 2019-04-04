@@ -5,6 +5,7 @@
 #include "gamesimulator.h"
 
 #include "testalgorithm.h"
+#include "simplebeamsearch.h"
 
 class GameManager : public QObject
 {

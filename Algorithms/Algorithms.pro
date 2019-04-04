@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         algorithmwrapper.cpp \
-        testalgorithm.cpp
+        testalgorithm.cpp \
+    simplebeamsearch.cpp
 
 HEADERS += \
         algorithmwrapper.h \
-        testalgorithm.h
+        testalgorithm.h \
+    simplebeamsearch.h
 
 unix {
     target.path = /usr/lib
