@@ -99,11 +99,28 @@ void Visualizer::paintEvent(QPaintEvent *event){
         }
     };
 
+    auto drawTurnCount = [&]{
+        QPoint text_point;
+        text_point.setX(horizontal_margin + (size.x - 3) * grid_size);
+        text_point.setY(vertical_margin - 0.4 * grid_size);
+
+        painter.setPen(QPen(QBrush(score_color), 0.3));
+
+        QFont font = painter.font();
+        font.setPointSize(grid_size * 0.8);
+        painter.setFont(font);
+
+        auto turn = field->getTurn();
+        QString str(QString::number(turn.now) + QString::fromStdString(" / ") + QString::number(turn.final));
+        painter.drawText(text_point, str);
+    };
+
     if(field){
         drawGrid();
         drawTiles();
         drawValues();
         drawAgents();
+        drawTurnCount();
     }
 }
 
