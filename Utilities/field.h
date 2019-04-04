@@ -36,6 +36,8 @@ public:
     void setScore(bool side, Score score){scores[side] = score;}
     void addTileScore(bool side, int value){scores[side].tile += value;}
 
+    MoveState makeMoveState(bool side, const Point& p, int move_index) const;
+
     std::pair<bool, Point> outOfRangeCheck(Point p) const;
 
     void setNowTurn(int now_turn);
