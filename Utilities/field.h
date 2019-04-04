@@ -49,7 +49,7 @@ public:
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
     constexpr Point intToPoint(const int i) const{return Point(i / size.y, i % size.y);}
 
-    static Field generateRandomField(Point size = Point(0, 0), size_t agent_count = 0, int min_value = -8, int max_value = 8);
+    static Field generateRandomField(Point size = Point(0, 0), size_t agent_count = 0, int min_value = -8, int max_value = 8, double minus_per = 0.25);
 
 private:
 
