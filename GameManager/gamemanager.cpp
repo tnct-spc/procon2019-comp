@@ -10,6 +10,11 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalResetField, this, &GameManager::resetField);
     connect(&visualizer, &Visualizer::signalRunSimulator, this, &GameManager::runSimulator);
     connect(&visualizer, &Visualizer::signalRunFullSimulation, this, &GameManager::runFullSimulation);
+    connect(&visualizer, &Visualizer::signalSimulateNextTurn, this, &GameManager::simulateNextTurn);
+
+    // 仮実装という事で、algoにランダムウォーク2つを入れて、Visualizerがクリックされる毎に更新を行うようなものを考える
+    algo.at(0) = std::make_shared<SimpleBeamSearch>(*field, 0);
+    algo.at(1) = std::make_shared<TestAlgorithm>(*field, 1);
 
     visualizer.setFieldPtr(field);
     visualizer.show();
@@ -21,22 +26,27 @@ void GameManager::runFullSimulation(){
 }
 
 void GameManager::resetField(){
+
     game = std::make_shared<GameSimulator>();
     field = game->getFieldPtr();
+
+    algo.at(0) = std::make_shared<SimpleBeamSearch>(*field, 0);
+    algo.at(1) = std::make_shared<TestAlgorithm>(*field, 1);
+
     visualizer.setFieldPtr(field);
     visualizer.update();
     visualizer.repaint();
 }
 
 void GameManager::runSimulator(){
+    while(simulateNextTurn());
+}
 
-    // 仮実装という事で、algoにランダムウォーク2つを入れて、Visualizerがクリックされる毎に更新を行うようなものを考える
-    algo.at(0) = std::make_shared<SimpleBeamSearch>(*field, 0);
-    algo.at(1) = std::make_shared<TestAlgorithm>(*field, 1);
-
-    while(!game->isSimulationEnded()){
-        game->turnSimulation(algo.at(0), algo.at(1));
-        visualizer.update();
-        visualizer.repaint();
-    }
+bool GameManager::simulateNextTurn(){
+    if(game->isSimulationEnded())
+        return false;
+    game->turnSimulation(algo.at(0), algo.at(1));
+    visualizer.update();
+    visualizer.repaint();
+    return true;
 }

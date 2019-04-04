@@ -17,6 +17,7 @@ public slots:
     void runFullSimulation();
     void resetField();
     void runSimulator();
+    bool simulateNextTurn();
 
 private:
     std::shared_ptr<GameSimulator> game;

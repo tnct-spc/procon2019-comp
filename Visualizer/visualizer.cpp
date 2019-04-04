@@ -114,4 +114,6 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         emit signalRunSimulator();
     if(event->key() == Qt::Key_F)
         emit signalRunFullSimulation();
+    if(event->key() == Qt::Key_N)
+        emit signalSimulateNextTurn();
 }
