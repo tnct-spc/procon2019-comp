@@ -4,21 +4,32 @@ std::vector<procon::MoveState> SimpleBeamSearch::agentAct(){
 
     // 各エージェント毎にそれぞれbeamsearchを行い、それらの結果を合わせて最良のものを探索する
     int agent_count = field.getAgentCount();
-    std::vector<std::vector<std::pair<int, std::vector<procon::Point>>>> results(agent_count);
+    std::vector<procon::MoveState> return_vector(agent_count);
 
-    std::vector<procon::MoveState> return_vector;
-    // (field.getAgentCount(), procon::MoveState(procon::random::call(8), false));
+    std::priority_queue<std::pair<int, std::pair<int,int>>> value_que;
 
     for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-        results.at(agent_index) = beamSearch(agent_index);
-        const procon::Point& start_point = field.getAgent(side, agent_index);
-        const procon::Point& moved_point = results.at(agent_index).at(0).second.at(1);
-        return_vector.emplace_back(field.makeMoveState(side, start_point, start_point.getMoveIndex(moved_point)));
+        auto result = beamSearch(agent_index);
+        for(int move_index = 0; move_index < 9; ++move_index)
+            value_que.emplace(result.at(move_index), std::make_pair(agent_index, move_index));
     }
+    std::set<procon::Point> used_points;
+    std::bitset<8> set_flag;
+    while(!value_que.empty()){
+        auto [agent_index, move_index] = value_que.top().second;
+        value_que.pop();
+        procon::Point moved_point = field.getAgent(side, agent_index).getAppliedPosition(move_index);
+        if(used_points.find(moved_point) != used_points.end() || set_flag[agent_index])
+            continue;
+        set_flag.set(agent_index);
+        used_points.insert(moved_point);
+        return_vector.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), move_index);
+    }
+    assert(static_cast<int>(set_flag.count()) == agent_count);
     return return_vector;
 }
 
-std::vector<std::pair<int, std::vector<procon::Point>>> SimpleBeamSearch::beamSearch(int agent_index){
+std::vector<int> SimpleBeamSearch::beamSearch(int agent_index){
     int max_depth = std::min(max_depth, field.getTurn().final - field.getTurn().now);
     const procon::Point& start_point = field.getAgent(side, agent_index);
 
@@ -65,11 +76,16 @@ std::vector<std::pair<int, std::vector<procon::Point>>> SimpleBeamSearch::beamSe
         now_que = std::move(next_que);
         next_que = std::move(next_next_que);
     }
-    std::vector<que_type> result;
+    std::vector<int> result(9, 0);
+    std::vector<int> result_count(9, 0);
     while(!now_que.empty()){
-        result.emplace_back(now_que.top());
+        int index = (static_cast<int>(now_que.top().second.size()) == 1) ? 8 : now_que.top().second.at(0).getMoveIndex(now_que.top().second.at(1));
+        result.at(index) += now_que.top().first;
+        ++result_count.at(index);
         now_que.pop();
     }
-    std::reverse(result.begin(), result.end());
+    for(int move_index = 0; move_index < 9; ++move_index)
+        result.at(move_index) *= result.at(move_index);
+
     return result;
 }

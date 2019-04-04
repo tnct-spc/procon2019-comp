@@ -14,7 +14,7 @@ public:
 
 private:
 
-    std::vector<std::pair<int, std::vector<procon::Point>>> beamSearch(int agent_index);
+    std::vector<int> beamSearch(int agent_index);
 
     const int max_depth = 5;
     const int max_width = 30;
