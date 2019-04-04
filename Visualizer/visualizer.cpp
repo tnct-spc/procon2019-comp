@@ -115,12 +115,34 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.drawText(text_point, str);
     };
 
+    auto drawScores = [&]{
+        auto score_0 = field->getScore(0);
+        auto score_1 = field->getScore(1);
+
+        QPoint side_0_point, side_1_point;
+        side_0_point.setX(horizontal_margin);
+        side_1_point.setX(window_width - horizontal_margin - grid_size * 3.5);
+        side_0_point.setY(window_height - vertical_margin + grid_size * 1.3);
+        side_1_point.setY(window_height - vertical_margin + grid_size * 1.3);
+
+        QColor paint_color = team_colors.at(0);
+        paint_color.setAlpha(100);
+        painter.setPen(QPen(QBrush(paint_color), 0.3));
+        painter.drawText(side_0_point, QString::number(score_0.tile) + QString::fromStdString(" + ") + QString::number(score_0.region));
+
+        paint_color = team_colors.at(1);
+        paint_color.setAlpha(100);
+        painter.setPen(QPen(QBrush(paint_color), 0.3));
+        painter.drawText(side_1_point, QString::number(score_1.tile) + QString::fromStdString(" + ") + QString::number(score_1.region));
+    };
+
     if(field){
         drawGrid();
         drawTiles();
         drawValues();
         drawAgents();
         drawTurnCount();
+        drawScores();
     }
 }
 
