@@ -89,15 +89,13 @@ void GameSimulator::changeTurn(){
 
         if(acts.at(side).at(agent_index).isDelete()){
             if(after_state.isEmpty())
-                field->addTileScore(after_state.getDecrementedSide(), -1 * after_state.value);
-            field->setTileEmpty(position);
+                field->setTileEmpty(position);
         }else{
             // 敵タイルでないなら
             if(after_state.equalSide(!side) == false){
                 field->setAgent(side, agent_index, position);
-                field->setTileSide(position, side);
                 if(after_state.isEmpty())
-                    field->addTileScore(side, after_state.value);
+                    field->setTileSide(position, side);
                 int before_index = get_index(before_positions.at(side).at(agent_index));
                 if(--in_count.at(before_index) == 0)
                     ts_que.emplace(before_index);

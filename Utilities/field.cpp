@@ -22,6 +22,13 @@ void Field::setTile(Point p, int value){
 
     assert(0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y);
     assert(0 <= value && value <= 2);
+    auto& state = states[p.x][p.y];
+    assert(state.isEmpty() ^ value == false);
+    if(state.isEmpty() && value){
+        scores.at(value - 1).tile += state.value;
+    }else if(!state.isEmpty() && !value){
+        scores.at(state.getDecrementedSide()).tile -= state.value;
+    }
     states[p.x][p.y].tile = value;
 }
 

@@ -32,9 +32,8 @@ public:
     void setAgent(bool side, int agent_index, Point agent_data);
     void setAgent(bool side, int agent_index, int agent_x, int agent_y){setAgent(side, agent_index, Point(agent_x, agent_y));}
 
+    const std::array<Score, 2>& getScores() const{return scores;}
     const Score& getScore(bool side) const{return scores[side];}
-    void setScore(bool side, Score score){scores[side] = score;}
-    void addTileScore(bool side, int value){scores[side].tile += value;}
 
     MoveState makeMoveState(bool side, const Point& p, int move_index) const;
 

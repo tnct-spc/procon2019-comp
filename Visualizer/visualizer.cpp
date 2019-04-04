@@ -116,8 +116,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
     };
 
     auto drawScores = [&]{
-        auto score_0 = field->getScore(0);
-        auto score_1 = field->getScore(1);
+        auto scores = field->getScores();
 
         QPoint side_0_point, side_1_point;
         side_0_point.setX(horizontal_margin);
@@ -128,12 +127,12 @@ void Visualizer::paintEvent(QPaintEvent *event){
         QColor paint_color = team_colors.at(0);
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
-        painter.drawText(side_0_point, QString::number(score_0.tile) + QString::fromStdString(" + ") + QString::number(score_0.region));
+        painter.drawText(side_0_point, QString::number(scores[0].tile) + QString::fromStdString(" + ") + QString::number(scores[0].region));
 
         paint_color = team_colors.at(1);
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
-        painter.drawText(side_1_point, QString::number(score_1.tile) + QString::fromStdString(" + ") + QString::number(score_1.region));
+        painter.drawText(side_1_point, QString::number(scores[1].tile) + QString::fromStdString(" + ") + QString::number(scores[1].region));
     };
 
     if(field){
