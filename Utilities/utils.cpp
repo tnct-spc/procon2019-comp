@@ -31,6 +31,15 @@ bool operator<(const Point& p, const Point& q){
     return p.x < q.x || (p.x == q.x && p.y < q.y);
 }
 
+int Point::getMoveIndex(const Point &moved_position) const{
+    assert(std::abs(x - moved_position.x) <= 1 && std::abs(y - moved_position.y) <= 1);
+    // ループを回しているのがよくないので、気が向いたらO(1)で求められるようにする
+    for(int move_index = 0; move_index < 9; ++move_index){
+        if(*this + getMove(move_index) == moved_position)
+            return move_index;
+    }
+}
+
 namespace random{
 
     bool once_called = false;

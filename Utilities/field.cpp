@@ -35,6 +35,13 @@ void Field::setAgent(bool side, int agent_index, Point agent_data){
     agents.at(agent_index)[side] = agent_data;
 }
 
+MoveState Field::makeMoveState(bool side, const Point &p, int move_index) const{
+    auto [out_of_range, moved_pos] = outOfRangeCheck(p.getAppliedPosition(move_index));
+    if(out_of_range)
+        return MoveState();
+    return MoveState(move_index, getState(moved_pos).equalSide(!side) ? true : false);
+}
+
 std::pair<bool, Point> Field::outOfRangeCheck(Point p) const{
     bool out_of_range = false;
     if(p.x < 0){

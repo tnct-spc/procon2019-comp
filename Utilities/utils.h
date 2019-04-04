@@ -35,6 +35,8 @@ struct Point
     Point getAppliedPosition(int move_index) const;
     Point getAppliedPosition(const MoveState& m) const;
 
+    int getMoveIndex(const Point& moved_position) const;
+
     explicit operator bool() const{return x || y;}
 
     int x, y;
