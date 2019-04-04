@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPaintEvent>
+#include <QKeyEvent>
 #include <QPainter>
 #include <memory>
 #include "field.h"
@@ -21,9 +22,15 @@ public:
 
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
 
+signals:
+    void signalResetField();
+    void signalRunSimulator();
+    void signalRunFullSimulation();
+
 private:
 
     void paintEvent(QPaintEvent* event);
+    void keyPressEvent(QKeyEvent* event);
 
 
     Ui::Visualizer *ui;

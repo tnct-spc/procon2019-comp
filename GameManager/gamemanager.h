@@ -14,7 +14,9 @@ public:
     GameManager();
 
 public slots:
-    void runSimulation();
+    void runFullSimulation();
+    void resetField();
+    void runSimulator();
 
 private:
     std::shared_ptr<GameSimulator> game;
