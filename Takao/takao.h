@@ -16,6 +16,12 @@ public:
     explicit Takao(QWidget *parent = nullptr);
     ~Takao();
 
+signals:
+    void signalLoadField(procon::Field field);
+
+private slots:
+    void loadCsvField();
+
 private:
     Ui::Takao *ui;
 

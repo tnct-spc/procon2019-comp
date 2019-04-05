@@ -4,12 +4,11 @@ namespace procon::csv{
 
 Field csvImport(std::string path){
     std::ifstream input_stream(path);
-    assert(input_stream.bad() == false);
+    assert(input_stream.good());
     std::string data;
 
     auto comma_input = makeRec([&](auto&& comma_input, auto&& head, auto&&... tail) -> void{
-        std::getline(input_stream, data, ',');
-        head = std::stoi(data);
+        comma_input._f2(head);
         if(sizeof...(tail))
             comma_input(std::forward<decltype(tail)>(tail)...);
     }, [&](auto&& head){
@@ -23,6 +22,7 @@ Field csvImport(std::string path){
     std::array<Score, 2> scores;
     std::vector<std::vector<FieldState>> states(size.x, std::vector<FieldState>(size.y));
     std::vector<std::array<Point, 2>> agents;
+
 
     Field field(size);
 
@@ -60,10 +60,9 @@ void csvExport(std::string path, const Field& field){
 
     std::ofstream output_stream;
     output_stream.open(path, std::ios::out | std::ios::app);
-    assert(output_stream.bad() == false);
+    assert(output_stream.good());
     auto comma_output = makeRec([&](auto&& comma_output, auto head, auto... tail) -> void{
-
-        output_stream << head << ",";
+        comma_output._f2(head);
         if(sizeof...(tail))
             comma_output(std::forward<decltype(tail)>(tail)...);
     }, [&](auto head){

@@ -14,6 +14,7 @@ public:
     GameManager();
 
 public slots:
+    void loadField(procon::Field field);
     void runFullSimulation();
     void resetField();
     void runSimulator();

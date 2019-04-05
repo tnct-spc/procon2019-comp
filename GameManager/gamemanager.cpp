@@ -29,6 +29,19 @@ void GameManager::runFullSimulation(){
     runSimulator();
 }
 
+void GameManager::loadField(procon::Field field){
+
+    game = std::make_shared<GameSimulator>();
+    game->setField(field);
+    auto field_ptr = game->getFieldPtr();
+
+    setAlgorithms();
+
+    visualizer.setFieldPtr(field_ptr);
+    visualizer.update();
+    visualizer.repaint();
+}
+
 void GameManager::resetField(){
 
     game = std::make_shared<GameSimulator>();

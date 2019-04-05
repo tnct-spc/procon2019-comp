@@ -90,7 +90,7 @@ struct FixPoint{
     FixPoint(F&& f, F2&& f2) : _f(std::forward<F>(f)), _f2(std::forward<F2>(f2)){}
 
     template<typename Type>
-    decltype(auto) operator()(Type arg) const{return _f2(std::forward<Type>(arg));}
+    decltype(auto) operator()(Type&& arg) const{return _f2(std::forward<Type>(arg));}
     template<typename... Types>
     decltype(auto) operator()(Types&&... args) const{return _f(*this, std::forward<Types>(args)...);}
 };

@@ -39,6 +39,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="csvImportButton">
+        <property name="text">
+         <string>CsvImport</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

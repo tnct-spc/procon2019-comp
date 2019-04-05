@@ -27,6 +27,8 @@ public:
 
     void turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
 
+    void setField(const procon::Field& field){this->field = std::make_shared<procon::Field>(field);}
+
 private:
     void changeTurn(bool calc_score_flag);
 
