@@ -8,17 +8,18 @@ std::vector<procon::MoveState> SimpleBeamSearch::agentAct(){
     int agent_count = field.getAgentCount();
     std::vector<procon::MoveState> return_vector(agent_count);
 
-    std::priority_queue<std::pair<double, std::pair<int,int>>> value_que;
+    using que_type = std::tuple<double, unsigned long, std::pair<int,int>>;
+    std::priority_queue<que_type> value_que;
 
     for(int agent_index = 0; agent_index < agent_count; ++agent_index){
         auto result = beamSearch(agent_index);
         for(int move_index = 0; move_index < 9; ++move_index)
-            value_que.emplace(result.at(move_index), std::make_pair(agent_index, move_index));
+            value_que.emplace(result.at(move_index), procon::random::call(), std::make_pair(agent_index, move_index));
     }
     std::set<procon::Point> used_points;
     std::bitset<8> set_flag;
     while(!value_que.empty()){
-        auto [agent_index, move_index] = value_que.top().second;
+        auto [agent_index, move_index] = std::get<2>(value_que.top());
         value_que.pop();
         procon::Point moved_point = field.getAgent(side, agent_index).getAppliedPosition(move_index);
         if(field.outOfRangeCheck(moved_point).first == true || used_points.find(moved_point) != used_points.end() || set_flag[agent_index])

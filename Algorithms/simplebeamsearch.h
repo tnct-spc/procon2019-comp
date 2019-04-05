@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <set>
 #include <queue>
+#include <tuple>
 #include <cmath>
 #include "algorithmwrapper.h"
 
