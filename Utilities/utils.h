@@ -82,6 +82,20 @@ namespace random{
     long call(long min_value, long max_value);
 }
 
+template <typename F>
+struct FixPoint{
+    const F _f;
+
+    FixPoint(F&& f) : _f(std::forward<F>(f)){}
+
+    template<typename... Types>
+    decltype(auto) operator()(Types&&... args) const{return _f(*this, std::forward<Types>(args)...);}
+};
+
+template <typename F>
+decltype(auto) makeRec(F&& f){return FixPoint<F>(std::forward<F>(f));}
+
+
 }
 
 #endif // UTILS_H
