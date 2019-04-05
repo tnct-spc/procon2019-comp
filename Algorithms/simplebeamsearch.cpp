@@ -1,12 +1,14 @@
 #include "simplebeamsearch.h"
 
+#include <iostream>
+
 std::vector<procon::MoveState> SimpleBeamSearch::agentAct(){
 
     // 各エージェント毎にそれぞれbeamsearchを行い、それらの結果を合わせて最良のものを探索する
     int agent_count = field.getAgentCount();
     std::vector<procon::MoveState> return_vector(agent_count);
 
-    std::priority_queue<std::pair<int, std::pair<int,int>>> value_que;
+    std::priority_queue<std::pair<double, std::pair<int,int>>> value_que;
 
     for(int agent_index = 0; agent_index < agent_count; ++agent_index){
         auto result = beamSearch(agent_index);
@@ -29,13 +31,13 @@ std::vector<procon::MoveState> SimpleBeamSearch::agentAct(){
     return return_vector;
 }
 
-std::vector<int> SimpleBeamSearch::beamSearch(int agent_index){
+std::vector<double> SimpleBeamSearch::beamSearch(int agent_index){
     int max_depth = std::min(this->max_depth, field.getTurn().final - field.getTurn().now);
     const procon::Point& start_point = field.getAgent(side, agent_index);
 
     // 敵味方問わず、他エージェントの考慮を行わない 途中の盤面の変化の考慮も行わない
 
-    using que_type = std::pair<int, std::vector<procon::Point>>;
+    using que_type = std::pair<double, std::vector<procon::Point>>;
     std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
     std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> next_que;
     now_que.emplace(0.0, std::vector<procon::Point>(1, start_point));
@@ -44,6 +46,7 @@ std::vector<int> SimpleBeamSearch::beamSearch(int agent_index){
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> next_next_que;
         while(!now_que.empty()){
             auto [value, moves] = now_que.top();
+            value *= 1.4;
             now_que.pop();
 
             // 行動した回数
@@ -76,7 +79,7 @@ std::vector<int> SimpleBeamSearch::beamSearch(int agent_index){
         now_que = std::move(next_que);
         next_que = std::move(next_next_que);
     }
-    std::vector<int> result(9, 0);
+    std::vector<double> result(9, 0);
     std::vector<int> result_count(9, 0);
     while(!now_que.empty()){
         int index = (static_cast<int>(now_que.top().second.size()) == 1) ? 8 : now_que.top().second.at(0).getMoveIndex(now_que.top().second.at(1));
@@ -85,7 +88,7 @@ std::vector<int> SimpleBeamSearch::beamSearch(int agent_index){
         now_que.pop();
     }
     for(int move_index = 0; move_index < 9; ++move_index)
-        result.at(move_index) *= result.at(move_index);
+        result.at(move_index) *= std::pow(1.3, result.at(move_index));
 
     return result;
 }
