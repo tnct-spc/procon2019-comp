@@ -39,6 +39,8 @@ const FieldState& Field::getState(Point p) const{
 
 void Field::setAgent(bool side, int agent_index, Point agent_data){
     assert(0 <= agent_index && agent_index < getAgentCount());
+    if(getState(agent_data).isEmpty())
+        setTileSide(agent_data, side);
     agents.at(agent_index)[side] = agent_data;
 }
 
@@ -156,9 +158,6 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         field.scores[!mask].tile += field.getState(inversed_point).tile;
         field.setAgent(mask, index, *it);
         field.setAgent(!mask, index, inversed_point);
-
-        field.setTileSide(*it, mask);
-        field.setTileSide(inversed_point, !mask);
     }
 
     return field;

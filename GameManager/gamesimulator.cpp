@@ -94,8 +94,6 @@ void GameSimulator::changeTurn(){
             // 敵タイルでないなら
             if(after_state.equalSide(!side) == false){
                 field->setAgent(side, agent_index, position);
-                if(after_state.isEmpty())
-                    field->setTileSide(position, side);
                 int before_index = get_index(before_positions.at(side).at(agent_index));
                 if(--in_count.at(before_index) == 0)
                     ts_que.emplace(before_index);
