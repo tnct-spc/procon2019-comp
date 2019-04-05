@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <set>
 #include <queue>
+#include <tuple>
+#include <cmath>
 #include "algorithmwrapper.h"
 
 class SimpleBeamSearch : public AlgorithmWrapper
@@ -14,7 +16,7 @@ public:
 
 private:
 
-    std::vector<int> beamSearch(int agent_index);
+    std::vector<double> beamSearch(int agent_index);
 
     const int max_depth = 5;
     const int max_width = 30;

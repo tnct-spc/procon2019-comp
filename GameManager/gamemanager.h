@@ -20,6 +20,9 @@ public slots:
     bool simulateNextTurn();
 
 private:
+
+    void setAlgorithms();
+
     std::shared_ptr<GameSimulator> game;
     Visualizer visualizer;
 
