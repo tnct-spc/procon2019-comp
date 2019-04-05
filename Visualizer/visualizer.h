@@ -5,8 +5,9 @@
 #include <QPaintEvent>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QFileDialog>
 #include <memory>
-#include "field.h"
+#include "csvtranslate.h"
 
 namespace Ui {
 class Visualizer;
