@@ -19,13 +19,13 @@ std::vector<procon::MoveState> SimpleBeamSearch::agentAct(){
         auto [agent_index, move_index] = value_que.top().second;
         value_que.pop();
         procon::Point moved_point = field.getAgent(side, agent_index).getAppliedPosition(move_index);
-        if(used_points.find(moved_point) != used_points.end() || set_flag[agent_index])
+        if(field.outOfRangeCheck(moved_point).first == true || used_points.find(moved_point) != used_points.end() || set_flag[agent_index])
             continue;
-        set_flag.set(agent_index);
+        if(move_index != 8)
+            set_flag.set(agent_index);
         used_points.insert(moved_point);
         return_vector.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), move_index);
     }
-    assert(static_cast<int>(set_flag.count()) == agent_count);
     return return_vector;
 }
 
