@@ -2,7 +2,6 @@
 #define GAMESIMULATOR_H
 
 #include <algorithm>
-#include <queue>
 #include <tuple>
 #include <memory>
 #include "algorithmwrapper.h"
@@ -22,14 +21,14 @@ public:
 
     bool isSimulationEnded(){const auto& turn = field->getTurn(); return turn.now == turn.final;}
 
-    static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
+    static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag);
     template<typename... Args>
-    static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args);
+    static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag, Args... args);
 
     void turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
 
 private:
-    void changeTurn();
+    void changeTurn(bool calc_score_flag);
 
     std::shared_ptr<procon::Field> field;
     std::vector<std::vector<procon::MoveState>> acts;

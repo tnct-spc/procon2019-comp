@@ -20,7 +20,7 @@ void GameSimulator::addAgentAct(bool side, const std::vector<procon::MoveState>&
     acts[side] = moves;
 }
 
-void GameSimulator::changeTurn(){
+void GameSimulator::changeTurn(bool calc_score_flag){
 
     assert(acts_flag.all());
     // 移動先 => 移動元 に逆辺を張り、トポロジカルソートをする
@@ -102,6 +102,8 @@ void GameSimulator::changeTurn(){
     }
 
     acts_flag.reset();
+    if(calc_score_flag)
+        field->calcRegionPoint();
     field->incrementTurn();
 }
 
@@ -111,11 +113,11 @@ void GameSimulator::turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std
 
     addAgentAct(0, move_1);
     addAgentAct(1, move_2);
-    changeTurn();
+    changeTurn(true);
 }
 
 template <typename... Args>
-procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, Args... args){
+procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag, Args... args){
     assert(algo_1->getSide() == false && algo_2->getSide() == true);
     static GameSimulator sim(std::forward<Args>(args)...);
     while(!sim.isSimulationEnded()){
@@ -124,11 +126,11 @@ procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> alg
         sim.addAgentAct(0, move_1);
         sim.addAgentAct(1, move_2);
 
-        sim.changeTurn();
+        sim.changeTurn(calc_score_flag);
     }
     return sim.getField();
 }
 
-procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2){
-    return runSimulation(algo_1, algo_2, procon::Point(0, 0));
+procon::Field GameSimulator::runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag){
+    return runSimulation(algo_1, algo_2, calc_score_flag, procon::Point(0, 0));
 }

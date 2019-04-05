@@ -3,6 +3,7 @@
 
 #include <bitset>
 #include <set>
+#include <queue>
 #include "utils.h"
 
 namespace procon{
@@ -34,6 +35,8 @@ public:
 
     const std::array<Score, 2>& getScores() const{return scores;}
     const Score& getScore(bool side) const{return scores[side];}
+
+    void calcRegionPoint();
 
     MoveState makeMoveState(bool side, const Point& p, int move_index) const;
 

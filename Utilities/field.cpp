@@ -44,6 +44,54 @@ void Field::setAgent(bool side, int agent_index, Point agent_data){
     agents.at(agent_index)[side] = agent_data;
 }
 
+void Field::calcRegionPoint(){
+
+    auto calc_one_side = [this](bool side){
+        std::queue<Point> point_que;
+        std::bitset<400> visited_flag;
+
+        auto is_wall = [this, side](const Point& p){return getState(p).equalSide(side);};
+
+        auto add_to_que = [this, is_wall, &point_que, &visited_flag](const Point& p){
+            if(is_wall(p) == false && visited_flag[pointToInt(p)] == false){
+                visited_flag.set(pointToInt(p));
+                point_que.emplace(p);
+            }
+        };
+
+        for(int x_index = 0; x_index < size.x; ++x_index){
+            add_to_que(Point(x_index, 0));
+            add_to_que(Point(x_index, size.y - 1));
+        }
+        for(int y_index = 1; y_index < size.y - 1; ++y_index){
+            add_to_que(Point(0, y_index));
+            add_to_que(Point(size.x - 1, y_index));
+        }
+
+        while(!point_que.empty()){
+            auto point = point_que.front();
+            point_que.pop();
+            for(int move_index = 0; move_index < 4; ++move_index){
+                auto [out_of_range, moved_pos] = outOfRangeCheck(point.getAppliedPosition(move_index));
+                if(out_of_range)
+                    continue;
+                add_to_que(moved_pos);
+            }
+        }
+        int return_value = 0;
+        for(int x_index = 0; x_index < size.x; ++x_index){
+            for(int y_index = 0; y_index < size.y; ++y_index){
+                Point point(x_index, y_index);
+                if(visited_flag[pointToInt(point)] == false && is_wall(point) == false)
+                    return_value += std::abs(getState(point).value);
+            }
+        }
+        return return_value;
+    };
+    for(int side = 0; side < 2; ++side)
+        scores[side].region = calc_one_side(side);
+}
+
 MoveState Field::makeMoveState(bool side, const Point &p, int move_index) const{
     auto [out_of_range, moved_pos] = outOfRangeCheck(p.getAppliedPosition(move_index));
     if(out_of_range)
