@@ -88,7 +88,7 @@ void GameSimulator::changeTurn(){
         const auto& after_state = field->getState(position);
 
         if(acts.at(side).at(agent_index).isDelete()){
-            if(after_state.isEmpty())
+            if(!after_state.isEmpty())
                 field->setTileEmpty(position);
         }else{
             // 敵タイルでないなら
