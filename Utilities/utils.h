@@ -83,11 +83,11 @@ namespace random{
 }
 
 template <typename F, typename F2>
-struct FixPoint{
+struct FixPointForEach{
     const F _f;
     const F2 _rec;
 
-    FixPoint(F&& f, F2&& rec) : _f(std::forward<F>(f)), _rec(std::forward<F2>(rec)){}
+    FixPointForEach(F&& f, F2&& rec) : _f(std::forward<F>(f)), _rec(std::forward<F2>(rec)){}
 
     template<typename Type>
     decltype(auto) operator()(Type&& arg) const{return _f(std::forward<Type>(arg));}
@@ -96,7 +96,7 @@ struct FixPoint{
 };
 
 template <typename F>
-decltype(auto) makeRec(F&& f){
+decltype(auto) makeForEachFunc(F&& f){
 
     constexpr auto rec = [&](auto&& f, auto&& head, auto&&... tail) -> void{
         f._f(head);
@@ -104,7 +104,7 @@ decltype(auto) makeRec(F&& f){
             f(std::forward<decltype(tail)>(tail)...);
     };
 
-    return FixPoint<F, decltype(rec)>(std::forward<F>(f), std::forward<decltype(rec)>(rec));
+    return FixPointForEach<F, decltype(rec)>(std::forward<F>(f), std::forward<decltype(rec)>(rec));
 
 }
 

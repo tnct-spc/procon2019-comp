@@ -7,7 +7,7 @@ Field csvImport(std::string path){
     assert(input_stream.good());
     std::string data;
 
-    auto comma_input = makeRec([&](auto&& head){
+    auto comma_input = makeForEachFunc([&](auto&& head){
         std::getline(input_stream, data, ',');
         head = std::stoi(data);
     });
@@ -57,7 +57,7 @@ void csvExport(std::string path, const Field& field){
     std::ofstream output_stream;
     output_stream.open(path, std::ios::out | std::ios::app);
     assert(output_stream.good());
-    auto comma_output = makeRec([&](auto&& head){output_stream << head << ",";});
+    auto comma_output = makeForEachFunc([&](auto&& head){output_stream << head << ",";});
 
     auto size = field.getSize();
     comma_output(size.x, size.y, field.getTurn().now, field.getTurn().final);
