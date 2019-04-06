@@ -8,7 +8,7 @@ GenerateRandomSimulatedData::GenerateRandomSimulatedData()
 void GenerateRandomSimulatedData::run(){
 
     std::string csv_path = QFileDialog::getOpenFileName().toStdString();
-    const procon::Field field = procon::csv::csvImport(csv_path);
+    procon::Field field = procon::csv::csvImport(csv_path);
 
     std::string save_dir = QFileDialog::getExistingDirectory().toStdString();
 
@@ -23,7 +23,10 @@ void GenerateRandomSimulatedData::run(){
     std::array<int, 3> arr;
     GameSimulator sim;
     for(int count = 0; count < make_count; ++count){
+
+        field.setTurn(procon::Turn(0, procon::random::call(30, 60)));
         sim.setField(field);
+
         for(int side = 0; side < 2; ++side)
             algo[side] = std::make_shared<TestAlgorithm>(field, side);
 
