@@ -37,9 +37,6 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user*
 
-# exported field file
-*.csv
-
 # gitkeep and data folders
 Data/GenerateRandomSiimulatedData
 !.gitkeep
