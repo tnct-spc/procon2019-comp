@@ -82,6 +82,32 @@ namespace random{
     long call(long min_value, long max_value);
 }
 
+template <typename F, typename F2>
+struct FixPointForEach{
+    const F _f;
+    const F2 _rec;
+
+    FixPointForEach(F&& f, F2&& rec) : _f(std::forward<F>(f)), _rec(std::forward<F2>(rec)){}
+
+    template<typename Type>
+    decltype(auto) operator()(Type&& arg) const{return _f(std::forward<Type>(arg));}
+    template<typename... Types>
+    decltype(auto) operator()(Types&&... args) const{return _rec(*this, std::forward<Types>(args)...);}
+};
+
+template <typename F>
+decltype(auto) makeForEachFunc(F&& f){
+
+    constexpr auto rec = [&](auto&& f, auto&& head, auto&&... tail) -> void{
+        f._f(head);
+        if(sizeof...(tail))
+            f(std::forward<decltype(tail)>(tail)...);
+    };
+
+    return FixPointForEach<F, decltype(rec)>(std::forward<F>(f), std::forward<decltype(rec)>(rec));
+
+}
+
 }
 
 #endif // UTILS_H

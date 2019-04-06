@@ -48,6 +48,12 @@ public:
 
     const Turn& getTurn() const{return turn;}
 
+    void setSize(const Point& size){this->size = size;}
+    void setTurn(const Turn& turn){this->turn = turn;}
+    void setScores(const std::array<Score, 2>& scores){this->scores = scores;}
+    void setStates(const std::vector<std::vector<FieldState>>& states){this->states = states;}
+    void setAgents(const std::vector<std::array<Point, 2>>& agents){this->agents = agents;}
+
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
     constexpr Point intToPoint(const int i) const{return Point(i / size.y, i % size.y);}
 

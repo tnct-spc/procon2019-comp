@@ -24,11 +24,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         utils.cpp \
-        field.cpp
+        field.cpp \
+    csvtranslate.cpp
 
 HEADERS += \
         utils.h \
-        field.h
+        field.h \
+    csvtranslate.h
 
 unix {
     target.path = /usr/lib

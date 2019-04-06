@@ -154,4 +154,7 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         emit signalRunFullSimulation();
     if(event->key() == Qt::Key_N)
         emit signalSimulateNextTurn();
+    if(event->key() == Qt::Key_E){
+        procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
+    }
 }
