@@ -7,11 +7,7 @@ Field csvImport(std::string path){
     assert(input_stream.good());
     std::string data;
 
-    auto comma_input = makeRec([&](auto&& comma_input, auto&& head, auto&&... tail) -> void{
-        comma_input._f2(head);
-        if(sizeof...(tail))
-            comma_input(std::forward<decltype(tail)>(tail)...);
-    }, [&](auto&& head){
+    auto comma_input = makeRec([&](auto&& head){
         std::getline(input_stream, data, ',');
         head = std::stoi(data);
     });
@@ -61,13 +57,7 @@ void csvExport(std::string path, const Field& field){
     std::ofstream output_stream;
     output_stream.open(path, std::ios::out | std::ios::app);
     assert(output_stream.good());
-    auto comma_output = makeRec([&](auto&& comma_output, auto head, auto... tail) -> void{
-        comma_output._f2(head);
-        if(sizeof...(tail))
-            comma_output(std::forward<decltype(tail)>(tail)...);
-    }, [&](auto head){
-        output_stream << head << ",";
-    });
+    auto comma_output = makeRec([&](auto&& head){output_stream << head << ",";});
 
     auto size = field.getSize();
     comma_output(size.x, size.y, field.getTurn().now, field.getTurn().final);
