@@ -7,6 +7,12 @@ GameSimulator::GameSimulator(Args... args) :
 {
 }
 
+GameSimulator::GameSimulator(const procon::Field& field) :
+    field(std::make_shared<procon::Field>(field)),
+    acts(2, std::vector<procon::MoveState>(this->field->getAgentCount()))
+{
+}
+
 GameSimulator::GameSimulator() :
     field(std::make_shared<procon::Field>(procon::Field::generateRandomField())),
     acts(2, std::vector<procon::MoveState>(field->getAgentCount()))
@@ -107,13 +113,13 @@ void GameSimulator::changeTurn(bool calc_score_flag){
     field->incrementTurn();
 }
 
-void GameSimulator::turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2){
+void GameSimulator::turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag){
     auto move_1 = algo_1->agentAct();
     auto move_2 = algo_2->agentAct();
 
     addAgentAct(0, move_1);
     addAgentAct(1, move_2);
-    changeTurn(true);
+    changeTurn(calc_score_flag);
 }
 
 template <typename... Args>

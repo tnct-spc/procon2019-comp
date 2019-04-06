@@ -11,6 +11,7 @@ class GameSimulator
 {
 public:
     GameSimulator();
+    GameSimulator(const procon::Field& field);
     template<typename... Args>
     GameSimulator(Args... args);
 
@@ -25,7 +26,7 @@ public:
     template<typename... Args>
     static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag, Args... args);
 
-    void turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2);
+    void turnSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag);
 
     void setField(const procon::Field& field){this->field = std::make_shared<procon::Field>(field);}
 
