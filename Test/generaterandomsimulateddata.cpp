@@ -56,4 +56,5 @@ void GenerateRandomSimulatedData::run(){
         path += ".csv";
         procon::csv::csvExport(path, sim.getField());
     }
+    QCoreApplication::exit(0);
 }

@@ -1,6 +1,7 @@
 #ifndef GENERATERANDOMSIMULATEDDATA_H
 #define GENERATERANDOMSIMULATEDDATA_H
 
+#include <QCoreApplication>
 #include <QFileDialog>
 #include "csvtranslate.h"
 #include "gamesimulator.h"
