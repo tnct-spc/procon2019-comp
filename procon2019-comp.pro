@@ -6,4 +6,5 @@ SUBDIRS += \
         Algorithms \
         Visualizer \
         GameManager \
-        Takao
+        Takao \
+    Test
