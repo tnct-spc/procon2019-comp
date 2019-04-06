@@ -61,7 +61,7 @@ void GameManager::runSimulator(){
 bool GameManager::simulateNextTurn(){
     if(game->isSimulationEnded())
         return false;
-    game->turnSimulation(algo.at(0), algo.at(1));
+    game->turnSimulation(algo.at(0), algo.at(1), true);
     visualizer.update();
     visualizer.repaint();
     return true;

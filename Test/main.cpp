@@ -1,9 +1,10 @@
-#include <iostream>
+#include <QApplication>
+#include "generaterandomsimulateddata.h"
 
-using namespace std;
-
-int main()
+int main(int argc, char *argv[])
 {
-    cout << "Hello World!" << endl;
+    QApplication a(argc, argv);
+    GenerateRandomSimulatedData test;
+    test.run();
     return 0;
 }
