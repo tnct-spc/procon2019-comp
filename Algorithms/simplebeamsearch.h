@@ -12,7 +12,7 @@ class SimpleBeamSearch : public AlgorithmWrapper
 {
     using AlgorithmWrapper::AlgorithmWrapper;
 public:
-    std::vector<procon::MoveState> agentAct();
+    std::vector<procon::MoveState> agentAct() override;
 
 private:
 

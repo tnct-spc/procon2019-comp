@@ -8,7 +8,7 @@ class BoardDivideAlgorithm : public AlgorithmWrapper
 {
     using AlgorithmWrapper::AlgorithmWrapper;
 public:
-    std::vector<procon::MoveState> agentAct();
+    std::vector<procon::MoveState> agentAct() override;
 
 private:
     // チェビジェフ距離が[0, always_check_dist)のものを最寄りエージェントに関わらず探索候補にする
