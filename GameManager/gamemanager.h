@@ -6,6 +6,7 @@
 
 #include "testalgorithm.h"
 #include "simplebeamsearch.h"
+#include "boarddividealgorithm.h"
 
 class GameManager : public QObject
 {
