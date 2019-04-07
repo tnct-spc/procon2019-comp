@@ -25,6 +25,8 @@ std::vector<procon::MoveState> BoardDivideAlgorithm::agentAct(){
             add_to_que(point.getAppliedPosition(move_index), agent_index);
     }
 
+    std::priority_queue<std::tuple<double, unsigned long, int, procon::Point>> total_que;
+
     auto calc_one_agent = [&](int agent_index){
         const auto& start_point = field.getAgent(side, agent_index);
         std::vector<std::vector<int>> tile_scores(size.x, std::vector<int>(size.y, 0));
@@ -88,11 +90,30 @@ std::vector<procon::MoveState> BoardDivideAlgorithm::agentAct(){
             now_que = std::move(next_que);
             next_que = std::move(next_next_que);
         }
-        return (static_cast<int>(now_que.top().second.size()) == 1) ? 8 : now_que.top().second.at(0).getMoveIndex(now_que.top().second.at(1));
+        while(!now_que.empty()){
+            auto& result = now_que.top();
+            if(result.second.size() >= 2)
+                total_que.emplace(result.first, procon::random::call(), agent_index, result.second.at(1));
+            now_que.pop();
+        }
     };
-    std::vector<procon::MoveState> moves(agent_count);
+
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
-        moves.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), calc_one_agent(agent_index));
+        calc_one_agent(agent_index);
+
+    std::vector<procon::MoveState> moves(agent_count);
+
+    std::set<procon::Point> used_point;
+    std::bitset<8> agent_set_flag;
+    while(!total_que.empty()){
+        auto [score, random_value, agent_index, point] = total_que.top();
+        total_que.pop();
+        if(agent_set_flag[agent_index] || used_point.find(point) != used_point.end())
+            continue;
+        used_point.emplace(point);
+        const auto& start_point = field.getAgent(side, agent_index);
+        moves.at(agent_index) = field.makeMoveState(side, start_point, start_point.getMoveIndex(point));
+    }
 
     return moves;
 
