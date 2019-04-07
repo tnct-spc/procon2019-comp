@@ -110,8 +110,10 @@ std::vector<procon::MoveState> BoardDivideAlgorithm::agentAct(){
         total_que.pop();
         if(agent_set_flag[agent_index] || used_point.find(point) != used_point.end())
             continue;
-        used_point.emplace(point);
+        agent_set_flag.set(agent_index);
         const auto& start_point = field.getAgent(side, agent_index);
+        used_point.emplace(start_point);
+        used_point.emplace(point);
         moves.at(agent_index) = field.makeMoveState(side, start_point, start_point.getMoveIndex(point));
     }
 
