@@ -67,12 +67,15 @@ std::vector<procon::MoveState> BoardDivideAlgorithm::agentAct(){
 
                     bool conflict_flag = (depth == 0 && enemy_positions.find(moved_point) != enemy_positions.end());
 
+                    if(conflict_flag)
+                        continue;
+
                     auto new_moves = moves;
                     new_moves.emplace_back(moved_point);
 
                     bool already_moved = (change_points.find(moved_point) != change_points.end());
                     auto state = field.getState(moved_point);
-                    auto tile_score = tile_scores.at(moved_point.x).at(moved_point.y) * (conflict_flag ? 0.5 : 1) * (depth ? 1 : 2);
+                    auto tile_score = tile_scores.at(moved_point.x).at(moved_point.y) * (depth ? 1 : 2);
 
                     if(state.isEmpty() == true && already_moved == false)
                         next_que.emplace(value + tile_score, new_moves);
