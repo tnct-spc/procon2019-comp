@@ -26,19 +26,24 @@ std::vector<procon::MoveState> BoardDivideAlgorithm::agentAct(){
     }
 
     auto calc_one_agent = [&](int agent_index){
+        const auto& start_point = field.getAgent(side, agent_index);
         std::vector<std::vector<int>> tile_scores(size.x, std::vector<int>(size.y, 0));
         for(int x_index = 0; x_index < size.x; ++x_index)
             for(int y_index = 0; y_index < size.y; ++y_index){
-                if(near_agents.at(x_index).at(y_index) == agent_index)
+                if(std::max(std::abs(start_point.x - x_index), std::abs(start_point.y - y_index)) < always_check_dist || near_agents.at(x_index).at(y_index) == agent_index)
                     tile_scores.at(x_index).at(y_index) += std::max(field.getState(x_index, y_index).value, 0);
             }
         // ここからは単純にBFSをすればよい
         // SimpleBeamSearchのほぼ移植なので、気が向いたらコピペ実装を改善する
 
+        std::set<procon::Point> enemy_positions;
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+            enemy_positions.emplace(field.getAgent(!side, agent_index));
+
         using que_type = std::pair<double, std::vector<procon::Point>>;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> next_que;
-        now_que.emplace(0.0, std::vector<procon::Point>(1, field.getAgent(side, agent_index)));
+        now_que.emplace(0.0, std::vector<procon::Point>(1, start_point));
 
         for(int depth = 0; depth < max_depth; ++depth){
             std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> next_next_que;
@@ -57,12 +62,15 @@ std::vector<procon::MoveState> BoardDivideAlgorithm::agentAct(){
                     procon::Point moved_point = now_point.getAppliedPosition(move_index);
                     if(field.outOfRangeCheck(moved_point).first == true)
                         continue;
+
+                    bool conflict_flag = (depth == 0 && enemy_positions.find(moved_point) != enemy_positions.end());
+
                     auto new_moves = moves;
                     new_moves.emplace_back(moved_point);
 
                     bool already_moved = (change_points.find(moved_point) != change_points.end());
                     auto state = field.getState(moved_point);
-                    auto tile_score = tile_scores.at(moved_point.x).at(moved_point.y);
+                    auto tile_score = tile_scores.at(moved_point.x).at(moved_point.y) * (conflict_flag ? 0.5 : 1);
 
                     if(state.isEmpty() == true && already_moved == false)
                         next_que.emplace(value + tile_score, new_moves);
@@ -74,6 +82,8 @@ std::vector<procon::MoveState> BoardDivideAlgorithm::agentAct(){
 
                 while(static_cast<int>(next_que.size()) > max_width)
                     next_que.pop();
+                while(static_cast<int>(next_next_que.size()) > max_width)
+                    next_next_que.pop();
             }
             now_que = std::move(next_que);
             next_que = std::move(next_next_que);
