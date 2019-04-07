@@ -27,12 +27,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         algorithmwrapper.cpp \
         testalgorithm.cpp \
-    simplebeamsearch.cpp
+    simplebeamsearch.cpp \
+    boarddividealgorithm.cpp
 
 HEADERS += \
         algorithmwrapper.h \
         testalgorithm.h \
-    simplebeamsearch.h
+    simplebeamsearch.h \
+    boarddividealgorithm.h
 
 unix {
     target.path = /usr/lib
