@@ -85,6 +85,8 @@ flow Dinic<flow>::dfs(int point_index, const int t_index, flow f) {
 
 template<typename flow>
 flow Dinic<flow>::calcMaxFlow(int s_index, int t_index){
+    assert(0 <= s_index && s_index < point_count);
+    assert(0 <= t_index && t_index < point_count);
     flow max_flow = 0;
     while(bfs(s_index, t_index)){
         iter.assign(graph.size(), 0);

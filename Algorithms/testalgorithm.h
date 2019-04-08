@@ -1,6 +1,7 @@
 #ifndef TESTALGORITHM_H
 #define TESTALGORITHM_H
 
+#include <map>
 #include "algorithmwrapper.h"
 #include "simplebeamsearch.h"
 
@@ -15,9 +16,6 @@ public:
 private:
     // SimpleBeamSearchベース、コンフリクトを発生させられる場合に優先的にそれをします
     std::vector<procon::MoveState> testMakeConflict();
-
-    const int max_depth = 10;
-    const int max_width = 30;
 };
 
 #endif // TESTALGORITHM_H

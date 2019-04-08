@@ -9,6 +9,11 @@ std::vector<procon::MoveState> TestAlgorithm::agentAct(){
 
 std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
 
+    const int const_max_depth = 10;
+    const int max_width = 30;
+    const double max_value = 1e9;
+    const double inf_cost = 1e15;
+
     SimpleBeamSearch enemy(field, !side);
     std::vector<procon::MoveState> moves(enemy.agentAct());
 
@@ -36,12 +41,13 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
 
     // 相手の移動候補マスを除外、相手のいるマスを除外した上で、各エージェント毎にBFSをする
     auto calc_one_agent = [&](int agent_index, int first_move){
-        int max_depth = std::min(this->max_depth, field.getTurn().final - field.getTurn().now) - 1;
+        // SimpleBeamSearchのほぼ移植なので、気が向いたらコピペ実装を改善する ってずっと言ってる
+        int max_depth = std::min(const_max_depth, field.getTurn().final - field.getTurn().now) - 1;
         const auto& start_point = field.getAgent(side, agent_index).getAppliedPosition(first_move);
 
         if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end() || enemy_conflict_points.find(start_point) != enemy_conflict_points.end())
-            return -1e9;
-        // SimpleBeamSearchのほぼ移植なので、気が向いたらコピペ実装を改善する ってずっと言ってる
+            // 絶対に選ばれてはいけないため、ペナルティを設ける
+            return -inf_cost;
 
         using que_type = std::pair<double, std::vector<procon::Point>>;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
@@ -94,6 +100,9 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
             now_que = std::move(next_que);
             next_que = std::move(next_next_que);
         }
+        // デフォルトでgreaterなため、pri_queの末尾の値が最も重要な値になる
+        while(now_que.size() >= 2)
+            now_que.pop();
         return now_que.top().first;
     };
 
@@ -103,6 +112,37 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
             scores.at(agent_index).at(first_move) = calc_one_agent(agent_index, first_move);
 
     // マッチング可能な候補に対して辺を張ると、適当に燃やす埋める問題に帰着することができる
-    // s側を「適当に動かした時の辺」、t側を「コンフリクト解消に
+    procon::Dinic<double> max_flow(agent_count * 8 + 2);
+    std::map<procon::Point, std::vector<int>> field_map;
+    int start_index = agent_count * 8;
+    int end_index = start_index + 1;
+    for(int agent_index = 0; agent_index < 8; ++agent_index){
+        for(int first_move = 0; first_move < 8; ++first_move){
+
+            int index = agent_index * first_move;
+            const auto& agent_pos = field.getAgent(side, agent_index).getAppliedPosition(first_move);
+
+            // 行きの辺が消去されてはいけないので、この辺のコストは最大値にする
+            max_flow.addEdge(start_index, agent_index * 8 + first_move, inf_cost);
+
+            assert(max_value >= scores.at(agent_index).at(first_move));
+            max_flow.addEdge(index, end_index, max_value - scores.at(agent_index).at(first_move));
+
+            // 同じ位置を複数回踏む必要はないため、ペナルティを設ける
+            for(auto& same_point_index : field_map[agent_pos]){
+                max_flow.addEdge(index, same_point_index, inf_cost);
+                max_flow.addEdge(same_point_index, index, inf_cost);
+            }
+
+            // 同じエージェントが複数の動作を同時に行う事はできないため、ペナルティを設ける
+            for(int target_move = first_move + 1; target_move < 8; ++target_move){
+                max_flow.addEdge(index, agent_index * 8 + target_move, inf_cost);
+                max_flow.addEdge(agent_index * 8 + target_move, index, inf_cost);
+            }
+        }
+    }
+    max_flow.calcMaxFlow(start_index, end_index);
+
+    return std::vector<procon::MoveState>(field.getAgentCount());
 
 }
