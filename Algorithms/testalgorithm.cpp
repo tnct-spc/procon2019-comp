@@ -52,7 +52,8 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
         using que_type = std::pair<double, std::vector<procon::Point>>;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> next_que;
-        now_que.emplace(tile_scores.at(start_point.x).at(start_point.y) * 2, std::vector<procon::Point>(1, start_point));
+        auto first_vec = {field.getAgent(side, agent_index), start_point};
+        now_que.emplace(tile_scores.at(start_point.x).at(start_point.y) * 2, first_vec);
 
         for(int depth = 0; depth < max_depth - 1; ++depth){
             std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> next_next_que;
