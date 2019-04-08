@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <vector>
+#include <queue>
 #include <array>
 #include <limits>
 #include <cassert>
@@ -81,6 +82,27 @@ namespace random{
     // 閉区間での設定
     long call(long min_value, long max_value);
 }
+
+template<typename flow>
+struct Dinic{
+    const flow INF;
+    struct Edge{
+        Edge(int to, flow cap, int rev, bool is_rev) : to(to), cap(cap), rev(rev), is_rev(is_rev){}
+        int to;
+        flow cap;
+        int rev;
+        bool is_rev;
+    };
+    int point_count;
+    std::vector<std::vector<Edge>> graph;
+    std::vector<int> min_cost, iter;
+
+    Dinic(int point_count) : INF(std::numeric_limits<flow>::max()), point_count(point_count), graph(point_count){};
+    void addEdge(int from, int to, flow cap);
+    bool bfs(int s_index, int t_index);
+    flow dfs(int point_index, const int t_index, flow f);
+    flow calcMaxFlow(int s_index, int t_index);
+};
 
 template <typename F, typename F2>
 struct FixPointForEach{
