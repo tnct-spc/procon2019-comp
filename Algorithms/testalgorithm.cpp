@@ -33,7 +33,7 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
     for(int x_index = 0; x_index < size.x; ++x_index)
         for(int y_index = 0; y_index < size.y; ++y_index){
             if(enemy_agent_points.find(procon::Point(x_index, y_index)) == enemy_agent_points.end() && enemy_conflict_points.find(procon::Point(x_index, y_index)) == enemy_conflict_points.end())
-                tile_scores.at(x_index).at(y_index) = std::max(field.getState(x_index, y_index).value, 0);
+                tile_scores.at(x_index).at(y_index) = std::max(field.getState(x_index, y_index).equalSide(side) ? 0 : field.getState(x_index, y_index).value, 0);
             else
                 tile_scores.at(x_index).at(y_index) = -1e3;
         }
@@ -47,7 +47,7 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
         if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end())
             return -1e9;
         if(enemy_conflict_points.find(start_point) != enemy_conflict_points.end())
-            return 1e6;
+            return -1e6;
 
         using que_type = std::pair<double, std::vector<procon::Point>>;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
@@ -150,10 +150,17 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
     std::vector<procon::MoveState> ret_moves(agent_count);
 
     auto move_indexes = matching_que.top().second;
+
+    std::cout << matching_que.top().first << " : ";
+    for(auto& move : move_indexes)
+        std::cout << move << " ";
+    std::cout << std::endl;
+
     for(int agent_index = 0; agent_index < agent_count; ++agent_index){
         int move_index = move_indexes.at(agent_index);
         auto agent_pos = field.getAgent(side, agent_index);
         ret_moves.at(agent_index) = field.makeMoveState(side, agent_pos, move_index);
+
     }
 
     return ret_moves;
