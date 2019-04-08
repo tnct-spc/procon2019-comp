@@ -70,9 +70,9 @@ bool Dinic<flow>::bfs(int s_index, int t_index){
 template<typename flow>
 flow Dinic<flow>::dfs(int point_index, const int t_index, flow f) {
     if(point_index == t_index) return f;
-    for(int &i = iter.at(point_index); i < graph.at(point_index).size(); i++){
-        Edge &edge = graph.at(point_index).at(i);
-        if(edge.cap > 0 && min_cost.at(point_index) < min_cost[edge.to]){
+    for(int& i = iter.at(point_index); i < graph.at(point_index).size(); i++){
+        Edge& edge = graph.at(point_index).at(i);
+        if(edge.cap > 0 && min_cost.at(point_index) < min_cost.at(edge.to)){
             flow dfs_ret = dfs(edge.to, t_index, std::min(f, edge.cap));
             if(dfs_ret > 0){
                 edge.cap -= dfs_ret;
@@ -97,9 +97,6 @@ flow Dinic<flow>::calcMaxFlow(int s_index, int t_index){
     }
     return max_flow;
 }
-
-template void Dinic<long double>::addEdge(int, int, long double);
-template long double Dinic<long double>::calcMaxFlow(int, int);
 
 namespace random{
 

@@ -1,7 +1,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <iostream>
 #include <vector>
+#include <algorithm>
+#include <unordered_set>
 #include <queue>
 #include <array>
 #include <limits>

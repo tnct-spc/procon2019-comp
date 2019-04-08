@@ -1,7 +1,6 @@
 #ifndef TESTALGORITHM_H
 #define TESTALGORITHM_H
 
-#include <iostream>
 #include <map>
 #include "algorithmwrapper.h"
 #include "simplebeamsearch.h"
