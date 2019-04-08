@@ -10,7 +10,8 @@ std::vector<procon::MoveState> TestAlgorithm::agentAct(){
 std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
 
     const int const_max_depth = 10;
-    const int max_width = 30;
+    const int max_width_1 = 30;
+    const int max_width_2 = 30;
 
     SimpleBeamSearch enemy(field, !side);
     std::vector<procon::MoveState> moves(enemy.agentAct());
@@ -37,17 +38,16 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
                 tile_scores.at(x_index).at(y_index) = -1e3;
         }
 
-    int invalid_move_count = 0;
     // 相手の移動候補マスを除外、相手のいるマスを除外した上で、各エージェント毎にBFSをする
     auto calc_one_agent = [&](int agent_index, int first_move){
         // SimpleBeamSearchのほぼ移植なので、気が向いたらコピペ実装を改善する ってずっと言ってる
         int max_depth = std::min(const_max_depth, field.getTurn().final - field.getTurn().now) - 1;
         const auto& start_point = field.getAgent(side, agent_index).getAppliedPosition(first_move);
 
-        if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end() || enemy_conflict_points.find(start_point) != enemy_conflict_points.end()){
-            ++invalid_move_count;
-            return static_cast<double>(-1e9);
-        }
+        if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end())
+            return -1e9;
+        if(enemy_conflict_points.find(start_point) != enemy_conflict_points.end())
+            return 1e6;
 
         using que_type = std::pair<double, std::vector<procon::Point>>;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
@@ -93,9 +93,9 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
                         next_next_que.emplace(value + 2 * tile_score, new_moves);
                 }
 
-                while(static_cast<int>(next_que.size()) > max_width)
+                while(static_cast<int>(next_que.size()) > max_width_1)
                     next_que.pop();
-                while(static_cast<int>(next_next_que.size()) > max_width)
+                while(static_cast<int>(next_next_que.size()) > max_width_1)
                     next_next_que.pop();
             }
             now_que = std::move(next_que);
@@ -117,6 +117,45 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
     // と思っていたのですが、制約条件の都合で帰着できないらしい？(二部グラフであるという性質を使えばいけるかも？)
     // とりあえず諦めて、素直にbeamsearchを書きます
 
-    return std::vector<procon::MoveState>(field.getAgentCount());
+    using matching_que_type = std::pair<double, std::vector<int>>;
+    std::priority_queue<matching_que_type, std::vector<matching_que_type>, std::greater<matching_que_type>> matching_que;
+    matching_que.emplace(0.0, std::vector<int>(0));
+
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+        decltype(matching_que) next_matching_que;
+        while(!matching_que.empty()){
+            std::set<procon::Point> used_points;
+            auto [score, moves] = matching_que.top();
+            matching_que.pop();
+            for(int index = 0; index < agent_index; ++index){
+                auto point = field.getAgent(side, index).getAppliedPosition(moves.at(index));
+                used_points.emplace(point);
+            }
+            for(int move_index = 0; move_index < 8; ++move_index){
+                auto point = field.getAgent(side, agent_index).getAppliedPosition(move_index);
+                if(field.outOfRangeCheck(point).first == true || used_points.find(point) != used_points.end())
+                    continue;
+                auto after_moves = moves;
+                after_moves.emplace_back(move_index);
+                next_matching_que.emplace(score + scores.at(agent_index).at(move_index), after_moves);
+            }
+            while(static_cast<int>(next_matching_que.size()) > max_width_2)
+                next_matching_que.pop();
+        }
+        matching_que = std::move(next_matching_que);
+    }
+    while(static_cast<int>(matching_que.size()) >= 2)
+        matching_que.pop();
+
+    std::vector<procon::MoveState> ret_moves(agent_count);
+
+    auto move_indexes = matching_que.top().second;
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+        int move_index = move_indexes.at(agent_index);
+        auto agent_pos = field.getAgent(side, agent_index);
+        ret_moves.at(agent_index) = field.makeMoveState(side, agent_pos, move_index);
+    }
+
+    return ret_moves;
 
 }
