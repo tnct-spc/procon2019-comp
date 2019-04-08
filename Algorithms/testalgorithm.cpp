@@ -11,8 +11,8 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
 
     const int const_max_depth = 10;
     const int max_width = 30;
-    const double max_value = 1e9;
-    const double inf_cost = 1e15;
+    const long double max_value = 1e9;
+    const long double inf_cost = 1e15;
 
     SimpleBeamSearch enemy(field, !side);
     std::vector<procon::MoveState> moves(enemy.agentAct());
@@ -39,17 +39,19 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
                 tile_scores.at(x_index).at(y_index) = -1e3;
         }
 
+    int invalid_move_count = 0;
     // 相手の移動候補マスを除外、相手のいるマスを除外した上で、各エージェント毎にBFSをする
     auto calc_one_agent = [&](int agent_index, int first_move){
         // SimpleBeamSearchのほぼ移植なので、気が向いたらコピペ実装を改善する ってずっと言ってる
         int max_depth = std::min(const_max_depth, field.getTurn().final - field.getTurn().now) - 1;
         const auto& start_point = field.getAgent(side, agent_index).getAppliedPosition(first_move);
 
-        if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end() || enemy_conflict_points.find(start_point) != enemy_conflict_points.end())
-            // 絶対に選ばれてはいけないため、ペナルティを設ける
-            return -inf_cost;
+        if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end() || enemy_conflict_points.find(start_point) != enemy_conflict_points.end()){
+            ++invalid_move_count;
+            return static_cast<long double>(-inf_cost);
+        }
 
-        using que_type = std::pair<double, std::vector<procon::Point>>;
+        using que_type = std::pair<long double, std::vector<procon::Point>>;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> next_que;
         auto first_vec = {field.getAgent(side, agent_index), start_point};
@@ -107,17 +109,17 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
         return now_que.top().first;
     };
 
-    std::vector<std::vector<double>> scores(agent_count, std::vector<double>(8));
+    std::vector<std::vector<long double>> scores(agent_count, std::vector<long double>(8));
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         for(int first_move = 0; first_move < 8; ++first_move)
             scores.at(agent_index).at(first_move) = calc_one_agent(agent_index, first_move);
 
     // マッチング可能な候補に対して辺を張ると、適当に燃やす埋める問題に帰着することができる
-    procon::Dinic<double> max_flow(agent_count * 8 + 2);
+    procon::Dinic<long double> max_flow(agent_count * 8 + 2);
     std::map<procon::Point, std::vector<int>> field_map;
     int start_index = agent_count * 8;
     int end_index = start_index + 1;
-    for(int agent_index = 0; agent_index < 8; ++agent_index){
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index){
         for(int first_move = 0; first_move < 8; ++first_move){
 
             int index = agent_index * first_move;
@@ -135,6 +137,8 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
                 max_flow.addEdge(same_point_index, index, inf_cost);
             }
 
+            field_map[agent_pos].emplace_back(index);
+
             // 同じエージェントが複数の動作を同時に行う事はできないため、ペナルティを設ける
             for(int target_move = first_move + 1; target_move < 8; ++target_move){
                 max_flow.addEdge(index, agent_index * 8 + target_move, inf_cost);
@@ -142,7 +146,17 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
             }
         }
     }
-    max_flow.calcMaxFlow(start_index, end_index);
+    auto max_f = max_flow.calcMaxFlow(start_index, end_index);
+    std::cout << "max advantage : " << invalid_move_count * inf_cost + (long double)(8) * agent_count * max_value - max_f << std::endl;
+
+    for(auto& edge : max_flow.graph.at(start_index))
+        if(edge.is_rev == false){
+            auto& rev = max_flow.graph[edge.to][edge.rev];
+            // std::cout << start_index << " -> " << edge.to << " : " << rev.cap << " / " << edge.cap + rev.cap << std::endl;
+            std::cout << start_index << " -> " << edge.to << " : " << max_value - rev.cap << " / " << max_value - (edge.cap + rev.cap) << std::endl;
+            if(edge.to % 8 == 7)
+                std::cout << std::endl;
+        }
 
     return std::vector<procon::MoveState>(field.getAgentCount());
 

@@ -44,6 +44,7 @@ template<typename flow>
 void Dinic<flow>::addEdge(int from, int to, flow cap){
     assert(0 <= from && from < point_count);
     assert(0 <= to && to < point_count);
+    assert(cap >= 0);
     graph.at(from).emplace_back(to, cap, graph.at(to).size(), false);
     graph.at(to).emplace_back(from, 0, graph.at(from).size() - 1, true);
 }
@@ -96,6 +97,9 @@ flow Dinic<flow>::calcMaxFlow(int s_index, int t_index){
     }
     return max_flow;
 }
+
+template void Dinic<long double>::addEdge(int, int, long double);
+template long double Dinic<long double>::calcMaxFlow(int, int);
 
 namespace random{
 
