@@ -47,8 +47,15 @@ std::vector<procon::MoveState> CheckAllPatternGreedy::agentAct(){
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
             agent_moves.at(agent_index) = (mask >> (3 * agent_index)) & 7;
             auto after_move = field.getAgent(side, agent_index).getAppliedPosition(agent_moves.at(agent_index));
-            auto score = calc_score_func(after_move, 0);
-            score_sum += score;
+
+            if(field.outOfRangeCheck(after_move).first)
+                continue;
+            else{
+                const auto& state = field.getState(after_move);
+                double score = state.tile * (state.equalSide(!side) ? 2 : 1);
+                score += calc_score_func(after_move, state.equalSide(!side) + 1);
+                score_sum += score;
+            }
         }
         if(max_score <= score_sum){
             max_score = score_sum;
