@@ -151,11 +151,6 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
 
     auto move_indexes = matching_que.top().second;
 
-    std::cout << matching_que.top().first << " : ";
-    for(auto& move : move_indexes)
-        std::cout << move << " ";
-    std::cout << std::endl;
-
     for(int agent_index = 0; agent_index < agent_count; ++agent_index){
         int move_index = move_indexes.at(agent_index);
         auto agent_pos = field.getAgent(side, agent_index);
