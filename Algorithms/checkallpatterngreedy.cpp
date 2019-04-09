@@ -51,7 +51,7 @@ std::vector<procon::MoveState> CheckAllPatternGreedy::agentAct(){
                 continue;
             else{
                 const auto& state = field.getState(after_move);
-                double score = state.tile * (state.equalSide(!side) ? 2 : 1);
+                double score = state.value * (state.equalSide(!side) ? 2 : (state.equalSide(side) ? 0 : 1));
                 score += calc_score_func(after_move, state.equalSide(!side) + 1);
                 score_sum += score;
             }
