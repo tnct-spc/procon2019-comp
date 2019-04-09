@@ -7,7 +7,7 @@ std::vector<procon::MoveState> TestAlgorithm::agentAct(){
     // return std::vector<procon::MoveState>(field.getAgentCount());
 }
 
-std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
+std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(int conflict_flag){
 
     const int const_max_depth = 10;
     const int max_width_1 = 30;
@@ -47,6 +47,10 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
         if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end())
             return -1e9;
         if(enemy_conflict_points.find(start_point) != enemy_conflict_points.end()){
+            if(conflict_flag == 1)
+                return 1e6;
+            else if(conflict_flag == 2)
+                return -1e6;
             bool has_advantage = field.getScore(side).getSum() >= field.getScore(!side).getSum();
             return has_advantage ? 1e6 : -1e6;
         }

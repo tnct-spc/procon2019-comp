@@ -15,7 +15,8 @@ public:
 
 private:
     // SimpleBeamSearchベース、コンフリクトを発生させられる場合に優先的にそれをします
-    std::vector<procon::MoveState> testMakeConflict();
+    // conflict_falgが0なら得点によって動的に決める、1ならコンフリクトさせにいく、2ならコンフリクトさせない
+    std::vector<procon::MoveState> testMakeConflict(int conflict_flag = 0);
 };
 
 #endif // TESTALGORITHM_H
