@@ -39,14 +39,13 @@ std::vector<procon::MoveState> CheckAllPatternGreedy::agentAct(){
     double max_score = -1e18;
     int max_mask = 0;
 
-    std::vector<int> agent_moves(agent_count);
     for(int mask = 0; mask < (1 << (3 * agent_count)); ++mask){
 
         double score_sum = 0.0;
 
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-            agent_moves.at(agent_index) = (mask >> (3 * agent_index)) & 7;
-            auto after_move = field.getAgent(side, agent_index).getAppliedPosition(agent_moves.at(agent_index));
+            int move_index = (mask >> (3 * agent_index)) & 7;
+            auto after_move = field.getAgent(side, agent_index).getAppliedPosition(move_index);
 
             if(field.outOfRangeCheck(after_move).first)
                 continue;
