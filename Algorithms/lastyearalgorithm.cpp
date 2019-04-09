@@ -56,6 +56,7 @@ std::vector<procon::MoveState> LastYearAlgorithm::agentAct(){
         return pena;
     };
 
+    // ここの更新パートをどうにかする
     for(auto& pos0 : poses_0)
         for(auto& pos1 : poses_1){
 
@@ -93,9 +94,9 @@ void LastYearAlgorithm::setParams(LastYearAlgorithm::Parameters& param){
 std::vector<std::pair<int, std::pair<int,int>>> LastYearAlgorithm::calcSingleAgent(int agent){
 
     // [0,maxdepth]
-    int maxdepth = std::min(params.maxdepth_max, field.getFinalTurn() - field.getTurnCount());
+    int maxdepth = std::min(params.maxdepth_max, field.getTurn().final - field.getTurn().now);
 
-    std::pair<int,int> agent_pos = field.getAgent(side, agent);
+    const procon::Point& agent_pos = field.getAgent(side, agent);
 
     std::vector<std::vector<Edge>> edges = calcDijkStra(getPosValue(agent_pos), maxdepth, agent);
 
