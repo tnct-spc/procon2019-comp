@@ -10,14 +10,14 @@ LastYearAlgorithm::LastYearAlgorithm(const procon::Field& field, bool side) :
 
 std::vector<procon::MoveState> LastYearAlgorithm::agentAct(){
 
-    std::vector<std::pair<int ,std::pair<int,int>>> poses_0 = calcSingleAgent(0);
-    std::vector<std::pair<int ,std::pair<int,int>>> poses_1 = calcSingleAgent(1);
+    std::vector<std::vector<std::pair<int ,std::pair<int,int>>>> poses(agent_count);
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+        poses.at(agent_index) = calcSingleAgent(agent_index);
 
     std::pair<std::pair<int,int> , std::pair<int,int>> ans;
     int max_adv = -1e9;
 
-    std::map<std::pair<int,int> , std::vector<std::vector<std::vector<int>>>> agent0_distributions;
-    std::map<std::pair<int,int> , std::vector<std::vector<std::vector<int>>>> agent1_distributions;
+    std::vector<std::map<std::pair<int,int> , std::vector<std::vector<std::vector<int>>>>> agent_distributions(agent_count);
 
     auto calc_distribution = [=](std::map<std::pair<int,int> , std::vector<std::vector<std::vector<int>>>>& agent_distribution, std::map<std::pair<int,int>, MapElement> route_map){
         for(auto element : route_map){
@@ -34,19 +34,24 @@ std::vector<procon::MoveState> LastYearAlgorithm::agentAct(){
         }
     };
 
-    if(params.fix_conflict)calc_distribution(agent0_distributions, route_map_agent0);
-    if(params.fix_conflict)calc_distribution(agent1_distributions, route_map_agent1);
+    if(params.fix_conflict)
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+            calc_distribution(agent_distributions.at(agent_index), route_map_agent0);
 
     auto calc_pena = [&](std::pair<int,int> pos_agent0, std::pair<int,int> pos_agent1){
-        std::vector<std::vector<std::vector<int>>> agent0_distribution = agent0_distributions[pos_agent0];
-        std::vector<std::vector<std::vector<int>>> agent1_distribution = agent1_distributions[pos_agent1];
-        long long pena = 0;
-        for(int depth = 0; depth < std::min(agent0_distribution.size(), agent1_distribution.size()); depth++){
-            for(int x = 0;x < 12; x++){
-                for(int y = 0;y < 12; y++){
-                    pena += agent0_distribution.at(depth).at(x).at(y) * agent1_distribution.at(depth).at(x).at(y) / (depth+1);
+        std::vector<std::vector<std::vector<std::vector<int>>>> agent_distribution(agent_count);
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+            agent_distribution.at(agent_index) = agent_distributions.at(agent_index)[pos_agent0];
+        double pena = 0.0;
+        int min_depth = (*std::min_element(agent_distribution.begin(), agent_distribution.end(), [](const std::vector<std::vector<std::vector<int>>>& c){return c.size();})).size();
+        for(int depth = 0; depth < min_depth; depth++){
+            for(int x = 0; x < field.getSize().x; x++)
+                for(int y = 0; y < field.getSize().y; y++){
+                    double pena_value = 1.0 / (depth + 1);
+                    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+                        pena_value *= agent_distribution.at(agent_index).at(depth).at(x).at(y);
+                    pena += pena_value;
                 }
-            }
         }
         return pena;
     };
