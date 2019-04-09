@@ -15,12 +15,12 @@ std::vector<procon::MoveState> CheckAllPatternGreedy::agentAct(){
         if(field.outOfRangeCheck(point).first)
             return -1e16;
 
+        if(depth >= max_depth)
+            return 0.0;
+
         auto& value = calc_scores.at(point.x).at(point.y).at(depth);
         if(value != -1e15)
             return value;
-
-        if(depth >= max_depth)
-            return 0.0;
 
         value = 0.0;
 
