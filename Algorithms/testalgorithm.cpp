@@ -107,6 +107,9 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(int conflict_flag
             now_que = std::move(next_que);
             next_que = std::move(next_next_que);
         }
+        if(now_que.empty())
+            return 1e-9;
+
         // デフォルトでgreaterなため、pri_queの末尾の値が最も重要な値になる
         while(now_que.size() >= 2)
             now_que.pop();
