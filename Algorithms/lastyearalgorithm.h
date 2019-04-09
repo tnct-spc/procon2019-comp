@@ -2,15 +2,15 @@
 #define LASTYEARALGORITHM_H
 
 #include "algorithmwrapper.h"
-#include "progresdock.h"
+#include <map>
+#include <list>
 
 class LastYearAlgorithm : public AlgorithmWrapper
 {
 public:
-    LastYearAlgorithm(const procon::Field& field, int final_turn, bool side);
+    LastYearAlgorithm(const procon::Field& field, bool side);
 
-    const std::pair<std::tuple<int,int,int>, std::tuple<int,int,int>> agentAct(int);
-    void setParams(std::vector<std::pair<QString, double>>){}
+    std::vector<procon::MoveState> agentAct() override;
 
     struct Edge;
     struct MapElement;
@@ -58,9 +58,7 @@ private:
     int getRotatePos(int pos, int rotate);
     bool outOfRange(int pos, int rotate);
 
-    int size_sum;
-
-    std::shared_ptr<ProgresDock> dock;
+    int size_sum, agent_count;
 
 };
 
@@ -88,7 +86,6 @@ struct LastYearAlgorithm::MapElement{
         put_count.resize(size_x, std::vector<int>(size_y, 0));
 
         for(int index = 0; index < routes.first.size(); ++index){
-            auto score = routes.first.at(index);
             const auto& route = routes.second.at(index);
 
             for(auto it = std::next(route.begin(), 1); it != route.end(); ++it)

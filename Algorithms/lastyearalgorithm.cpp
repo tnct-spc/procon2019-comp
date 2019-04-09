@@ -1,18 +1,15 @@
 #include "lastyearalgorithm.h"
 
-LastYearAlgorithm::LastYearAlgorithm(const procon::Field& field, int final_turn, bool side) :
-    AlgorithmWrapper(field, final_turn, side)
+LastYearAlgorithm::LastYearAlgorithm(const procon::Field& field, bool side) :
+    AlgorithmWrapper(field, side)
 {
-    size_sum = field.getSize().first * field.getSize().second;
+    size_sum = field.getSize().x * field.getSize().y;
+    agent_count = field.getAgentCount();
 
-    dock = std::make_shared<ProgresDock>();
-    // dock->show();
 }
 
-const std::pair<std::tuple<int,int,int>, std::tuple<int,int,int>> LastYearAlgorithm::agentAct(int){
+std::vector<procon::MoveState> LastYearAlgorithm::agentAct(){
 
-    std::pair<int,int> bef_0 = field.getAgent(side, 0);
-    std::pair<int,int> bef_1 = field.getAgent(side, 1);
     std::vector<std::pair<int ,std::pair<int,int>>> poses_0 = calcSingleAgent(0);
     std::vector<std::pair<int ,std::pair<int,int>>> poses_1 = calcSingleAgent(1);
 
@@ -73,12 +70,15 @@ const std::pair<std::tuple<int,int,int>, std::tuple<int,int,int>> LastYearAlgori
     std::pair<int,int> pos_1 = ans.second;
 
 
-    std::pair<std::tuple<int,int,int>,std::tuple<int,int,int>> ret_value = std::make_pair(
-                std::make_tuple(1 + (field.getState(pos_0.first, pos_0.second).first == (side ? 1 : 2)), pos_0.first - bef_0.first, pos_0.second - bef_0.second),
-                std::make_tuple(1 + (field.getState(pos_1.first, pos_1.second).first == (side ? 1 : 2)), pos_1.first - bef_1.first, pos_1.second - bef_1.second)
-                          );
+    // ここに答えが入る
+    std::vector<procon::Point> after_positions(agent_count);
 
-    return ret_value;
+    std::vector<procon::MoveState> ret_moves(agent_count);
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+        ret_moves.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), field.getAgent(side, agent_index).getMoveIndex(after_positions.at(agent_index)));
+    }
+
+    return ret_moves;
 }
 
 void LastYearAlgorithm::setParams(LastYearAlgorithm::Parameters& param){
@@ -160,7 +160,6 @@ std::vector<std::pair<int, std::pair<int,int>>> LastYearAlgorithm::calcSingleAge
 
         anses.emplace_back(routes.size(), target_pos);
 
-        // dock->addMinumuVisu(field.getSize(), routes, color);
     }
 
     if(agent){
