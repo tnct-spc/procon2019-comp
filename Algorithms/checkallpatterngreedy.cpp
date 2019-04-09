@@ -36,17 +36,29 @@ std::vector<procon::MoveState> CheckAllPatternGreedy::agentAct(){
         return value;
     });
 
-    for(int depth = max_depth - 1; depth >= 0; --depth)
-        for(int x_index = 0; x_index < size.x; ++x_index)
-            for(int y_index = 0; y_index < size.y; ++y_index)
-                calc_score_func(procon::Point(x_index, y_index), depth);
-
+    double max_score = -1e18;
+    int max_mask = 0;
 
     std::vector<int> agent_moves(agent_count);
     for(int mask = 0; mask < (1 << (3 * agent_count)); ++mask){
 
+        double score_sum = 0.0;
+
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
             agent_moves.at(agent_index) = (mask >> (3 * agent_index)) & 7;
+            auto after_move = field.getAgent(side, agent_index).getAppliedPosition(agent_moves.at(agent_index));
+            auto score = calc_score_func(after_move, 0);
+            score_sum += score;
+        }
+        if(max_score <= score_sum){
+            max_score = score_sum;
+            max_mask = mask;
         }
     }
+
+    std::vector<procon::MoveState> ret_moves(agent_count);
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+        ret_moves.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index),  (max_mask >> (3 * agent_index)) & 7);
+
+    return ret_moves;
 }
