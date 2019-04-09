@@ -29,14 +29,16 @@ SOURCES += \
         testalgorithm.cpp \
         randommove.cpp \
         simplebeamsearch.cpp \
-        boarddividealgorithm.cpp
+        boarddividealgorithm.cpp \
+    lastyearalgorithm.cpp
 
 HEADERS += \
         algorithmwrapper.h \
         testalgorithm.h \
         randommove.h \
         simplebeamsearch.h \
-        boarddividealgorithm.h
+        boarddividealgorithm.h \
+    lastyearalgorithm.h
 
 unix {
     target.path = /usr/lib
