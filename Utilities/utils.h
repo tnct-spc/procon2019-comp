@@ -107,6 +107,22 @@ struct Dinic{
     flow calcMaxFlow(int s_index, int t_index);
 };
 
+template <typename F>
+struct FixPoint{
+    const F _f;
+    FixPoint(F&& f) : _f(std::forward<F>(f)){}
+
+    template<typename... Types>
+    decltype(auto) operator()(Types&&... args) const{
+        return _f(*this, std::forward<Types>(args)...);
+    }
+};
+
+template <typename F>
+static decltype(auto) makeRecFunc(F&& f){
+    return FixPoint<F>(std::forward<F>(f));
+}
+
 template <typename F, typename F2>
 struct FixPointForEach{
     const F _f;
