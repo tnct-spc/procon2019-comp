@@ -30,7 +30,7 @@ std::vector<procon::MoveState> CheckAllPatternGreedy::agentAct(){
                 continue;
             const auto& target_state = field.getState(moved_point);
             double target_score = target_state.equalSide(side) ? 0.0 : target_state.value;
-            int warp = target_state.equalSide(!side) ? 2 : 1;
+            int warp = target_state.equalSide(!side) ? std::min(2, max_depth - depth) : 1;
             value = std::max(value, warp * target_score + rec_func(moved_point, depth + warp));
         }
         return value;
