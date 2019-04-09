@@ -29,14 +29,16 @@ SOURCES += \
         testalgorithm.cpp \
         randommove.cpp \
         simplebeamsearch.cpp \
-        boarddividealgorithm.cpp
+        boarddividealgorithm.cpp \
+    checkallpatterngreedy.cpp
 
 HEADERS += \
         algorithmwrapper.h \
         testalgorithm.h \
         randommove.h \
         simplebeamsearch.h \
-        boarddividealgorithm.h
+        boarddividealgorithm.h \
+    checkallpatterngreedy.h
 
 unix {
     target.path = /usr/lib
