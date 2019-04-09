@@ -33,7 +33,7 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
     for(int x_index = 0; x_index < size.x; ++x_index)
         for(int y_index = 0; y_index < size.y; ++y_index){
             if(enemy_agent_points.find(procon::Point(x_index, y_index)) == enemy_agent_points.end() && enemy_conflict_points.find(procon::Point(x_index, y_index)) == enemy_conflict_points.end())
-                tile_scores.at(x_index).at(y_index) = std::max(field.getState(x_index, y_index).equalSide(side) ? 0 : field.getState(x_index, y_index).value, 0);
+                tile_scores.at(x_index).at(y_index) = field.getState(x_index, y_index).equalSide(side) ? 0 : field.getState(x_index, y_index).value;
             else
                 tile_scores.at(x_index).at(y_index) = -1e3;
         }
@@ -46,8 +46,10 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(){
 
         if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end())
             return -1e9;
-        if(enemy_conflict_points.find(start_point) != enemy_conflict_points.end())
-            return -1e6;
+        if(enemy_conflict_points.find(start_point) != enemy_conflict_points.end()){
+            bool has_advantage = field.getScore(side).getSum() >= field.getScore(!side).getSum();
+            return has_advantage ? 1e6 : -1e6;
+        }
 
         using que_type = std::pair<double, std::vector<procon::Point>>;
         std::priority_queue<que_type, std::vector<que_type>, std::greater<que_type>> now_que;
