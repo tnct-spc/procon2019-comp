@@ -41,7 +41,7 @@ std::vector<procon::MoveState> TestAlgorithm::testMakeConflict(int conflict_flag
     // 相手の移動候補マスを除外、相手のいるマスを除外した上で、各エージェント毎にBFSをする
     auto calc_one_agent = [&](int agent_index, int first_move){
         // SimpleBeamSearchのほぼ移植なので、気が向いたらコピペ実装を改善する ってずっと言ってる
-        int max_depth = std::min(const_max_depth, field.getTurn().final - field.getTurn().now) - 1;
+        int max_depth = std::min(const_max_depth, field.getTurn().getRemainTurn()) - 1;
         const auto& start_point = field.getAgent(side, agent_index).getAppliedPosition(first_move);
 
         if(field.outOfRangeCheck(start_point).first || enemy_agent_points.find(start_point) != enemy_agent_points.end())

@@ -33,7 +33,7 @@ std::vector<procon::MoveState> SimpleBeamSearch::agentAct(){
 }
 
 std::vector<double> SimpleBeamSearch::beamSearch(int agent_index){
-    int max_depth = std::min(this->max_depth, field.getTurn().final - field.getTurn().now);
+    int max_depth = std::min(this->max_depth, field.getTurn().getRemainTurn());
     const procon::Point& start_point = field.getAgent(side, agent_index);
 
     // 敵味方問わず、他エージェントの考慮を行わない 途中の盤面の変化の考慮も行わない
