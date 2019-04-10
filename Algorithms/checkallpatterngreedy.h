@@ -10,7 +10,7 @@ public:
     std::vector<procon::MoveState> agentAct() override;
 
 private:
-    const int before_calc_depth = 3;
+    const int before_calc_depth = 5;
 };
 
 #endif // CHECKALLPATTERNGREEDY_H
