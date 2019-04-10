@@ -76,6 +76,7 @@ struct Score{
 struct Turn{
     constexpr Turn(int now, int final) : now(now), final(final){}
     // 0-indexed, [0, final)
+    constexpr int getRemainTurn() const{return final - now;}
     int now, final;
 };
 
