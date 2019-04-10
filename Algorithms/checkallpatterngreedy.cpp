@@ -41,23 +41,38 @@ std::vector<procon::MoveState> CheckAllPatternGreedy::agentAct(){
 
     for(int mask = 0; mask < (1 << (3 * agent_count)); ++mask){
 
-        double score_sum = 0.0;
+        auto calc_score = [&]{
 
-        for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-            int move_index = (mask >> (3 * agent_index)) & 7;
-            auto after_move = field.getAgent(side, agent_index).getAppliedPosition(move_index);
+            double score_sum = 0.0;
 
-            if(field.outOfRangeCheck(after_move).first)
-                continue;
-            else{
-                const auto& state = field.getState(after_move);
-                double score = state.value * (state.equalSide(!side) ? 2 : (state.equalSide(side) ? 0 : 1));
-                score += calc_score_func(after_move, state.equalSide(!side) + 1);
-                score_sum += score;
+            // ここで自明なコンフリクトを除いておく
+            std::set<procon::Point> unuse_points;
+            // insertの返り値が非自明なため(insertできた場合にtrueが返る)
+            auto check_and_insert = [&unuse_points](procon::Point p){return unuse_points.insert(std::move(p)).second;};
+
+            for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+                int move_index = (mask >> (3 * agent_index)) & 7;
+                auto after_move = field.getAgent(side, agent_index).getAppliedPosition(move_index);
+
+                // 不可能な場合に消すようにしている
+                if(check_and_insert(field.getAgent(side, agent_index)) == false || check_and_insert(after_move) == false)
+                    return -1e15;
+
+                if(field.outOfRangeCheck(after_move).first)
+                    continue;
+                else{
+                    const auto& state = field.getState(after_move);
+                    double score = 2 * state.value * (state.equalSide(!side) ? 2 : (state.equalSide(side) ? 0 : 1));
+                    score += calc_score_func(after_move, state.equalSide(!side) + 1);
+                    score_sum += score;
+                }
             }
-        }
-        if(max_score <= score_sum){
-            max_score = score_sum;
+            return score_sum;
+        };
+
+        auto score = calc_score();
+        if(max_score <= score){
+            max_score = score;
             max_mask = mask;
         }
     }
