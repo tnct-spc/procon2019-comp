@@ -75,9 +75,10 @@ BOOST_PYTHON_MODULE(communication){
 
     // procon::Fieldをpython側で用意せずに、numpy行列4つ(赤青のタイル状況、エージェント状況をboolにしたもの)を送る事にする
     // Fieldに関する他の関数も必要になったら適宜用意する
-    bp::class_<Board>("Board").def("getData", &Board::getData);
-    bp::class_<Board>("Board").def("getScore", &Board::getScore);
-    bp::class_<Board>("Board").def("addAct", &Board::addAgentActArr);
+    bp::class_<Board>("Board", bp::init<std::string>())
+            .def("getData", &Board::getData)
+            .def("getScore", &Board::getScore)
+            .def("addAct", &Board::addAgentActArr);
 }
 
 }
