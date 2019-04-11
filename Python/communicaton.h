@@ -4,6 +4,7 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 #include "gamesimulator.h"
+#include "csvtranslate.h"
 
 // 流石にかなり冗長になるため
 namespace bp = boost::python;
@@ -14,7 +15,7 @@ namespace communication{
 
 class Board{
 public:
-    Board(const procon::Field& _field);
+    Board(std::string path);
     np::ndarray getData();
     bp::tuple getScore();
     void addAgentActArr(bool side, np::ndarray arr);

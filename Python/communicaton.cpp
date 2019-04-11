@@ -3,8 +3,8 @@
 namespace procon{
 namespace communication{
 
-Board::Board(const procon::Field& _field) :
-    sim(_field),
+Board::Board(std::string path) :
+    sim(procon::csv::csvImport(path)),
     field(sim.getField())
 {
 }
