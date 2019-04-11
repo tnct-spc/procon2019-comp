@@ -18,8 +18,7 @@ public:
     Board(std::string path);
     np::ndarray getData();
     bp::tuple getScore();
-    void addAgentActArr(bool side, np::ndarray arr);
-    void addAgentActAlgo(bool side, std::shared_ptr<AlgorithmWrapper> algo_0);
+    void addAgentAct(bool side, np::ndarray arr);
 
 private:
     GameSimulator sim;

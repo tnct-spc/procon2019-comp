@@ -38,26 +38,13 @@ bp::tuple Board::getScore(){
     return bp::make_tuple(field.getScore(0).getSum(), field.getScore(1).getSum());
 }
 
-void Board::addAgentActArr(bool side, np::ndarray arr){
+void Board::addAgentAct(bool side, np::ndarray arr){
     int agent_count = field.getAgentCount();
     assert(arr.shape(0) == agent_count);
     std::vector<procon::MoveState> moves(agent_count);
     bool* data = reinterpret_cast<bool*>(arr.get_data());
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         moves.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), data[agent_index]);
-
-    sim.addAgentAct(side, moves);
-
-    act_flag.set(side);
-    if(act_flag.all()){
-        sim.changeTurn(true);
-        act_flag.reset();
-    }
-}
-
-void Board::addAgentActAlgo(bool side, std::shared_ptr<AlgorithmWrapper> algo){
-
-    auto moves = algo->agentAct();
 
     sim.addAgentAct(side, moves);
 
