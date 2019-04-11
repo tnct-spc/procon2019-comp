@@ -3,6 +3,12 @@
 namespace procon{
 namespace communication{
 
+Board::Board(const procon::Field& _field) :
+    sim(_field),
+    field(sim.getField())
+{
+}
+
 np::ndarray Board::getData(){
 
     auto size = field.getSize();

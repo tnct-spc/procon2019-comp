@@ -3,7 +3,7 @@
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
-#include "field.h"
+#include "gamesimulator.h"
 
 // 流石にかなり冗長になるため
 namespace bp = boost::python;
@@ -14,10 +14,12 @@ namespace communication{
 
 class Board{
 public:
-    Board(const procon::Field& field) : field(field){}
+    Board(const procon::Field& _field);
     np::ndarray getData();
     bp::tuple getScore();
 private:
+    GameSimulator sim;
+    std::bitset<2> act_flag;
     const procon::Field& field;
 };
 
