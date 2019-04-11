@@ -42,7 +42,7 @@ void Board::addAgentAct(bool side, np::ndarray arr){
     int agent_count = field.getAgentCount();
     assert(arr.shape(0) == agent_count);
     std::vector<procon::MoveState> moves(agent_count);
-    int* data = reinterpret_cast<int*>(arr.get_data());
+    bool* data = reinterpret_cast<bool*>(arr.get_data());
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         moves.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), data[agent_index]);
 
