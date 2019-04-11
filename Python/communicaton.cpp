@@ -1,0 +1,42 @@
+#include "communicaton.h"
+
+namespace procon{
+namespace communication{
+
+np::ndarray Board::getData(){
+
+    auto size = field.getSize();
+    auto agent_count = field.getAgentCount();
+
+    auto shape = bp::make_tuple(4, size.x, size.y);
+    auto data = np::zeros(shape, np::dtype::get_builtin<bool>());
+
+    data[0][0][0] = 1;
+    for(int x_index = 0; x_index < size.x; ++x_index)
+        for(int y_index = 0; y_index < size.y; ++y_index){
+            auto tile = field.getState(x_index, y_index).getDecrementedSide();
+            if(tile != -1)
+                data[tile][x_index][y_index] = 1;
+        }
+
+    for(int side = 0; side < 2; ++side)
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+            auto agent_pos = field.getAgent(side, agent_index);
+            data[2 + side][agent_pos.x][agent_pos.y] = 1;
+        }
+
+    return data;
+}
+
+BOOST_PYTHON_MODULE(communication){
+
+    Py_Initialize();
+    np::initialize();
+
+    // procon::Fieldをpython側で用意せずに、numpy行列4つ(赤青のタイル状況、エージェント状況をboolにしたもの)を送る事にする
+    // 必要になったら適宜用意する
+    bp::class_<Board>("Board").def("getData", &Board::getData);
+}
+
+}
+}

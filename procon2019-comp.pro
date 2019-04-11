@@ -7,4 +7,5 @@ SUBDIRS += \
         Visualizer \
         GameManager \
         Takao \
-        Test
+        Test \
+    Python
