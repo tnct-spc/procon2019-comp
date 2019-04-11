@@ -17,6 +17,9 @@ public:
     Board(const procon::Field& _field);
     np::ndarray getData();
     bp::tuple getScore();
+    void addAgentAct(bool side, np::ndarray arr);
+    void addAgentAct(bool side, std::shared_ptr<AlgorithmWrapper> algo_0);
+
 private:
     GameSimulator sim;
     std::bitset<2> act_flag;
