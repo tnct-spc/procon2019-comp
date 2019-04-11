@@ -38,7 +38,7 @@ bp::tuple Board::getScore(){
     return bp::make_tuple(field.getScore(0).getSum(), field.getScore(1).getSum());
 }
 
-void Board::addAgentAct(bool side, np::ndarray arr){
+void Board::addAgentActArr(bool side, np::ndarray arr){
     int agent_count = field.getAgentCount();
     assert(arr.shape(0) == agent_count);
     std::vector<procon::MoveState> moves(agent_count);
@@ -55,7 +55,7 @@ void Board::addAgentAct(bool side, np::ndarray arr){
     }
 }
 
-void Board::addAgentAct(bool side, std::shared_ptr<AlgorithmWrapper> algo){
+void Board::addAgentActAlgo(bool side, std::shared_ptr<AlgorithmWrapper> algo){
 
     auto moves = algo->agentAct();
 
@@ -77,7 +77,7 @@ BOOST_PYTHON_MODULE(communication){
     // Fieldに関する他の関数も必要になったら適宜用意する
     bp::class_<Board>("Board").def("getData", &Board::getData);
     bp::class_<Board>("Board").def("getScore", &Board::getScore);
-    bp::class_<Board>("Board").def("addAct", &Board::addAgentAct);
+    bp::class_<Board>("Board").def("addAct", &Board::addAgentActArr);
 }
 
 }
