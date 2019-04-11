@@ -28,6 +28,10 @@ np::ndarray Board::getData(){
     return data;
 }
 
+bp::tuple Board::getScore(){
+    return bp::make_tuple(field.getScore(0).getSum(), field.getScore(1).getSum());
+}
+
 BOOST_PYTHON_MODULE(communication){
 
     Py_Initialize();

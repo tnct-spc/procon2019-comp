@@ -14,7 +14,9 @@ namespace communication{
 
 class Board{
 public:
+    Board(const procon::Field& field) : field(field){}
     np::ndarray getData();
+    bp::tuple getScore();
 private:
     const procon::Field& field;
 };
