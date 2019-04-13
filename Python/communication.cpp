@@ -34,8 +34,20 @@ np::ndarray Board::getData(){
     return data;
 }
 
+bp::tuple Board::getTurn(){
+    return bp::make_tuple(field.getTurn().now, field.getTurn().final, field.getTurn().getRemainTurn());
+}
+
 bp::tuple Board::getScore(){
     return bp::make_tuple(field.getScore(0).getSum(), field.getScore(1).getSum());
+}
+
+int Board::getAgentCount(){
+    return field.getAgentCount();
+}
+
+bool Board::isEnded(){
+    return sim.isSimulationEnded();
 }
 
 void Board::addAgentAct(bool side, np::ndarray arr){
@@ -65,7 +77,10 @@ BOOST_PYTHON_MODULE(communication){
     bp::class_<Board>("Board", bp::init<std::string>())
             .def("getData", &Board::getData)
             .def("getScore", &Board::getScore)
-            .def("addAct", &Board::addAgentAct);
+            .def("addAct", &Board::addAgentAct)
+            .def("getTurn", &Board::getTurn)
+            .def("getAgentCount", &Board::getAgentCount)
+            .def("isEnded", &Board::isEnded);
 }
 
 }

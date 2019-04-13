@@ -17,7 +17,10 @@ class Board{
 public:
     Board(std::string path);
     np::ndarray getData();
+    bp::tuple getTurn();
     bp::tuple getScore();
+    int getAgentCount();
+    bool isEnded();
     void addAgentAct(bool side, np::ndarray arr);
 
 private:
