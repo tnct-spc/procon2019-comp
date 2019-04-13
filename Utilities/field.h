@@ -59,6 +59,8 @@ public:
 
     static Field generateRandomField(Point size = Point(0, 0), size_t agent_count = 0, int min_value = -8, int max_value = 8, double minus_per = 0.25);
 
+    Field getSideReversedField() const;
+
 private:
 
     Point size;
