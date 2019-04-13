@@ -211,4 +211,20 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
     return field;
 }
 
+Field Field::getSideReversedField() const{
+    Field field = *this;
+
+    for(int agent_index = 0; agent_index < getAgentCount(); ++agent_index)
+        std::swap(field.agents.at(agent_index).at(0), field.agents.at(agent_index).at(1));
+    std::swap(field.scores.at(0), field.scores.at(1));
+    for(int x_index = 0; x_index < size.x; ++x_index)
+        for(int y_index = 0; y_index < size.y; ++y_index){
+            auto& state = field.states.at(x_index).at(y_index);
+            if(state.tile)
+                state.tile = (state.tile == 1 ? 2 : 1);
+        }
+
+    return field;
+}
+
 }
