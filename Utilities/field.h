@@ -42,6 +42,9 @@ public:
 
     std::pair<bool, Point> outOfRangeCheck(Point p) const;
 
+    std::bitset<2> getIsRegion(Point p) const;
+    std::bitset<2> getIsRegion(int x, int y) const{return getIsRegion(Point(x, y));}
+
     void setNowTurn(int now_turn);
     void setFinalTurn(int final_turn);
     void incrementTurn();
@@ -68,6 +71,7 @@ private:
     std::array<Score, 2> scores;
     std::vector<std::vector<FieldState>> states;
     std::vector<std::array<Point, 2>> agents;
+    std::vector<std::vector<std::bitset<2>>> regions;
 };
 
 }

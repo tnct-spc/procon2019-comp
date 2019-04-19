@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         gamesimulator.cpp \
-        gamemanager.cpp
+        gamemanager.cpp \
+    expandedgamesimulator.cpp
 
 HEADERS += \
         gamesimulator.h \
-        gamemanager.h
+        gamemanager.h \
+    expandedgamesimulator.h
 
 unix {
     target.path = /usr/lib
