@@ -30,9 +30,9 @@ public:
 
     void setField(const procon::Field& field){this->field = std::make_shared<procon::Field>(field);}
 
-    void changeTurn(bool calc_score_flag);
+    virtual void changeTurn(bool calc_score_flag);
 
-private:
+protected:
 
     std::shared_ptr<procon::Field> field;
     std::vector<std::vector<procon::MoveState>> acts;
