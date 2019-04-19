@@ -120,6 +120,12 @@ std::pair<bool, Point> Field::outOfRangeCheck(Point p) const{
     return std::make_pair(out_of_range, p);
 }
 
+std::bitset<2> Field::getIsRegion(Point p) const{
+
+    assert(0 <= p.x && p.x < size.x && 0 <= p.y && p.y < size.y);
+    return regions[p.x][p.y];
+}
+
 void Field::setNowTurn(int now_turn){
     assert(0 <= now_turn && now_turn <= turn.final);
     turn.now = now_turn;
