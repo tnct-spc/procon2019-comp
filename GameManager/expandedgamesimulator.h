@@ -15,7 +15,7 @@ public:
 
 private:
     const procon::Field start_field;
-    std::vector<std::vector<procon::MoveState>> acts_log;
+    std::vector<std::vector<std::vector<procon::MoveState>>> acts_log;
 };
 
 #endif // EXPANDEDGAMESIMULATOR_H
