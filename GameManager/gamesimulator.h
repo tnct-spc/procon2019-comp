@@ -15,12 +15,12 @@ public:
     template<typename... Args>
     GameSimulator(Args... args);
 
-    const procon::Field& getField(){return *field;}
-    const std::shared_ptr<const procon::Field> getFieldPtr(){return field;}
+    const procon::Field& getField() const{return *field;}
+    const std::shared_ptr<const procon::Field> getFieldPtr() const{return field;}
 
     void addAgentAct(bool side, const std::vector<procon::MoveState>& moves);
 
-    bool isSimulationEnded(){const auto& turn = field->getTurn(); return turn.now == turn.final;}
+    bool isSimulationEnded() const{const auto& turn = field->getTurn(); return turn.now == turn.final;}
 
     static procon::Field runSimulation(std::shared_ptr<AlgorithmWrapper> algo_1, std::shared_ptr<AlgorithmWrapper> algo_2, bool calc_score_flag);
     template<typename... Args>
