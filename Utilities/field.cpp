@@ -6,7 +6,8 @@ procon::Field::Field(Point size) :
     size(size),
     turn(0, 30),
     states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
-    agents(2)
+    agents(2),
+    regions(size.x, std::vector<std::bitset<2>>(size.y))
 {
 }
 
@@ -14,7 +15,8 @@ procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
     turn(0, 30),
     states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
-    agents(2)
+    agents(2),
+    regions(size.x, std::vector<std::bitset<2>>(size.y))
 {
 }
 
@@ -44,9 +46,11 @@ void Field::setAgent(bool side, int agent_index, Point agent_data){
     agents.at(agent_index)[side] = agent_data;
 }
 
-void Field::calcRegionPoint(){
+std::vector<std::vector<std::bitset<2>>> Field::reCalcRegion(){
 
-    auto calc_one_side = [this](bool side){
+    std::vector<std::vector<std::bitset<2>>> ret(size.x, std::vector<std::bitset<2>>(size.y));
+
+    for(int side = 0; side < 2; ++side){
         std::queue<Point> point_que;
         std::bitset<400> visited_flag;
 
@@ -78,18 +82,27 @@ void Field::calcRegionPoint(){
                 add_to_que(moved_pos);
             }
         }
-        int return_value = 0;
-        for(int x_index = 0; x_index < size.x; ++x_index){
+        for(int x_index = 0; x_index < size.x; ++x_index)
             for(int y_index = 0; y_index < size.y; ++y_index){
                 Point point(x_index, y_index);
                 if(visited_flag[pointToInt(point)] == false && is_wall(point) == false)
-                    return_value += std::abs(getState(point).value);
+                    ret.at(x_index).at(y_index).set(side);
             }
-        }
-        return return_value;
-    };
+    }
+    return ret;
+}
+
+void Field::calcRegionPoint(){
+
     for(int side = 0; side < 2; ++side)
-        scores[side].region = calc_one_side(side);
+        scores.at(side).region = 0;
+
+    regions = reCalcRegion();
+    for(int x_index = 0; x_index < size.x; ++x_index)
+        for(int y_index = 0; y_index < size.y; ++y_index)
+            for(int side = 0; side < 2; ++side)
+                if(regions.at(x_index).at(y_index)[side])
+                    scores.at(side).region += std::abs(getState(x_index, y_index).value);
 }
 
 MoveState Field::makeMoveState(bool side, const Point &p, int move_index) const{

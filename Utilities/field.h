@@ -36,6 +36,7 @@ public:
     const std::array<Score, 2>& getScores() const{return scores;}
     const Score& getScore(bool side) const{return scores[side];}
 
+    std::vector<std::vector<std::bitset<2>>> reCalcRegion();
     void calcRegionPoint();
 
     MoveState makeMoveState(bool side, const Point& p, int move_index) const;
