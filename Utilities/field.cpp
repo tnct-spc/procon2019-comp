@@ -6,7 +6,8 @@ procon::Field::Field(Point size) :
     size(size),
     turn(0, 30),
     states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
-    agents(2)
+    agents(2),
+    regions(size.x, std::vector<std::bitset<2>>(size.y))
 {
 }
 
@@ -14,7 +15,8 @@ procon::Field::Field(int size_x, int size_y) :
     size(size_x, size_y),
     turn(0, 30),
     states(size.x, std::vector<FieldState>(size.y, FieldState(0))),
-    agents(2)
+    agents(2),
+    regions(size.x, std::vector<std::bitset<2>>(size.y))
 {
 }
 
@@ -45,6 +47,8 @@ void Field::setAgent(bool side, int agent_index, Point agent_data){
 }
 
 void Field::calcRegionPoint(){
+
+    regions.assign(size.x, std::vector<std::bitset<2>>(size.y));
 
     auto calc_one_side = [this](bool side){
         std::queue<Point> point_que;
@@ -82,8 +86,10 @@ void Field::calcRegionPoint(){
         for(int x_index = 0; x_index < size.x; ++x_index){
             for(int y_index = 0; y_index < size.y; ++y_index){
                 Point point(x_index, y_index);
-                if(visited_flag[pointToInt(point)] == false && is_wall(point) == false)
+                if(visited_flag[pointToInt(point)] == false && is_wall(point) == false){
+                    regions.at(x_index).at(y_index).set(side);
                     return_value += std::abs(getState(point).value);
+                }
             }
         }
         return return_value;
