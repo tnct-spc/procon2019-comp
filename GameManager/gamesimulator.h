@@ -30,6 +30,8 @@ public:
 
     void setField(const procon::Field& field){this->field = std::make_shared<procon::Field>(field);}
 
+    void reverseField(){field = std::make_shared<procon::Field>(field->getSideReversedField());};
+
     virtual void changeTurn(bool calc_score_flag);
 
 protected:
