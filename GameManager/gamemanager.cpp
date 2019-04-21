@@ -10,6 +10,7 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalResetField, this, &GameManager::resetField);
     connect(&visualizer, &Visualizer::signalRunSimulator, this, &GameManager::runSimulator);
     connect(&visualizer, &Visualizer::signalRunFullSimulation, this, &GameManager::runFullSimulation);
+    connect(&visualizer, &Visualizer::signalReverseField, this, &GameManager::reverseField);
     connect(&visualizer, &Visualizer::signalSimulateNextTurn, this, &GameManager::simulateNextTurn);
 
     setAlgorithms();
@@ -31,8 +32,7 @@ void GameManager::runFullSimulation(){
 
 void GameManager::loadField(procon::Field field){
 
-    game = std::make_shared<GameSimulator>();
-    game->setField(field);
+    game = std::make_shared<GameSimulator>(field);
     auto field_ptr = game->getFieldPtr();
 
     setAlgorithms();
@@ -49,6 +49,15 @@ void GameManager::resetField(){
 
     setAlgorithms();
 
+    visualizer.setFieldPtr(field);
+    visualizer.update();
+    visualizer.repaint();
+}
+
+void GameManager::reverseField(){
+    game->reverseField();
+    field = game->getFieldPtr();
+    setAlgorithms();
     visualizer.setFieldPtr(field);
     visualizer.update();
     visualizer.repaint();

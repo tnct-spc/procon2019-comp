@@ -28,6 +28,7 @@ signals:
     void signalRunSimulator();
     void signalRunFullSimulation();
     void signalSimulateNextTurn();
+    void signalReverseField();
 
 private:
 
