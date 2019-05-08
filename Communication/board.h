@@ -16,11 +16,15 @@ namespace communication{
 class Board{
 public:
     Board(std::string path);
+    Board(const GameSimulator& sim);
     np::ndarray getData();
     bp::tuple getTurn();
     bp::tuple getScore();
     int getAgentCount();
     bool isEnded();
+    np::ndarray getValidMoves(bool side);
+    Board copyBoard(){return Board(sim);}
+    Board reverseBoard(){auto rev = field.getSideReversedField(); return Board(GameSimulator(rev));}
     void addAgentAct(bool side, np::ndarray arr);
 
 private:

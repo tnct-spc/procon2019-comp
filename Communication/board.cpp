@@ -10,6 +10,12 @@ Board::Board(std::string path) :
 {
 }
 
+Board::Board(const GameSimulator& sim) :
+    sim(sim),
+    field(sim.getField())
+{
+}
+
 np::ndarray Board::getData(){
 
     auto size = field.getSize();
@@ -41,6 +47,18 @@ bp::tuple Board::getTurn(){
 
 bp::tuple Board::getScore(){
     return bp::make_tuple(field.getScore(0).getSum(), field.getScore(1).getSum());
+}
+
+np::ndarray Board::getValidMoves(bool side){
+    int agent_count = field.getAgentCount();
+    auto shape = bp::make_tuple(agent_count, 8);
+    auto data = np::zeros(shape, np::dtype::get_builtin<bool>());
+
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+        for(int move = 0; move < 8; ++move)
+            data[agent_index][move] = field.outOfRangeCheck(field.getAgent(side, agent_index).getAppliedPosition(move)).first;
+
+    return data;
 }
 
 int Board::getAgentCount(){
