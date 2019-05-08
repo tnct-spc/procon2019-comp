@@ -23,12 +23,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-		communication.cpp
+        communication.cpp
 
 HEADERS += \
-		communication.h
+        communication.h
+
+LIBS += -lboost_python
+LIBS += -lpython3.7m
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
+INCLUDEPATH += $$PWD/../Utilities
+DEPENDPATH += $$PWD/../Utilities
+
+LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
+INCLUDEPATH += $$PWD/../Algorithms
+DEPENDPATH += $$PWD/../Algorithms
+
+LIBS += -L$$OUT_PWD/../GameManager/ -lGameManager
+INCLUDEPATH += $$PWD/../GameManager
+DEPENDPATH += $$PWD/../GameManager
+
+INCLUDEPATH += /usr/include/python3.7m
