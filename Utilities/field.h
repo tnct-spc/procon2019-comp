@@ -58,6 +58,8 @@ public:
     void setStates(const std::vector<std::vector<FieldState>>& states){this->states = states;}
     void setAgents(const std::vector<std::array<Point, 2>>& agents){this->agents = agents;}
 
+    std::vector<std::vector<int>> getValidMoves(bool side) const;
+
     constexpr int pointToInt(const Point& p) const{return p.x * size.y + p.y;}
     constexpr Point intToPoint(const int i) const{return Point(i / size.y, i % size.y);}
 
