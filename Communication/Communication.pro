@@ -6,7 +6,7 @@
 
 QT       -= gui
 
-TARGET = Python
+TARGET = Communication
 TEMPLATE = lib
 
 CONFIG += c++17
