@@ -154,6 +154,18 @@ void Field::incrementTurn(){
     ++turn.now;
 }
 
+std::vector<std::vector<int>> Field::getValidMoves(bool side) const{
+    int agent_count = getAgentCount();
+    std::vector<std::vector<int>> moves(agent_count);
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+        for(int move_index = 0; move_index < 8; ++move_index){
+            auto moved_point = getAgent(side, agent_index).getAppliedPosition(move_index);
+            if(outOfRangeCheck(moved_point).first == false)
+                moves.at(agent_index).emplace_back(move_index);
+        }
+    return moves;
+}
+
 Field Field::generateRandomField(Point size, size_t agent_count, int min_value, int max_value, double minus_per){
 
     assert(min_value <= max_value);
