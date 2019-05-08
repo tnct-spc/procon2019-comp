@@ -16,5 +16,8 @@ BOOST_PYTHON_MODULE(communication){
             .def("addAct", &Board::addAgentAct)
             .def("getTurn", &Board::getTurn)
             .def("getAgentCount", &Board::getAgentCount)
+            .def("getValidMoves", &Board::getValidMoves)
+            .def("copy", &Board::copyBoard)
+            .def("rev", &Board::reverseBoard)
             .def("isEnded", &Board::isEnded);
 }
