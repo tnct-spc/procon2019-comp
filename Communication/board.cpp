@@ -56,7 +56,7 @@ np::ndarray Board::getValidMoves(bool side){
 
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         for(int move = 0; move < 8; ++move)
-            data[agent_index][move] = field.outOfRangeCheck(field.getAgent(side, agent_index).getAppliedPosition(move)).first;
+            data[agent_index][move] = !field.outOfRangeCheck(field.getAgent(side, agent_index).getAppliedPosition(move)).first;
 
     return data;
 }
