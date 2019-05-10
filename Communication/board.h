@@ -13,8 +13,7 @@ namespace np = boost::python::numpy;
 namespace procon{
 namespace communication{
 
-class Board{
-public:
+struct Board{
     Board(std::string path);
     Board(const GameSimulator& sim);
     np::ndarray getData();
@@ -26,8 +25,8 @@ public:
     Board copyBoard(){return Board(sim);}
     Board reverseBoard(){auto rev = field.getSideReversedField(); return Board(GameSimulator(rev));}
     void addAgentAct(bool side, np::ndarray arr);
+    const procon::Field& getField() const{return field;}
 
-private:
     GameSimulator sim;
     std::bitset<2> act_flag;
     const procon::Field& field;

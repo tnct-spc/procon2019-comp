@@ -24,10 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         board.cpp \
+        com_utils.cpp \
         communication.cpp
 
 HEADERS += \
         board.h \
+        com_utils.h \
         communication.h
 
 LIBS += -lboost_python
