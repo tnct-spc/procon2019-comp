@@ -6,12 +6,11 @@
 #include "gamesimulator.h"
 #include "csvtranslate.h"
 
-// 流石にかなり冗長になるため
-namespace bp = boost::python;
-namespace np = boost::python::numpy;
-
 namespace procon{
 namespace communication{
+
+namespace bp = boost::python;
+namespace np = boost::python::numpy;
 
 struct Board{
     Board(std::string path);

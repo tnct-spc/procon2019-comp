@@ -4,6 +4,9 @@
 namespace procon{
 namespace communication{
 
+namespace bp = boost::python;
+namespace np = boost::python::numpy;
+
 Board::Board(std::string path) :
     sim(procon::csv::csvImport(path)),
     field(sim.getField())

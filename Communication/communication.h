@@ -1,6 +1,6 @@
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
-#include "board.h"
+#include "com_utils.h"
 
 #endif // COMMUNICATION_H
