@@ -6,9 +6,7 @@ namespace communication{
 namespace bp = boost::python;
 namespace np = boost::python::numpy;
 
-np::ndarray simpleFastGreedy(const Board& board, bool side){
-    int agent_move_bound = 8;
-    double temperature = 0.01;
+np::ndarray simpleFastGreedy(const Board& board, bool side, int agent_move_bound, double temperature){
 
     assert(temperature >= 0.001);
 
