@@ -49,7 +49,8 @@ bp::tuple Board::getTurn(){
 }
 
 bp::tuple Board::getScore(){
-    return bp::make_tuple(field.getScore(0).getSum(), field.getScore(1).getSum());
+    auto scores = field.getScores();
+    return bp::make_tuple(bp::make_tuple(scores.at(0).tile, scores.at(0).region), bp::make_tuple(scores.at(0).tile, scores.at(0).region));
 }
 
 np::ndarray Board::getValidMoves(bool side){
