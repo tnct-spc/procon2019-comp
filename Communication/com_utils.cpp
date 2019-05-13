@@ -6,7 +6,7 @@ namespace communication{
 namespace bp = boost::python;
 namespace np = boost::python::numpy;
 
-np::ndarray simpleFastGreedy(const Board& board, bool side, int agent_move_bound, double temperature){
+bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, double temperature){
 
     assert(temperature >= 0.001);
 
@@ -73,6 +73,17 @@ np::ndarray simpleFastGreedy(const Board& board, bool side, int agent_move_bound
             move.first = 1;
         sum = moves.size();
     }
+
+    np::ndarray policy = np::zeros(bp::make_tuple(agent_count, 8), np::dtype::get_builtin<double>());
+    for(auto& move : moves){
+        double value = move.first / sum;
+        int moves_bitset = move.second;
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+            int move_index = (moves_bitset >> (3 * agent_index)) & 7;
+            policy[agent_index][move_index] += value;
+        }
+    }
+
     std::vector<long double> cum_sum(1, 0.0);
     for(auto& move : moves)
         cum_sum.emplace_back(cum_sum.back() + move.first / sum);
@@ -83,7 +94,7 @@ np::ndarray simpleFastGreedy(const Board& board, bool side, int agent_move_bound
     np::ndarray moves_ndarr = np::zeros(bp::make_tuple(agent_count), np::dtype::get_builtin<int>());
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         moves_ndarr[agent_index] = (moves_bitset >> (3 * agent_index)) & 7;
-    return moves_ndarr;
+    return bp::make_tuple(moves_ndarr, policy);
 }
 
 }

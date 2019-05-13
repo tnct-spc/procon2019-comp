@@ -7,7 +7,7 @@
 namespace procon{
 namespace communication{
 
-    boost::python::numpy::ndarray simpleFastGreedy(const Board& board, bool side, int agent_move_bound, double temperature);
+    bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, double temperature);
 
 }
 }
