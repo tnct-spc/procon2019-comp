@@ -17,7 +17,7 @@ bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, 
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         for(int move_index = 0; move_index < 8; ++move_index){
             auto after_point = field.getAgent(side, agent_index).getAppliedPosition(move_index);
-            if(field.outOfRangeCheck(field.getAgent(side, agent_index)).first == false){
+            if(field.outOfRangeCheck(after_point).first == false){
                 auto state = field.getState(after_point);
                 valid_moves.at(agent_index).emplace_back(move_index, state.tile == 0 ? 0 : state.value);
             }
