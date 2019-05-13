@@ -87,7 +87,7 @@ bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, 
     std::vector<long double> cum_sum(1, 0.0);
     for(auto& move : moves)
         cum_sum.emplace_back(cum_sum.back() + move.first / sum);
-    long double rand_value = 1.0l * (procon::random::call() / std::numeric_limits<unsigned long>::max());
+    long double rand_value = 1.0l * procon::random::call() / std::numeric_limits<unsigned long>::max();
     int target_index = std::distance(cum_sum.begin(), std::lower_bound(cum_sum.begin(), cum_sum.end(), rand_value));
     int moves_bitset = moves.at(target_index).second;
 
