@@ -1,0 +1,1 @@
+g++ -shared -fPIC -std=c++17 -I/usr/include/python3.7m -lpython3.7m -lboost_python3 -lboost_numpy3 -I../Utilities -I../Algorithms -I../GameManager -I./ -o communication.so ../Utilities/utils.cpp ../Utilities/field.cpp ../Utilities/csvtranslate.cpp ../Algorithms/algorithmwrapper.cpp ../GameManager/gamesimulator.cpp ./board.cpp ./com_utils.cpp ./communication.cpp

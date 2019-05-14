@@ -1,10 +1,20 @@
-#include "communication.h"
+#include "board.h"
+
 
 namespace procon{
 namespace communication{
 
+namespace bp = boost::python;
+namespace np = boost::python::numpy;
+
 Board::Board(std::string path) :
     sim(procon::csv::csvImport(path)),
+    field(sim.getField())
+{
+}
+
+Board::Board(const GameSimulator& sim) :
+    sim(sim),
     field(sim.getField())
 {
 }
@@ -39,7 +49,21 @@ bp::tuple Board::getTurn(){
 }
 
 bp::tuple Board::getScore(){
-    return bp::make_tuple(field.getScore(0).getSum(), field.getScore(1).getSum());
+    auto scores = field.getScores();
+    return bp::make_tuple(bp::make_tuple(scores.at(0).tile, scores.at(0).region, scores.at(0).getSum()),
+                          bp::make_tuple(scores.at(1).tile, scores.at(1).region, scores.at(1).getSum()));
+}
+
+np::ndarray Board::getValidMoves(bool side){
+    int agent_count = field.getAgentCount();
+    auto shape = bp::make_tuple(agent_count, 8);
+    auto data = np::zeros(shape, np::dtype::get_builtin<bool>());
+
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+        for(int move = 0; move < 8; ++move)
+            data[agent_index][move] = !field.outOfRangeCheck(field.getAgent(side, agent_index).getAppliedPosition(move)).first;
+
+    return data;
 }
 
 int Board::getAgentCount(){
@@ -65,22 +89,6 @@ void Board::addAgentAct(bool side, np::ndarray arr){
         sim.changeTurn(true);
         act_flag.reset();
     }
-}
-
-BOOST_PYTHON_MODULE(communication){
-
-    Py_Initialize();
-    np::initialize();
-
-    // procon::Fieldをpython側で用意せずに、numpy行列4つ(赤青のタイル状況、エージェント状況をboolにしたもの)を送る事にする
-    // Fieldに関する他の関数も必要になったら適宜用意する
-    bp::class_<Board>("Board", bp::init<std::string>())
-            .def("getData", &Board::getData)
-            .def("getScore", &Board::getScore)
-            .def("addAct", &Board::addAgentAct)
-            .def("getTurn", &Board::getTurn)
-            .def("getAgentCount", &Board::getAgentCount)
-            .def("isEnded", &Board::isEnded);
 }
 
 }
