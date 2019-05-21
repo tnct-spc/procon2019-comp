@@ -89,6 +89,5 @@ void GenerateCnpyBoardData::run(){
             cnpy::npz_save(save_filename, "input_" + std::to_string(side), field_vectors[side], "a");
             cnpy::npz_save(save_filename, "output_" + std::to_string(side), policy_vectors[side], "a");
         }
-        exit(0);
     }());
 }
