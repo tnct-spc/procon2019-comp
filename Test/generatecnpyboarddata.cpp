@@ -9,13 +9,8 @@ void GenerateCnpyBoardData::run(){
     namespace bp = boost::python;
     namespace np = boost::python::numpy;
 
-    std::string csv_path = "/home/shibh308/workspace/MCTS-RL-test/field.csv";
-    std::string save_dir = "/home/shibh308/workspace/tmp";
-
-    /*
     std::string csv_path = QFileDialog::getOpenFileName().toStdString();
     std::string save_dir = QFileDialog::getExistingDirectory().toStdString();
-    */
 
     for(int _ = 0; _ < playout_count; ++_, [&]{
 
