@@ -83,8 +83,9 @@ void GenerateCnpyBoardData::run(){
                     policy_vectors[side].emplace_back(elm);
             }
         }
-        cnpy::npz_save(save_filename, "input_shape", shape, "w");
-        cnpy::npz_save(save_filename, "output_shape", std::vector<int>{static_cast<int>(policy_vectors[0].size())}, "a");
+        cnpy::npz_save(save_filename, "data_length", std::vector<int>{static_cast<int>(ret_data.size())}, "w");
+        cnpy::npz_save(save_filename, "input_shape", shape, "a");
+        cnpy::npz_save(save_filename, "output_shape", std::vector<int>{static_cast<int>(policy_vectors[0].size() / ret_data.size())}, "a");
         for(int side = 0; side < 2; ++side){
             cnpy::npz_save(save_filename, "input_" + std::to_string(side), field_vectors[side], "a");
             cnpy::npz_save(save_filename, "output_" + std::to_string(side), policy_vectors[side], "a");
