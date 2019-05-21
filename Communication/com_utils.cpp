@@ -6,11 +6,9 @@ namespace communication{
 namespace bp = boost::python;
 namespace np = boost::python::numpy;
 
-bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, double temperature){
+bp::tuple simpleFastGreedy(const Field& field, bool side, int agent_move_bound, double temperature){
 
     assert(temperature >= 0.001);
-
-    const auto& field = board.getField();
 
     int agent_count = field.getAgentCount();
     std::vector<std::vector<std::pair<int, double>>> valid_moves(agent_count);
@@ -74,7 +72,7 @@ bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, 
         sum = moves.size();
     }
 
-    np::ndarray policy = np::zeros(bp::make_tuple(agent_count, 8), np::dtype::get_builtin<double>());
+    np::ndarray policy = np::zeros(bp::make_tuple(agent_count, 8), np::dtype::get_builtin<float>());
     for(auto& move : moves){
         double value = move.first / sum;
         int moves_bitset = move.second;
@@ -96,6 +94,8 @@ bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, 
         moves_ndarr[agent_index] = (moves_bitset >> (3 * agent_index)) & 7;
     return bp::make_tuple(moves_ndarr, policy);
 }
+
+bp::tuple greedyFromBoard(const Board& board, bool side, int agent_move_bound, double temperature){return simpleFastGreedy(board.getField(), side, agent_move_bound, temperature);}
 
 }
 }

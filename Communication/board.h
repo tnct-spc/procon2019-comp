@@ -1,8 +1,11 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#pragma push_macro("slots")
+#undef slots
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
+#pragma pop_macro("slots")
 #include "gamesimulator.h"
 #include "csvtranslate.h"
 
@@ -15,6 +18,7 @@ namespace np = boost::python::numpy;
 struct Board{
     Board(std::string path);
     Board(const GameSimulator& sim);
+    static np::ndarray getDataFromField(const procon::Field& field);
     np::ndarray getData();
     bp::tuple getTurn();
     bp::tuple getScore();
