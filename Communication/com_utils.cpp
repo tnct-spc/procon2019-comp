@@ -97,5 +97,33 @@ bp::tuple simpleFastGreedy(const Field& field, bool side, int agent_move_bound, 
 
 bp::tuple greedyFromBoard(const Board& board, bool side, int agent_move_bound, double temperature){return simpleFastGreedy(board.getField(), side, agent_move_bound, temperature);}
 
+std::pair<std::vector<int>, std::vector<float>> makeNpyFullData(const Field& field){
+    namespace bp = boost::python;
+    namespace np = boost::python::numpy;
+
+    auto data = communication::Board::getDataFromField(field);
+    std::vector<int> shape{9, field.getSize().x, field.getSize().y};
+    std::vector<float> data_vec;
+    for(int dim = 0; dim < 4; ++dim)
+        for(int x = 0; x < shape.at(1); ++x)
+            for(int y = 0; y < shape.at(2); ++y)
+                data_vec.emplace_back(bp::extract<int>(data[dim][x][y]));
+
+    auto set_full = [&](int val){
+        for(int x = 0; x < shape.at(1); ++x)
+            for(int y = 0; y < shape.at(2); ++y)
+                data_vec.emplace_back(val);
+    };
+
+    const auto& scores = field.getScores();
+    set_full(scores.at(0).tile);
+    set_full(scores.at(0).region);
+    set_full(scores.at(1).tile);
+    set_full(scores.at(1).region);
+    set_full(field.getTurn().getRemainTurn());
+
+    return std::make_pair(shape, data_vec);
+}
+
 }
 }

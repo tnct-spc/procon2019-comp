@@ -25,14 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         board.cpp \
         com_utils.cpp \
-        communication.cpp \
-        cnpytranslate.cpp
+        communication.cpp
 
 HEADERS += \
         board.h \
         com_utils.h \
-        communication.h \
-        cnpytranslate.h
+        communication.h
 
 LIBS += -lboost_python3
 LIBS += -lboost_numpy3

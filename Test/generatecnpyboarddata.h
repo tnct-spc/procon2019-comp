@@ -6,7 +6,6 @@
 #include "cnpy.h"
 
 #include "com_utils.h"
-#include "cnpytranslate.h"
 
 class GenerateCnpyBoardData : public QObject
 {
