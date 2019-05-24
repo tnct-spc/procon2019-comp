@@ -115,6 +115,21 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.drawText(text_point, str);
     };
 
+    auto drawAutomode = [&]{
+        QPoint text_point;
+        text_point.setX(horizontal_margin);
+        text_point.setY(vertical_margin - 0.4 * grid_size);
+
+        painter.setPen(QPen(QBrush(automode_color), 0.3));
+
+        QFont font = painter.font();
+        font.setPointSize(grid_size * 0.8);
+        painter.setFont(font);
+
+        QString str(QString::fromStdString("Auto Mode"));
+        if(auto_mode)painter.drawText(text_point, str);
+    };
+
     auto drawScores = [&]{
         auto scores = field->getScores();
 
@@ -133,6 +148,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
         painter.drawText(side_1_point, QString::number(scores[1].tile) + QString::fromStdString(" + ") + QString::number(scores[1].region));
+        drawAutomode();
     };
 
     if(field){
@@ -159,4 +175,8 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_E){
         procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
     }
+    if(event->key() == Qt::Key_A)
+        auto_mode = !auto_mode;
+        this->update();
+        this->repaint();
 }
