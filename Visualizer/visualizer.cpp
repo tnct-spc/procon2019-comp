@@ -175,8 +175,9 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_E){
         procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
     }
-    if(event->key() == Qt::Key_A)
+    if(event->key() == Qt::Key_A){
         auto_mode = !auto_mode;
         this->update();
         this->repaint();
+    }
 }
