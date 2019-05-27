@@ -46,7 +46,7 @@ private:
     const QColor background_color = QColor(245, 245, 220);
     const QColor grid_color = QColor(220, 220, 180);
     const QColor score_color = QColor(250, 80, 80, 120);
-    const QColor automode_color = QColor(200, 0, 0, 200);
+    const QColor automode_color = score_color;
     const std::array<QColor, 2> team_colors = {QColor(255, 0, 0), QColor(0, 0, 255)};
 };
 
