@@ -46,6 +46,7 @@ np::ndarray Board::getDataFromField(const procon::Field& field){
 
 np::ndarray Board::getData(){
     return getDataFromField(field);
+}
 
 np::ndarray Board::getCenterData(){
 
