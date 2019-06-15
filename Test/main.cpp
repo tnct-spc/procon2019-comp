@@ -1,11 +1,13 @@
 #include <QApplication>
 #include <QTimer>
-#include "generaterandomsimulateddata.h"
+#include "generatecnpyboarddata.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    GenerateRandomSimulatedData test;
-    QTimer::singleShot(0, &test, &GenerateRandomSimulatedData::run);
+    Py_Initialize();
+    boost::python::numpy::initialize();
+    GenerateCnpyBoardData test;
+    QTimer::singleShot(0, &test, &GenerateCnpyBoardData::run);
     return a.exec();
 }

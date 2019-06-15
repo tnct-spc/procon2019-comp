@@ -19,7 +19,7 @@ Board::Board(const GameSimulator& sim) :
 {
 }
 
-np::ndarray Board::getData(){
+np::ndarray Board::getDataFromField(const procon::Field& field){
 
     auto size = field.getSize();
     auto agent_count = field.getAgentCount();
@@ -43,6 +43,9 @@ np::ndarray Board::getData(){
 
     return data;
 }
+
+np::ndarray Board::getData(){
+    return getDataFromField(field);
 
 np::ndarray Board::getCenterData(){
 

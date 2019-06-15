@@ -32,8 +32,10 @@ HEADERS += \
         com_utils.h \
         communication.h
 
-LIBS += -lboost_python
+LIBS += -lboost_python3
+LIBS += -lboost_numpy3
 LIBS += -lpython3.7m
+LIBS += -lcnpy
 
 unix {
     target.path = /usr/lib

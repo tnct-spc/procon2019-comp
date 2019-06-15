@@ -23,14 +23,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        csvtranslate.cpp \
         utils.cpp \
-        field.cpp \
-    csvtranslate.cpp
+        field.cpp
 
 HEADERS += \
+        csvtranslate.h \
         utils.h \
-        field.h \
-    csvtranslate.h
+        field.h
 
 unix {
     target.path = /usr/lib
