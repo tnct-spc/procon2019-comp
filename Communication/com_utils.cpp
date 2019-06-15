@@ -125,5 +125,19 @@ std::pair<std::vector<int>, std::vector<float>> makeNpyFullData(const Field& fie
     return std::make_pair(shape, data_vec);
 }
 
+std::pair<std::vector<int>, std::vector<float>> makeNpyFullCenterData(const Field& field){
+    namespace bp = boost::python;
+    namespace np = boost::python::numpy;
+
+    auto data = communication::Board::getCenterDataFromField(field);
+    std::vector<int> shape{6 * (2 * field.getAgentCount()) + 7, 39, 39};
+    std::vector<float> data_vec;
+    for(int dim = 0; dim < shape.at(0); ++dim)
+        for(int x = 0; x < shape.at(1); ++x)
+            for(int y = 0; y < shape.at(2); ++y)
+                data_vec.emplace_back(bp::extract<int>(data[dim][x][y]));
+    return std::make_pair(shape, data_vec);
+}
+
 }
 }
