@@ -15,6 +15,7 @@ BOOST_PYTHON_MODULE(communication){
 
     bp::class_<Board>("Board", bp::init<std::string>())
             .def("getData", &Board::getData)
+            .def("getCenterData", &Board::getCenterData)
             .def("getScore", &Board::getScore)
             .def("addAct", &Board::addAgentAct)
             .def("getTurn", &Board::getTurn)

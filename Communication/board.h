@@ -20,6 +20,7 @@ struct Board{
     Board(const GameSimulator& sim);
     static np::ndarray getDataFromField(const procon::Field& field);
     np::ndarray getData();
+    np::ndarray getCenterData();
     bp::tuple getTurn();
     bp::tuple getScore();
     int getAgentCount();
