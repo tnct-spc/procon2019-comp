@@ -19,6 +19,7 @@ struct Board{
     Board(std::string path);
     Board(const GameSimulator& sim);
     static np::ndarray getDataFromField(const procon::Field& field);
+    static np::ndarray getCenterDataFromField(const procon::Field& field);
     np::ndarray getData();
     np::ndarray getCenterData();
     bp::tuple getTurn();

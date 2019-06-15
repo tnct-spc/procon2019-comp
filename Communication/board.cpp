@@ -48,14 +48,13 @@ np::ndarray Board::getData(){
     return getDataFromField(field);
 }
 
-np::ndarray Board::getCenterData(){
+np::ndarray Board::getCenterDataFromField(const procon::Field& field){
 
     /*
     全エージェント分の {生の得点, {味方のタイル, 敵のタイル, 空のタイル}, 自分, 敵}
     各sideの{タイル点, 領域点, 総和}
     */
 
-    auto size = field.getSize();
     auto agent_count = field.getAgentCount();
 
     int dim_size = 6 * (2 * agent_count) + 6;
@@ -101,6 +100,10 @@ np::ndarray Board::getCenterData(){
                 data[6 * (2 * agent_count) + dim][x_index][y_index] = values[dim];
 
     return data;
+}
+
+np::ndarray Board::getCenterData(){
+    return getCenterDataFromField(field);
 }
 
 bp::tuple Board::getTurn(){
