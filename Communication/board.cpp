@@ -53,11 +53,12 @@ np::ndarray Board::getCenterDataFromField(const procon::Field& field){
     /*
     全エージェント分の {生の得点, {味方のタイル, 敵のタイル, 空のタイル}, 自分, 敵}
     各sideの{タイル点, 領域点, 総和}
+    残りターン数
     */
 
     auto agent_count = field.getAgentCount();
 
-    int dim_size = 6 * (2 * agent_count) + 6;
+    int dim_size = 6 * (2 * agent_count) + 7;
     auto shape = bp::make_tuple(dim_size, 39, 39);
     auto data = np::zeros(shape, np::dtype::get_builtin<int>());
 
@@ -93,10 +94,11 @@ np::ndarray Board::getCenterDataFromField(const procon::Field& field){
 
     auto scores = field.getScores();
     std::vector<int> values{scores[0].tile, scores[0].region, scores[0].getSum(),
-                            scores[1].tile, scores[1].region, scores[1].getSum()};
+                            scores[1].tile, scores[1].region, scores[1].getSum(),
+                            field.getTurn().getRemainTurn()};
     for(int x_index = 0; x_index < 39; ++x_index)
         for(int y_index = 0; y_index < 39; ++y_index)
-            for(int dim = 0; dim < 6; ++dim)
+            for(int dim = 0; dim < 7; ++dim)
                 data[6 * (2 * agent_count) + dim][x_index][y_index] = values[dim];
 
     return data;
