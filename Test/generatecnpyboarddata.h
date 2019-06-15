@@ -10,13 +10,14 @@
 class GenerateCnpyBoardData : public QObject
 {
 public:
-    GenerateCnpyBoardData();
+    GenerateCnpyBoardData(bool use_center);
     void run();
 
 private:
     const int playout_count = 1e5;
     const int agent_move_bound = 8;
     const double temp = 0.1;
+    bool use_center;
 };
 
 #endif // GENERATECNPYBOARDDATA_H

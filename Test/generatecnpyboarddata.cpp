@@ -1,6 +1,7 @@
 #include "generatecnpyboarddata.h"
 
-GenerateCnpyBoardData::GenerateCnpyBoardData()
+GenerateCnpyBoardData::GenerateCnpyBoardData(bool use_center) :
+    use_center(use_center)
 {
 }
 
@@ -59,9 +60,16 @@ void GenerateCnpyBoardData::run(){
                 pol[pol.get_shape()[0] - 1] *= result;
 
             // TODO: procon::npy::cnpyExportと同じ形式を使う(cnpyExport自体はちゃんとした形式で出してくれないので, どうにかする)
-            auto [now_shape, ret_field] = procon::communication::makeNpyFullData(field);
+
+            auto get_make_npy_full_data = [this](auto&& field){
+                if(use_center)
+                    return procon::communication::makeNpyFullCenterData(field);
+                else
+                    return procon::communication::makeNpyFullData(field);
+            };
+            auto [now_shape, ret_field] = get_make_npy_full_data(field);
             shape = std::move(now_shape);
-            auto ret_field_rev = procon::communication::makeNpyFullData(field.getSideReversedField()).second;
+            auto ret_field_rev = get_make_npy_full_data(field.getSideReversedField()).second;
 
             int arr_size = policy[0].get_shape()[0];
             std::vector<std::vector<float>> field_vector{ret_field, ret_field_rev};
