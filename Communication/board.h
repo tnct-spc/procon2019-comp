@@ -16,6 +16,7 @@ struct Board{
     Board(std::string path);
     Board(const GameSimulator& sim);
     np::ndarray getData();
+    np::ndarray getCenterData();
     bp::tuple getTurn();
     bp::tuple getScore();
     int getAgentCount();
