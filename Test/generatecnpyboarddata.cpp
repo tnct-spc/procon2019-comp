@@ -44,6 +44,7 @@ void GenerateCnpyBoardData::run(){
                 policy[index] = new_policy;
             }
             ret_data.emplace_back(board, std::move(policy));
+
             board.addAgentAct(0, bp::extract<np::ndarray>(ret_0[0]));
             board.addAgentAct(1, bp::extract<np::ndarray>(ret_1[0]));
         }
@@ -55,21 +56,22 @@ void GenerateCnpyBoardData::run(){
             result = -1;
 
         for(auto& ret : ret_data){
-            auto [board, policy] = ret;
+            auto& [now_board, policy] = ret;
+            const auto& now_field = now_board.getField();
             for(auto& pol : policy)
                 pol[pol.get_shape()[0] - 1] *= result;
 
             // TODO: procon::npy::cnpyExportと同じ形式を使う(cnpyExport自体はちゃんとした形式で出してくれないので, どうにかする)
 
-            auto get_make_npy_full_data = [this](auto&& field){
+            auto get_make_npy_full_data = [this](auto&& _field){
                 if(use_center)
-                    return procon::communication::makeNpyFullCenterData(field);
+                    return procon::communication::makeNpyFullCenterData(_field);
                 else
-                    return procon::communication::makeNpyFullData(field);
+                    return procon::communication::makeNpyFullData(_field);
             };
-            auto [now_shape, ret_field] = get_make_npy_full_data(field);
+            auto [now_shape, ret_field] = get_make_npy_full_data(now_field);
             shape = std::move(now_shape);
-            auto ret_field_rev = get_make_npy_full_data(field.getSideReversedField()).second;
+            auto ret_field_rev = get_make_npy_full_data(now_field.getSideReversedField()).second;
 
             int arr_size = policy[0].get_shape()[0];
             std::vector<std::vector<float>> field_vector{ret_field, ret_field_rev};

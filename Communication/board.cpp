@@ -19,7 +19,7 @@ Board::Board(const GameSimulator& sim) :
 {
 }
 
-np::ndarray Board::getDataFromField(const procon::Field& field){
+np::ndarray Board::getDataFromField(const procon::Field field){
 
     auto size = field.getSize();
     auto agent_count = field.getAgentCount();
@@ -48,7 +48,7 @@ np::ndarray Board::getData(){
     return getDataFromField(field);
 }
 
-np::ndarray Board::getCenterDataFromField(const procon::Field& field){
+np::ndarray Board::getCenterDataFromField(const procon::Field field){
 
     /*
     全エージェント分の {生の得点, {味方のタイル, 敵のタイル, 空のタイル}, 自分, 敵}
@@ -68,10 +68,9 @@ np::ndarray Board::getCenterDataFromField(const procon::Field& field){
             for(int y_index = 0; y_index < 39; ++y_index){
                 Point pos(x_index + pos_dif.x, y_index + pos_dif.y);
                 for(int dim = 1; dim < 6; ++dim)
-                    data[dim_index * 6 + dim][pos.x][pos.y] = -1;
+                    data[dim_index * 6 + dim][x_index][y_index] = -1;
                 if(field.outOfRangeCheck(pos).first){
                     data[dim_index * 6][x_index][y_index] = -50;
-                    data[dim_index * 6][x_index][y_index] = -1;
                 }else{
                     auto state = field.getState(pos);
                     data[dim_index * 6][x_index][y_index] = state.value;
@@ -79,11 +78,11 @@ np::ndarray Board::getCenterDataFromField(const procon::Field& field){
                 }
             }
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-            auto agent_pos = field.getAgent(side, agent_index) - origin_agent_pos;
+            auto agent_pos = field.getAgent(side, agent_index) - pos_dif;
             data[dim_index * 6 + 4][agent_pos.x][agent_pos.y] = agent_index;
         }
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-            auto agent_pos = field.getAgent(!side, agent_index) - origin_agent_pos;
+            auto agent_pos = field.getAgent(!side, agent_index) - pos_dif;
             data[dim_index * 6 + 5][agent_pos.x][agent_pos.y] = agent_index;
         }
     };
@@ -151,6 +150,7 @@ void Board::addAgentAct(bool side, np::ndarray arr){
     act_flag.set(side);
     if(act_flag.all()){
         sim.changeTurn(true);
+        field = sim.getField();
         act_flag.reset();
     }
 }
