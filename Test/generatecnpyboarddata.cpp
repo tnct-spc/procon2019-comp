@@ -96,14 +96,14 @@ void GenerateCnpyBoardData::run(){
             board.addAgentAct(1, moves_ndarr_1);
         };
 
-        if((procon::random::call() & 15) == 15)
+        if(procon::random::call(16) == false)
             field_random_init();
 
         while(board.isEnded() == false){
-            if((procon::random::call() & 7) == 7)
-                agent_random_move();
-            else
+            if(procon::random::call(8))
                 agent_greedy_move();
+            else
+                agent_random_move();
         }
         const auto& score = field.getScores();
         int result = 0;
@@ -112,7 +112,11 @@ void GenerateCnpyBoardData::run(){
         else if(score[0].getSum() < score[1].getSum())
             result = -1;
 
+        int data_size = 0;
         for(auto& ret : ret_data){
+            if(procon::random::call(16))
+                continue;
+            ++data_size;
             auto& [now_board, policy] = ret;
             const auto& now_field = now_board.getField();
             for(auto& pol : policy)
@@ -134,20 +138,22 @@ void GenerateCnpyBoardData::run(){
             std::vector<std::vector<float>> field_vector{ret_field, ret_field_rev};
             std::vector<std::vector<float>> policy_vector(2, std::vector<float>(arr_size));
 
-            for(int side = 0; side < 2; ++side)
+            for(int side = 0; side < 2; ++side){
+
                 for(int index = 0; index < arr_size; ++index)
                     policy_vector[side][index] = bp::extract<float>(policy[side][index]);
 
-            for(int side = 0; side < 2; ++side){
                 for(auto& elm : field_vector[side])
                     field_vectors[side].emplace_back(elm);
                 for(auto& elm : policy_vector[side])
                     policy_vectors[side].emplace_back(elm);
             }
         }
-        cnpy::npz_save(save_filename, "data_length", std::vector<int>{static_cast<int>(ret_data.size())}, "w");
+        if(data_size == 0)
+            return ;
+        cnpy::npz_save(save_filename, "data_length", std::vector<int>{data_size}, "w");
         cnpy::npz_save(save_filename, "input_shape", shape, "a");
-        cnpy::npz_save(save_filename, "output_shape", std::vector<int>{static_cast<int>(policy_vectors[0].size() / ret_data.size())}, "a");
+        cnpy::npz_save(save_filename, "output_shape", std::vector<int>{static_cast<int>(policy_vectors[0].size() / data_size)}, "a");
         for(int side = 0; side < 2; ++side){
             cnpy::npz_save(save_filename, "input_" + std::to_string(side), field_vectors[side], "a");
             cnpy::npz_save(save_filename, "output_" + std::to_string(side), policy_vectors[side], "a");
