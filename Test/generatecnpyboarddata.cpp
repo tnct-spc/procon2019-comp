@@ -23,7 +23,41 @@ void GenerateCnpyBoardData::run(){
         std::vector<std::pair<procon::communication::Board, std::vector<np::ndarray>>> ret_data;
         auto& field = board.field;
         std::vector<int> shape;
-        while(board.isEnded() == false){
+
+        auto field_random_init = [&](){
+            const auto& size = field.getSize();
+            for(int x_index = 0; x_index < size.x; ++x_index)
+                for(int y_index = 0; y_index < size.y; ++y_index){
+                    int tile_state = procon::random::call(3);
+                    if(field.getState(x_index, y_index).isEmpty() == false)
+                        field.setTileEmpty(x_index, y_index);
+                    if((tile_state & 2) == false)
+                        field.setTileSide(x_index, y_index, tile_state & 1);
+                }
+
+            std::set<procon::Point> agent_exists_point;
+            int agent_count = field.getAgentCount();
+            for(int side = 0; side < 2; ++side)
+                for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+                    procon::Point agent_point;
+                    do{
+                        agent_point.x = procon::random::call(size.x);
+                        agent_point.y = procon::random::call(size.y);
+                    }while(agent_exists_point.find(agent_point) != agent_exists_point.end());
+                    agent_exists_point.emplace(agent_point);
+                    if(field.getState(agent_point).isEmpty() == false)
+                        field.setTileEmpty(agent_point);
+                    field.setAgent(side, agent_index, agent_point);
+                }
+            auto turn = field.getTurn();
+            turn.now = procon::random::call(turn.final);
+            field.setTurn(turn);
+            field.calcRegionPoint();
+            board.sim.setField(field);
+            ret_data.clear();
+        };
+
+        auto agent_greedy_move = [&](){
             auto ret_0 = procon::communication::simpleFastGreedy(field, 0, agent_move_bound, temp);
             auto ret_1 = procon::communication::simpleFastGreedy(field, 1, agent_move_bound, temp);
             std::vector<np::ndarray> policy{
@@ -43,10 +77,33 @@ void GenerateCnpyBoardData::run(){
                 new_policy[arr_size] = (index == 0 ? 1 : -1);
                 policy[index] = new_policy;
             }
-            ret_data.emplace_back(board, std::move(policy));
+
+            ret_data.emplace_back(board, policy);
 
             board.addAgentAct(0, bp::extract<np::ndarray>(ret_0[0]));
             board.addAgentAct(1, bp::extract<np::ndarray>(ret_1[0]));
+        };
+
+        auto agent_random_move = [&](){
+            int agent_count = field.getAgentCount();
+            np::ndarray moves_ndarr_0 = np::zeros(bp::make_tuple(agent_count), np::dtype::get_builtin<int>());
+            np::ndarray moves_ndarr_1 = np::zeros(bp::make_tuple(agent_count), np::dtype::get_builtin<int>());
+            for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+                moves_ndarr_0[agent_index] = procon::random::call(8);
+                moves_ndarr_1[agent_index] = procon::random::call(8);
+            }
+            board.addAgentAct(0, moves_ndarr_0);
+            board.addAgentAct(1, moves_ndarr_1);
+        };
+
+        if((procon::random::call() & 15) == 15)
+            field_random_init();
+
+        while(board.isEnded() == false){
+            if((procon::random::call() & 7) == 7)
+                agent_random_move();
+            else
+                agent_greedy_move();
         }
         const auto& score = field.getScores();
         int result = 0;
