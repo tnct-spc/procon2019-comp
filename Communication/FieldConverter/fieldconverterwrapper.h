@@ -8,9 +8,9 @@
 class FieldConverterWrapper
 {
 public:
-    FieldConverterWrapper();
-    virtual boost::python::numpy::ndarray operator()(const procon::Field& field) = 0;
+    FieldConverterWrapper(const procon::Field& field);
     // 相互変換ができる必要はない
+    boost::python::numpy::ndarray data;
     int ndim;
 };
 
