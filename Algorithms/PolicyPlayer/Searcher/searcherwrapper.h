@@ -1,7 +1,7 @@
 #ifndef SEARCHERWRAPPER_H
 #define SEARCHERWRAPPER_H
 
-#include <PolicyPlayer/Evaluator/evaluatorwrapper.h>
+#include "PolicyPlayer/Evaluator/evaluatorwrapper.h"
 
 class SearcherWrapper
 {

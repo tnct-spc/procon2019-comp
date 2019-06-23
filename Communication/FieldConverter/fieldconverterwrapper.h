@@ -1,7 +1,7 @@
 #ifndef FIELDCONVERTERWRAPPER_H
 #define FIELDCONVERTERWRAPPER_H
 
-#include <field.h>
+#include "field.h"
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
