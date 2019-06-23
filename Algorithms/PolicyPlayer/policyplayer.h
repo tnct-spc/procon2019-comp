@@ -3,6 +3,7 @@
 
 #include "algorithmwrapper.h"
 #include "Searcher/searcherwrapper.h"
+#include "selectors.h"
 
 class PolicyPlayer : public AlgorithmWrapper
 {
@@ -11,11 +12,11 @@ class PolicyPlayer : public AlgorithmWrapper
 public:
     std::vector<procon::MoveState> agentAct() override;
     void setSearcher(std::shared_ptr<SearcherWrapper> _searcher);
-    void setSelector(std::function<std::vector<procon::MoveState>(boost::python::numpy::ndarray&)> func);
+    void setSelector(std::function<std::vector<int>(boost::python::numpy::ndarray&)> func);
 
 private:
     std::shared_ptr<SearcherWrapper> searcher;
-    std::function<std::vector<procon::MoveState>(boost::python::numpy::ndarray&)> selector;
+    std::function<std::vector<int>(boost::python::numpy::ndarray&)> selector = procon::selector::argmax_selector;
 
     // プレイアウト時にpolicyを取得するため
     boost::python::numpy::ndarray last_raw_result;
