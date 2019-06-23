@@ -34,6 +34,10 @@ HEADERS += \
 FORMS += \
         takao.ui
 
+LIBS += -lboost_python3
+LIBS += -lboost_numpy3
+LIBS += -lpython3.7m
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
@@ -54,3 +58,5 @@ DEPENDPATH += $$PWD/../Visualizer
 LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
 INCLUDEPATH += $$PWD/../Algorithms
 DEPENDPATH += $$PWD/../Algorithms
+
+INCLUDEPATH += /usr/include/python3.7m
