@@ -38,6 +38,7 @@ HEADERS += \
         PolicyPlayer/Evaluator/evaluatorwrapper.h \
         PolicyPlayer/Searcher/searcherwrapper.h \
         PolicyPlayer/policyplayer.h \
+        PolicyPlayer/selectors.h \
         algorithmwrapper.h \
         testalgorithm.h \
         randommove.h \
