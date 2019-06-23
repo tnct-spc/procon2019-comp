@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         PolicyPlayer/Evaluator/evaluatorwrapper.cpp \
+        PolicyPlayer/Evaluator/randomevaluator.cpp \
         PolicyPlayer/Searcher/searcherwrapper.cpp \
         PolicyPlayer/policyplayer.cpp \
         algorithmwrapper.cpp \
@@ -36,6 +37,7 @@ SOURCES += \
 
 HEADERS += \
         PolicyPlayer/Evaluator/evaluatorwrapper.h \
+        PolicyPlayer/Evaluator/randomevaluator.h \
         PolicyPlayer/Searcher/searcherwrapper.h \
         PolicyPlayer/policyplayer.h \
         PolicyPlayer/selectors.h \
