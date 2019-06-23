@@ -13,6 +13,7 @@ public:
     std::vector<procon::MoveState> agentAct() override;
     void setSearcher(std::shared_ptr<SearcherWrapper> _searcher);
     void setSelector(std::function<std::vector<int>(boost::python::numpy::ndarray&)> func);
+    boost::python::numpy::ndarray getLastSearchResult();
 
 private:
     std::shared_ptr<SearcherWrapper> searcher;

@@ -5,3 +5,7 @@ SearcherWrapper::SearcherWrapper(std::shared_ptr<EvaluatorWrapper> evalator) :
 {
 
 }
+
+void SearcherWrapper::setEvaluator(std::shared_ptr<EvaluatorWrapper> _evaluator){
+    evaluator = _evaluator;
+}

@@ -22,3 +22,7 @@ void PolicyPlayer::setSearcher(std::shared_ptr<SearcherWrapper> _searcher){
 void PolicyPlayer::setSelector(std::function<std::vector<int>(boost::python::numpy::ndarray&)> func){
     selector = func;
 }
+
+boost::python::numpy::ndarray PolicyPlayer::getLastSearchResult(){
+    return last_raw_result;
+}
