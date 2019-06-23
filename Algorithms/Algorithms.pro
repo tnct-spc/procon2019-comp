@@ -28,6 +28,7 @@ SOURCES += \
         PolicyPlayer/Evaluator/evaluatorwrapper.cpp \
         PolicyPlayer/Evaluator/randomevaluator.cpp \
         PolicyPlayer/Searcher/searcherwrapper.cpp \
+        PolicyPlayer/Searcher/simplesearcher.cpp \
         PolicyPlayer/policyplayer.cpp \
         algorithmwrapper.cpp \
         testalgorithm.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
         PolicyPlayer/Evaluator/evaluatorwrapper.h \
         PolicyPlayer/Evaluator/randomevaluator.h \
         PolicyPlayer/Searcher/searcherwrapper.h \
+        PolicyPlayer/Searcher/simplesearcher.h \
         PolicyPlayer/policyplayer.h \
         PolicyPlayer/selectors.h \
         algorithmwrapper.h \

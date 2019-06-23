@@ -10,7 +10,7 @@ public:
     virtual boost::python::numpy::ndarray search(const procon::Field& field) = 0;
     void setEvaluator(std::shared_ptr<EvaluatorWrapper> _evaluator);
 
-private:
+protected:
     std::shared_ptr<EvaluatorWrapper> evaluator;
 };
 
