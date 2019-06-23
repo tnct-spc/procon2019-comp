@@ -1,7 +1,7 @@
 #ifndef SELECTORS_H
 #define SELECTORS_H
 
-#include "utils.h"
+#include "field.h"
 #include <functional>
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
@@ -9,9 +9,9 @@
 namespace procon::selector{
 
     namespace np = boost::python::numpy;
-    using func_type = std::function<std::vector<int>(np::ndarray&)>;
+    using func_type = std::function<std::vector<int>(const Field&, const np::ndarray&)>;
 
-    func_type argmax_selector = [](np::ndarray& arr){
+    func_type argmax_selector = [](const Field&, const np::ndarray& arr){
         int agent_count = arr.get_shape()[0];
         std::vector<int> ret_vec(agent_count);
         for(int agent_index = 0; agent_index < agent_count; ++agent_index){

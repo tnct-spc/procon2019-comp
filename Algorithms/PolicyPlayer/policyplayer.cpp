@@ -5,7 +5,7 @@ std::vector<procon::MoveState> PolicyPlayer::agentAct(){
 
     auto raw_result = searcher->search(field);
     last_raw_result = raw_result;
-    auto result_vec = selector(raw_result);
+    auto result_vec = selector(field, raw_result);
 
     int agent_count = field.getAgentCount();
     std::vector<procon::MoveState> result_movestate(agent_count);
@@ -19,7 +19,7 @@ void PolicyPlayer::setSearcher(std::shared_ptr<SearcherWrapper> _searcher){
     searcher = _searcher;
 }
 
-void PolicyPlayer::setSelector(std::function<std::vector<int>(boost::python::numpy::ndarray&)> func){
+void PolicyPlayer::setSelector(std::function<std::vector<int>(const procon::Field&, const boost::python::numpy::ndarray&)> func){
     selector = func;
 }
 

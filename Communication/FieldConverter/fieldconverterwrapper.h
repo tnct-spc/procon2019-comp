@@ -2,6 +2,7 @@
 #define FIELDCONVERTERWRAPPER_H
 
 #include "field.h"
+#undef slots
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
