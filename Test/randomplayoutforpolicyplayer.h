@@ -7,8 +7,10 @@
 #include "FieldConverter/fieldconverterwrapper.h"
 #include "PolicyPlayer/policyplayer.h"
 #include "PolicyPlayer/selectors.h"
+#include "PolicyPlayer/Searcher/simplesearcher.h"
+#include "PolicyPlayer/Evaluator/randomevaluator.h"
 
-class RandomPlayoutForPolicyPlayer
+class RandomPlayoutForPolicyPlayer : public QObject
 {
 public:
     RandomPlayoutForPolicyPlayer();

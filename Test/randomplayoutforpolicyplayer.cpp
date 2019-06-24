@@ -8,13 +8,15 @@ RandomPlayoutForPolicyPlayer::RandomPlayoutForPolicyPlayer()
 template <typename Converter>
 void RandomPlayoutForPolicyPlayer::run(){
 
-    players.at(0)->setSelector(procon::selector::argmax_selector);
-    players.at(0)->setSearcher(searchers.at(0));
-    searchers.at(0)->setEvaluator(evaluators.at(0));
+    for(int side = 0; side < 2; ++side){
+        players.at(side) = std::make_shared<PolicyPlayer>();
+        searchers.at(side) = std::make_shared<SimpleSearcher>();
+        evaluators.at(side) = std::make_shared<RandomEvaluator>();
 
-    players.at(1)->setSelector(procon::selector::argmax_selector);
-    players.at(1)->setSearcher(searchers.at(1));
-    searchers.at(1)->setEvaluator(evaluators.at(1));
+        players.at(side)->setSelector(procon::selector::argmax_selector);
+        searchers.at(side)->setEvaluator(evaluators.at(side));
+        players.at(side)->setSearcher(searchers.at(side));
+    }
 
     namespace bp = boost::python;
     namespace np = boost::python::numpy;
