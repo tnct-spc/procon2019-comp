@@ -24,15 +24,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         FieldConverter/fieldconverterwrapper.cpp \
+        FieldConverter/fixedfieldsortedpossimpleconverter.cpp \
         board.cpp \
         com_utils.cpp \
         communication.cpp
 
 HEADERS += \
         FieldConverter/fieldconverterwrapper.h \
+        FieldConverter/fixedfieldsortedpossimpleconverter.h \
         board.h \
         com_utils.h \
-        communication.h
+        communication.h \
+        policyconverters.h
 
 LIBS += -lboost_python3
 LIBS += -lboost_numpy3
