@@ -1,13 +1,13 @@
 #include <QApplication>
 #include <QTimer>
-#include "generatecnpyboarddata.h"
+#include "randomplayoutforpolicyplayer.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Py_Initialize();
     boost::python::numpy::initialize();
-    GenerateCnpyBoardData test(true);
-    QTimer::singleShot(0, &test, &GenerateCnpyBoardData::run);
+    RandomPlayoutForPolicyPlayer test;
+    QTimer::singleShot(0, &test, &RandomPlayoutForPolicyPlayer::run);
     return a.exec();
 }

@@ -25,6 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        PolicyPlayer/Evaluator/evaluatorwrapper.cpp \
+        PolicyPlayer/Evaluator/randomevaluator.cpp \
+        PolicyPlayer/Searcher/searcherwrapper.cpp \
+        PolicyPlayer/Searcher/simplesearcher.cpp \
+        PolicyPlayer/policyplayer.cpp \
         algorithmwrapper.cpp \
         testalgorithm.cpp \
         randommove.cpp \
@@ -32,11 +37,21 @@ SOURCES += \
         boarddividealgorithm.cpp
 
 HEADERS += \
+        PolicyPlayer/Evaluator/evaluatorwrapper.h \
+        PolicyPlayer/Evaluator/randomevaluator.h \
+        PolicyPlayer/Searcher/searcherwrapper.h \
+        PolicyPlayer/Searcher/simplesearcher.h \
+        PolicyPlayer/policyplayer.h \
+        PolicyPlayer/selectors.h \
         algorithmwrapper.h \
         testalgorithm.h \
         randommove.h \
         simplebeamsearch.h \
         boarddividealgorithm.h
+
+LIBS += -lboost_python3
+LIBS += -lboost_numpy3
+LIBS += -lpython3.7m
 
 unix {
     target.path = /usr/lib
@@ -46,3 +61,5 @@ unix {
 LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
 INCLUDEPATH += $$PWD/../Utilities
 DEPENDPATH += $$PWD/../Utilities
+
+INCLUDEPATH += /usr/include/python3.7m

@@ -7,11 +7,13 @@ QT += core gui widgets
 SOURCES += \
     generatecnpyboarddata.cpp \
         main.cpp \
-    generaterandomsimulateddata.cpp
+    generaterandomsimulateddata.cpp \
+    randomplayoutforpolicyplayer.cpp
 
 HEADERS += \
     generatecnpyboarddata.h \
-    generaterandomsimulateddata.h
+    generaterandomsimulateddata.h \
+    randomplayoutforpolicyplayer.h
 
 LIBS += -lboost_python3
 LIBS += -lboost_numpy3
