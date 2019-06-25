@@ -5,7 +5,7 @@ EvaluatorWrapper::EvaluatorWrapper()
 
 }
 
-boost::python::numpy::ndarray EvaluatorWrapper::calcPolicy(const procon::Field& field){
+boost::python::numpy::ndarray EvaluatorWrapper::calcPolicy(const procon::Field& field) const{
     auto result = calcInsidePolicy(field);
     auto shape = result.get_shape();
     for(int agent = 0; agent < shape[0]; ++agent){

@@ -1,5 +1,12 @@
 #include "policyplayer.h"
 
+PolicyPlayer::PolicyPlayer(const procon::Field& field, bool side) :
+    AlgorithmWrapper(field, side),
+    last_raw_result(boost::python::numpy::zeros(boost::python::tuple(), boost::python::numpy::dtype::get_builtin<float>()))
+{
+
+}
+
 std::vector<procon::MoveState> PolicyPlayer::agentAct(){
     assert(searcher);
 

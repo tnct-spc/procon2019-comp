@@ -9,10 +9,10 @@ class EvaluatorWrapper
 {
 public:
     EvaluatorWrapper();
-    virtual boost::python::numpy::ndarray calcPolicy(const procon::Field& field);
+    boost::python::numpy::ndarray calcPolicy(const procon::Field& field) const;
 
 protected:
-    virtual boost::python::numpy::ndarray calcInsidePolicy(const procon::Field& field) = 0;
+    virtual boost::python::numpy::ndarray calcInsidePolicy(const procon::Field& field) const = 0;
 };
 
 #endif // EVALUATORWRAPPER_H

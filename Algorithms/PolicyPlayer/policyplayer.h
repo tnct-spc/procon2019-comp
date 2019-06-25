@@ -7,9 +7,9 @@
 
 class PolicyPlayer : public AlgorithmWrapper
 {
-    using AlgorithmWrapper::AlgorithmWrapper;
 
 public:
+    PolicyPlayer(const procon::Field& field, bool side);
     std::vector<procon::MoveState> agentAct() override;
     void setSearcher(std::shared_ptr<SearcherWrapper> _searcher);
     void setSelector(std::function<std::vector<int>(const procon::Field&, const boost::python::numpy::ndarray&)> func);

@@ -6,9 +6,9 @@
 class RandomEvaluator : public EvaluatorWrapper
 {
     using EvaluatorWrapper::EvaluatorWrapper;
-public:
-    boost::python::numpy::ndarray calcInsidePolicy(const procon::Field& field) override;
 
+protected:
+    boost::python::numpy::ndarray calcInsidePolicy(const procon::Field& field) const override;
 };
 
 #endif // RANDOMEVALUATOR_H

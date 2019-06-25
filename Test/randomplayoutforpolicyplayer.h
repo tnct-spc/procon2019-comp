@@ -6,15 +6,15 @@
 #include "csvtranslate.h"
 #include "FieldConverter/fieldconverterwrapper.h"
 #include "PolicyPlayer/policyplayer.h"
-#include "PolicyPlayer/selectors.h"
+// #include "PolicyPlayer/selectors.h"
 #include "PolicyPlayer/Searcher/simplesearcher.h"
 #include "PolicyPlayer/Evaluator/randomevaluator.h"
+#include "FieldConverter/fixedfieldsortedpossimpleconverter.h"
 
 class RandomPlayoutForPolicyPlayer : public QObject
 {
 public:
     RandomPlayoutForPolicyPlayer();
-    template <typename T>
     void run();
 
 private:

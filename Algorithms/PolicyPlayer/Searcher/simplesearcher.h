@@ -5,6 +5,7 @@
 
 class SimpleSearcher : public SearcherWrapper
 {
+    using SearcherWrapper::SearcherWrapper;
 public:
     boost::python::numpy::ndarray search(const procon::Field& field) override;
 };

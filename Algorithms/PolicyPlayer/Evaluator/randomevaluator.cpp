@@ -1,6 +1,6 @@
 #include "randomevaluator.h"
 
-boost::python::numpy::ndarray EvaluatorWrapper::calcInsidePolicy(const procon::Field& field){
+boost::python::numpy::ndarray RandomEvaluator::calcInsidePolicy(const procon::Field& field) const{
 
     auto shape = boost::python::make_tuple(field.getAgentCount(), 8);
     auto arr = boost::python::numpy::zeros(shape, boost::python::numpy::dtype::get_builtin<float>());

@@ -1,22 +1,13 @@
 #include "randomplayoutforpolicyplayer.h"
 
+#include <iostream>
+
 RandomPlayoutForPolicyPlayer::RandomPlayoutForPolicyPlayer()
 {
 
 }
 
-template <typename Converter>
 void RandomPlayoutForPolicyPlayer::run(){
-
-    for(int side = 0; side < 2; ++side){
-        players.at(side) = std::make_shared<PolicyPlayer>();
-        searchers.at(side) = std::make_shared<SimpleSearcher>();
-        evaluators.at(side) = std::make_shared<RandomEvaluator>();
-
-        players.at(side)->setSelector(procon::selector::argmax_selector);
-        searchers.at(side)->setEvaluator(evaluators.at(side));
-        players.at(side)->setSearcher(searchers.at(side));
-    }
 
     namespace bp = boost::python;
     namespace np = boost::python::numpy;
@@ -37,7 +28,7 @@ void RandomPlayoutForPolicyPlayer::run(){
         std::set<std::pair<int,bool>> save_cond;
         for(int cnt = 0; cnt < 3; ++cnt){
             int rand_value = procon::random::call(mask);
-            save_cond.emplace(mask / 2, mask % 2);
+            save_cond.emplace(rand_value / 2, rand_value % 2);
         }
 
         /*
@@ -77,6 +68,16 @@ void RandomPlayoutForPolicyPlayer::run(){
         const auto& field = sim.getField();
         std::vector<std::pair<np::ndarray, np::ndarray>> ret_data;
 
+        for(int side = 0; side < 2; ++side){
+            players.at(side) = std::make_shared<PolicyPlayer>(field, static_cast<bool>(side));
+            evaluators.at(side) = std::make_shared<RandomEvaluator>();
+            searchers.at(side) = std::make_shared<SimpleSearcher>(evaluators.at(side));
+
+            players.at(side)->setSelector(procon::selector::argmax_selector);
+            players.at(side)->setSearcher(searchers.at(side));
+        }
+
+
         auto agent_move = [&](){
 
             auto move_0 = players.at(0)->agentAct();
@@ -85,8 +86,8 @@ void RandomPlayoutForPolicyPlayer::run(){
             auto policy_0 = players.at(0)->getLastSearchResult();
             auto policy_1 = players.at(1)->getLastSearchResult();
 
-            auto translated_field_0 = Converter(field);
-            auto translated_field_1 = Converter(field.getSideReversedField());
+            auto translated_field_0 = FixedFieldSortedPosSimpleConverter(field).data;
+            auto translated_field_1 = FixedFieldSortedPosSimpleConverter(field.getSideReversedField()).data;
 
             if(save_cond.find(std::make_pair(field.getTurn().now, 0)) != save_cond.end())
                 ret_data.emplace_back(translated_field_0, policy_0);
@@ -106,9 +107,13 @@ void RandomPlayoutForPolicyPlayer::run(){
         while(field.getTurn().now != field.getTurn().final)
             agent_move();
 
-        if(ret_data.size() >= 1e7){
+        for(auto& data : ret_data)
+            datas.emplace_back(std::move(data));
+
+        std::cout << datas.size() << std::endl;
+        if(datas.size() >= 1e7){
             // ここに適切な処理を入れる
-            exit(0);
+            return false;
         }
         return true;
     }());
