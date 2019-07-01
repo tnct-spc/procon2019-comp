@@ -26,6 +26,7 @@ SOURCES += \
         FieldConverter/fieldconverterwrapper.cpp \
         FieldConverter/fixedfieldsortedpossimpleconverter.cpp \
         board.cpp \
+        boardsimulator.cpp \
         com_utils.cpp \
         communication.cpp
 
@@ -33,6 +34,7 @@ HEADERS += \
         FieldConverter/fieldconverterwrapper.h \
         FieldConverter/fixedfieldsortedpossimpleconverter.h \
         board.h \
+        boardsimulator.h \
         com_utils.h \
         communication.h \
         policyconverters.h
