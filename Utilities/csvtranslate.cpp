@@ -41,7 +41,8 @@ Field csvImport(std::string path){
     for(int x_index = 0; x_index < size.x; ++x_index)
         for(int y_index = 0; y_index < size.y; ++y_index){
             FieldState state;
-            comma_input(state.tile, state.value);
+            int ignore_0, ignore_1;
+            comma_input(state.tile, state.value, ignore_0, ignore_1);
             states.at(x_index).at(y_index) = state;
         }
 
@@ -49,6 +50,7 @@ Field csvImport(std::string path){
     field.setScores(scores);
     field.setStates(states);
     field.setAgents(agents);
+    field.calcRegionPoint();
     return field;
 }
 
@@ -76,11 +78,12 @@ void csvExport(std::string path, const Field& field){
     for(int x_index = 0; x_index < size.x; ++x_index)
         for(int y_index = 0; y_index < size.y; ++y_index){
             auto state = field.getState(x_index, y_index);
+            auto is_region = field.getIsRegion(x_index, y_index);
 
             if(x_index == size.x - 1 && y_index == size.y - 1)
-                output_stream << state.tile << "," << state.value << std::endl;
+                output_stream << state.tile << "," << state.value << "," << is_region[0] << "," << is_region[1] << std::endl;
             else
-                comma_output(state.tile, state.value);
+                comma_output(state.tile, state.value, is_region[0], is_region[1]);
         }
 
     output_stream.close();
