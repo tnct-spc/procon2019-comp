@@ -30,6 +30,9 @@ SOURCES += \
         PolicyPlayer/Searcher/searcherwrapper.cpp \
         PolicyPlayer/Searcher/simplesearcher.cpp \
         PolicyPlayer/policyplayer.cpp \
+        SoftMaxSearch/evaluaterobject.cpp \
+        SoftMaxSearch/softmaxsearcher.cpp \
+        SoftMaxSearch/softmaxsearchnode.cpp \
         algorithmwrapper.cpp \
         testalgorithm.cpp \
         randommove.cpp \
@@ -43,6 +46,9 @@ HEADERS += \
         PolicyPlayer/Searcher/simplesearcher.h \
         PolicyPlayer/policyplayer.h \
         PolicyPlayer/selectors.h \
+        SoftMaxSearch/evaluaterobject.h \
+        SoftMaxSearch/softmaxsearcher.h \
+        SoftMaxSearch/softmaxsearchnode.h \
         algorithmwrapper.h \
         testalgorithm.h \
         randommove.h \

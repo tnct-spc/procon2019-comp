@@ -24,11 +24,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         csvtranslate.cpp \
+        treap.cpp \
         utils.cpp \
         field.cpp
 
 HEADERS += \
         csvtranslate.h \
+        treap.h \
         utils.h \
         field.h
 
