@@ -9,10 +9,9 @@
 class BoardSimulator
 {
 public:
-    BoardSimulator(std::string start_csv_path, std::string save_csv_path);
+    BoardSimulator(std::string start_csv_str);
     boost::python::tuple changeTurn(boost::python::numpy::ndarray input);
 private:
-    std::string save_csv_path;
     GameSimulator sim;
 };
 

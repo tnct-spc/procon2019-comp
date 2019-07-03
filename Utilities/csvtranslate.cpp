@@ -2,9 +2,8 @@
 
 namespace procon::csv{
 
-Field csvImport(std::string path){
-    std::ifstream input_stream(path);
-    assert(input_stream.good());
+Field csvDecode(std::string csv_string){
+    std::stringstream input_stream(csv_string);
     std::string data;
 
     auto comma_input = makeForEachFunc([&](auto&& head){
@@ -54,11 +53,19 @@ Field csvImport(std::string path){
     return field;
 }
 
-void csvExport(std::string path, const Field& field){
+Field csvImport(std::string path){
+    std::fstream input_stream(path);
+    assert(input_stream.good());
+    std::istreambuf_iterator<char> it(input_stream);
+    std::istreambuf_iterator<char> last;
+    std::string str(it, last);
+    input_stream.close();
+    return csvDecode(str);
+}
 
-    std::ofstream output_stream;
-    output_stream.open(path, std::ios::out | std::ios::app);
-    assert(output_stream.good());
+std::string csvEncode(const Field& field){
+
+    std::stringstream output_stream;
     auto comma_output = makeForEachFunc([&](auto&& head){output_stream << head << ",";});
 
     auto size = field.getSize();
@@ -86,6 +93,16 @@ void csvExport(std::string path, const Field& field){
                 comma_output(state.tile, state.value, is_region[0], is_region[1]);
         }
 
+    return output_stream.str();
+}
+
+void csvExport(std::string path, const Field& field){
+    std::string res = csvEncode(field);
+    std::ofstream output_stream;
+    output_stream.open(path, std::ios::out | std::ios::app);
+    assert(output_stream.good());
+    std::string str = csvEncode(field);
+    output_stream << str;
     output_stream.close();
 }
 

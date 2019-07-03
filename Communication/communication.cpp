@@ -25,6 +25,6 @@ BOOST_PYTHON_MODULE(communication){
             .def("rev", &Board::reverseBoard)
             .def("isEnded", &Board::isEnded);
 
-    bp::class_<BoardSimulator>("BoardSimulator", bp::init<std::string, std::string>())
+    bp::class_<BoardSimulator>("BoardSimulator", bp::init<std::string>())
             .def("change_turn", &BoardSimulator::changeTurn);
 }
