@@ -30,6 +30,7 @@ SOURCES += \
         PolicyPlayer/Searcher/searcherwrapper.cpp \
         PolicyPlayer/Searcher/simplesearcher.cpp \
         PolicyPlayer/policyplayer.cpp \
+        algofrompython.cpp \
         algorithmwrapper.cpp \
         testalgorithm.cpp \
         randommove.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
         PolicyPlayer/Searcher/simplesearcher.h \
         PolicyPlayer/policyplayer.h \
         PolicyPlayer/selectors.h \
+        algofrompython.h \
         algorithmwrapper.h \
         testalgorithm.h \
         randommove.h \
