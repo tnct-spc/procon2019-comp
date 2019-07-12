@@ -12,6 +12,7 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalRunFullSimulation, this, &GameManager::runFullSimulation);
     connect(&visualizer, &Visualizer::signalReverseField, this, &GameManager::reverseField);
     connect(&visualizer, &Visualizer::signalSimulateNextTurn, this, &GameManager::simulateNextTurn);
+    connect(&visualizer, &Visualizer::signalMoveAgents, this, &GameManager::moveAgents);
 
     setAlgorithms();
 
@@ -71,6 +72,17 @@ bool GameManager::simulateNextTurn(){
     if(game->isSimulationEnded())
         return false;
     game->turnSimulation(algo.at(0), algo.at(1), true);
+    visualizer.update();
+    visualizer.repaint();
+    return true;
+}
+
+bool GameManager::moveAgents(){
+    Visualizer vis;
+    if(vis.isInputEnded()){
+        return false;
+    }
+
     visualizer.update();
     visualizer.repaint();
     return true;

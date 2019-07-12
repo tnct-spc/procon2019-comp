@@ -22,6 +22,7 @@ public:
     ~Visualizer();
 
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
+    bool isInputEnded();
 
 signals:
     void signalResetField();
@@ -29,16 +30,18 @@ signals:
     void signalRunFullSimulation();
     void signalSimulateNextTurn();
     void signalReverseField();
+    void signalMoveAgents();
 
 private:
 
     void paintEvent(QPaintEvent* event);
     void keyPressEvent(QKeyEvent* event);
-    bool auto_mode = false;
-
 
     Ui::Visualizer *ui;
     std::shared_ptr<const procon::Field> field;
+    //↓初期化できてるか怪しい
+    std::vector<std::vector<procon::Point>> move_agent {2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
+    bool auto_mode = false;
 
     const double margin = 2;
 

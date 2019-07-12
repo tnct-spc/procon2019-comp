@@ -20,6 +20,18 @@ void Visualizer::setFieldPtr(std::shared_ptr<const procon::Field> field){
     this->repaint();
 }
 
+bool Visualizer::isInputEnded(){
+    int agent_count = field->getAgentCount();
+    for(int i = 0;i < agent_count;i++){
+        for(int j = 0;j < 2;j++){
+            if(move_agent[j][i].x == -1 || move_agent[j][i].y == -1){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void Visualizer::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
 

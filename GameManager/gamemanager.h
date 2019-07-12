@@ -20,6 +20,7 @@ public slots:
     void resetField();
     void runSimulator();
     bool simulateNextTurn();
+    bool moveAgents();
     void reverseField();
 
 private:
