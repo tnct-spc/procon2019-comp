@@ -40,7 +40,7 @@ const FieldState& Field::getState(Point p) const{
 }
 
 void Field::setAgent(bool side, int agent_index, Point agent_data){
-    assert(0 <= agent_index && agent_index < getAgentCount());
+    assert(0 <= agent_index && agent_index < AgentCount());
     if(getState(agent_data).isEmpty())
         setTileSide(agent_data, side);
     agents.at(agent_index)[side] = agent_data;

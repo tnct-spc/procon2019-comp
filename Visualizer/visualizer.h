@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPaintEvent>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QFileDialog>
 #include <memory>
@@ -36,12 +37,27 @@ private:
 
     void paintEvent(QPaintEvent* event);
     void keyPressEvent(QKeyEvent* event);
+    void mousePressEvent(QMouseEvent *event);
+    void checkClickedAgent(procon::Point mass);
 
     Ui::Visualizer *ui;
     std::shared_ptr<const procon::Field> field;
     //↓初期化できてるか怪しい
     std::vector<std::vector<procon::Point>> move_agent {2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
     bool auto_mode = false;
+    int window_width;
+    int window_height;
+    int grid_size;
+    int horizontal_margin;
+    int vertical_margin;
+    int agent_count;
+    bool selected = false;
+
+    procon::Point clicked_grid;
+    std::pair<bool, int> selected_agent;
+    procon::Point selected_agent_grid;
+    bool is_moving_agent = false;
+
 
     const double margin = 2;
 

@@ -82,7 +82,9 @@ bool GameManager::moveAgents(){
     if(vis.isInputEnded()){
         return false;
     }
-
+    else{
+        vis.mousePressEvent()
+    }
     visualizer.update();
     visualizer.repaint();
     return true;

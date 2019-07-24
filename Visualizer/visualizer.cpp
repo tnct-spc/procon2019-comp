@@ -32,19 +32,112 @@ bool Visualizer::isInputEnded(){
     return true;
 }
 
+void Visualizer::mousePressEvent(QMouseEvent *event){
+    agent_count = field->getAgentCount();
+    unsigned int grid_x = field->getSize().x;
+    unsigned int grid_y = field->getSize().y;
+    QPointF point = event->pos();
+    if(auto_mode == false){
+        if ((point.x() < horizontal_margin) || (point.x() > window_width - horizontal_margin)
+                        || (point.y() < vertical_margin) || (point.y() > window_height - vertical_margin)) {
+            return;
+        }
+        bool right_flag = (event->button() == Qt::RightButton);
+
+        // クリックされたグリッド座標を保存
+        procon::Point clicked_grid;
+
+        // xを座標からマスへ
+        clicked_grid.x = (point.x() - horizontal_margin) / grid_size;
+
+        // yを座標からマスへ
+        clicked_grid.y = (point.y() - vertical_margin) / grid_size;
+
+        // 移動を入力するエージェントが選ばれているか
+        if(selected){
+            std::vector<std::vector<std::pair<int, int>>> agents = field->getAgents();
+            for (int team = 0; team < 2; team++) {
+                for (int agent = 0; agent < agent_count; agent++) {
+
+                    // クリックされたマスとエージェントの位置が一致したら、チームとエージェントの番号を返す
+                    if (clicked_grid == agents.at(team).at(agent))// ここ対応する関数わからない
+                        return;
+                }
+            }
+
+            field->setTile(clicked_grid, selected_agent.first);
+            field->setAgent(selected_agent.first, selected_agent.second, clicked_grid);
+            selected = false;
+            is_moving_agent = true;
+
+        }else {
+
+            // クリックされたエージェントまたはマスを照合
+            checkClickedAgent(clicked_grid);
+        }
+        is_moving_agent = false;
+        bool finished_move = true;
+        for(int i = 0;i < agent_count;i++){
+            for(int j = 0;j < 2;j++){
+                if(move_agent[j][i].x == -1 || move_agent[j][i].y == -1){
+                    finished_move = false;
+                }
+            }
+        }
+
+    }
+}
+
+// クリックされたエージェントまたはマスを照合
+void Visualizer::checkClickedAgent(procon::Point mass)
+{
+    // Fieldから現在のエージェントの位置を取得
+    std::vector<std::vector<procon::Point>> agents {2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
+    for(int i = 0;i < 2;i++){
+        for(int j = 0;j < agent_count;j++){
+            agents[i][j];
+        }
+    }
+
+    // クリックされたマスにエージェントがいるのか確認
+    for (int team = 0; team < 2; team++) {
+        for (int agent = 0; agent < 2; agent++) {
+
+            // クリックされたマスとエージェントの位置が一致したら、チームとエージェントの番号を返す
+            if (mass == agents.at(team).at(agent)) {
+
+                // クリックされたエージェントがすでに変更済みなら何もしない
+                // if (decided_agents.at(team).at(agent)) return;
+
+                selected_agent.first = team;
+                selected_agent.second = agent;
+
+                // 移動を入力するエージェントのグリッド座標を保存
+                selected_agent_grid = mass;
+
+                // エージェントが選択されたことを記録
+                selected = true;
+                is_moving_agent = true;
+
+                // 選択されたエージェントの移動可能範囲を表示
+                this->update();
+            }
+        }
+    }
+}
+
 void Visualizer::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
-
     QPainter painter(this);
 
-    int window_width = this->width();
-    int window_height = this->height();
+    window_width = this->width();
+    window_height = this->height();
 
     procon::Point size = field ? field->getSize() : procon::Point(10, 10);
 
-    double grid_size = std::min(1.0 * window_width / ( (margin * 2) + size.x), 1.0 * window_height / ( (margin * 2) + size.y));
-    double horizontal_margin = (window_width - grid_size * size.x) / 2;
-    double vertical_margin = (window_height - grid_size * size.y) / 2;
+    grid_size = std::min(1.0 * window_width / ( (margin * 2) + size.x), 1.0 * window_height / ( (margin * 2) + size.y));
+    horizontal_margin = (window_width - grid_size * size.x) / 2;
+    vertical_margin = (window_height - grid_size * size.y) / 2;
 
     painter.setBrush(QBrush(background_color));
     painter.drawRect(0, 0, window_width, window_height);
