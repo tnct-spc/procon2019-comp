@@ -1,5 +1,5 @@
 # encording : utf-8
-""" get and post json data for procon30 comp server """
+''' get and post json data for procon30 comp server '''
 
 #default_token = 'procon30_example_token'
 
@@ -11,7 +11,7 @@ args = sys.argv
 json_def = {'actions': [{'agentID': 0, 'dx': 0, 'dy': 0, 'type': 'move'}]}
 
 def checkConnection(ip, port, token = 'procon30_example_token'):
-    """  check connection for procon30 comp server """
+    '''  check connection for procon30 comp server '''
 
     url = 'http://' + str(ip) + ':' + str(port) + '/ping'
 
@@ -25,7 +25,7 @@ def checkConnection(ip, port, token = 'procon30_example_token'):
 
 
 def getMatches(ip, port, token = 'procon30_example_token'):
-    """ get matches json data from procon30 comp server """
+    ''' get matches json data from procon30 comp server '''
 
     url = 'http://' + str(ip) + ':' + str(port) + '/matches'
 
@@ -39,7 +39,7 @@ def getMatches(ip, port, token = 'procon30_example_token'):
 
 
 def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = 6):
-    """ get match status json data from procon30 comp server """
+    ''' get match status json data from procon30 comp server '''
 
     url = 'http://' + str(ip) + ':' + str(port) + '/matches' + str(matchid)
 
@@ -53,7 +53,7 @@ def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = 6):
 
 
 def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = json_def):
-    """ post action json data to procon30 comp server """
+    ''' post action json data to procon30 comp server '''
 
     url = 'http://' + str(ip) + ':' + str(port) + '/matches' + str(matchid) + '/action'
 
