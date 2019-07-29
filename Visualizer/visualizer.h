@@ -44,8 +44,7 @@ private:
 
     Ui::Visualizer *ui;
     std::shared_ptr<const procon::Field> field;
-    //↓初期化できてるか怪しい
-    std::vector<std::vector<procon::Point>> move_agent {2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
+    std::vector<std::vector<procon::Point>> move_agent {2,std::vector<procon::Point>(field->getAgentCount(),procon::Point(-1,-1))};
     int window_width;
     int window_height;
     int grid_size;
@@ -58,7 +57,7 @@ private:
     procon::Point clicked_grid;
     std::pair<int, int> selected_agent;
     procon::Point selected_agent_grid;
-    bool is_moving_agent = false;//What is this?
+    bool is_moving_agent = false;
     std::vector<std::vector<int>> is_delete;
     std::vector<std::vector<procon::Point>> candidate;
 
