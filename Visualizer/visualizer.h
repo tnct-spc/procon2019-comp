@@ -24,6 +24,7 @@ public:
 
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
     bool isInputEnded();
+    bool auto_mode = false;
 
 signals:
     void signalResetField();
@@ -31,7 +32,7 @@ signals:
     void signalRunFullSimulation();
     void signalSimulateNextTurn();
     void signalReverseField();
-    void signalMoveAgents();
+    void signalMoveAgents(const std::vector<std::vector<procon::Point>>& inp_vec, std::vector<std::vector<int>> is_delete);
 
 private:
 
@@ -39,12 +40,12 @@ private:
     void keyPressEvent(QKeyEvent* event);
     void mousePressEvent(QMouseEvent *event);
     void checkClickedAgent(procon::Point mass);
+    void checkClickGrid(procon::Point mass, bool right_flag);
 
     Ui::Visualizer *ui;
     std::shared_ptr<const procon::Field> field;
     //↓初期化できてるか怪しい
     std::vector<std::vector<procon::Point>> move_agent {2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
-    bool auto_mode = false;
     int window_width;
     int window_height;
     int grid_size;
@@ -52,11 +53,14 @@ private:
     int vertical_margin;
     int agent_count;
     bool selected = false;
+    unsigned int confirm_count = 0;
 
     procon::Point clicked_grid;
-    std::pair<bool, int> selected_agent;
+    std::pair<int, int> selected_agent;
     procon::Point selected_agent_grid;
-    bool is_moving_agent = false;
+    bool is_moving_agent = false;//What is this?
+    std::vector<std::vector<int>> is_delete;
+    std::vector<std::vector<procon::Point>> candidate;
 
 
     const double margin = 2;
@@ -66,6 +70,8 @@ private:
     const QColor grid_color = QColor(220, 220, 180);
     const QColor score_color = QColor(250, 80, 80, 120);
     const QColor automode_color = score_color;
+    const QColor checked_color_a = QColor(255,120,0);
+    const QColor checked_color_b = QColor(0,120,255);
     const std::array<QColor, 2> team_colors = {QColor(255, 0, 0), QColor(0, 0, 255)};
 };
 

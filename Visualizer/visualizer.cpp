@@ -30,6 +30,7 @@ bool Visualizer::isInputEnded(){
         }
     }
     return true;
+    //すべてのエージェントの行動が確定していたらtrueを返す関数
 }
 
 void Visualizer::mousePressEvent(QMouseEvent *event){
@@ -55,23 +56,22 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
 
         // 移動を入力するエージェントが選ばれているか
         if(selected){
-            std::vector<std::vector<std::pair<int, int>>> agents = field->getAgents();
-            for (int team = 0; team < 2; team++) {
+            std::vector<std::vector<procon::Point>> agents = field->getAgents();
+            for (int team = 0; team < 2; team++) {//ここのループでエージェントごとに判定
                 for (int agent = 0; agent < agent_count; agent++) {
-
                     // クリックされたマスとエージェントの位置が一致したら、チームとエージェントの番号を返す
-                    if (clicked_grid == agents.at(team).at(agent))// ここ対応する関数わからない
-                        return;
+                    if (clicked_grid == agents.at(team).at(agent)){
+                        move_agent[team][agent]=clicked_grid;
+                    }
                 }
             }
-
             field->setTile(clicked_grid, selected_agent.first);
-            field->setAgent(selected_agent.first, selected_agent.second, clicked_grid);
+            //field->setAgent(selected_agent.first, selected_agent.second, clicked_grid);//選んだエージェントをclicked_gridへ for内で出来てるはず
             selected = false;
             is_moving_agent = true;
 
-        }else {
-
+        }
+        else {
             // クリックされたエージェントまたはマスを照合
             checkClickedAgent(clicked_grid);
         }
@@ -95,7 +95,7 @@ void Visualizer::checkClickedAgent(procon::Point mass)
     std::vector<std::vector<procon::Point>> agents {2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
     for(int i = 0;i < 2;i++){
         for(int j = 0;j < agent_count;j++){
-            agents[i][j];
+            agents[i][j] = getAgent;//ここにgetAgentが入る予定です
         }
     }
 
@@ -123,6 +123,69 @@ void Visualizer::checkClickedAgent(procon::Point mass)
                 this->update();
             }
         }
+    }
+}
+
+// エージェントの移動先を決定
+void Visualizer::checkClickGrid(procon::Point mass, bool right_flag)
+{
+    // クリックされた場所がエージェントの移動範囲に含まれているか確認
+    if (((selected_agent_grid.x - 1) > mass.x) || ((selected_agent_grid.x + 1) < mass.x)
+            || ((selected_agent_grid.y - 1) > mass.y) || ((selected_agent_grid.y + 1) < mass.y)) {
+
+        // 選択を解除
+        selected = false;
+
+        // すでに登録されている場合リセット
+        if (move_agent.at(selected_agent.first).at(selected_agent.second).x != -1) {
+
+            move_agent.at(selected_agent.first).at(selected_agent.second) = {-1, -1};
+            confirm_count--;
+
+        }
+
+        // 初期化
+        selected_agent = std::make_pair(INT_MAX, INT_MAX);
+        selected_agent_grid = {INT_MAX, INT_MAX};
+
+        this->update();
+
+        return;
+    }
+
+
+    //もう既に選択されている場合は値を増やさない
+    if(move_agent.at(selected_agent.first).at(selected_agent.second).x == -1)
+        ++confirm_count;
+
+    // 移動先を記録
+    move_agent.at(selected_agent.first).at(selected_agent.second) = mass;
+
+    is_delete.at(selected_agent.first).at(selected_agent.second) = right_flag;
+
+
+    // エージェントの移動先が決定済みであることを記録
+    // decided_agents.at(selected_agent.first).at(selected_agent.second) = true;
+
+    // エージェントの選択を解除
+    selected = false;
+
+    // windowの描きかえ
+    this->update();
+
+
+    if(confirm_count == 4){
+
+        confirm_count = 0;
+
+        std::vector<std::vector<procon::Point>> return_val = std::move(move_agent);
+        std::vector<std::vector<int>> return_delete_flag = std::move(is_delete);
+
+        move_agent = std::vector<std::vector<procon::Point>>{2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
+        candidate = std::vector<std::vector<procon::Point>>{2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
+
+        is_delete = std::vector<std::vector<int>>(2, std::vector<int>(2, 0));
+        emit signalMoveAgents(return_val, return_delete_flag);
     }
 }
 
@@ -204,6 +267,37 @@ void Visualizer::paintEvent(QPaintEvent *event){
         }
     };
 
+    auto drawAgentMove = [&]{
+
+        painter.setPen(QPen(QBrush(Qt::black), 0.3));
+
+        for(unsigned int team = 0; team < 2; ++team){
+            for(unsigned int index = 0; index < field->getAgentCount(); ++index){
+
+
+
+                int pos_x = move_agent.at(team).at(index).x;
+                int pos_y = move_agent.at(team).at(index).y;
+
+                if(pos_x == -1)continue;
+
+                QColor paint_color = ( team == 0
+                           ? checked_color_a
+                           : checked_color_b);
+
+                paint_color.setAlpha(120);
+
+                if(is_delete.at(team).at(index) || (field->getState(move_agent.at(team).at(index)).tile == (team == 0 ? 2 : 1)))
+                    paint_color.setAlpha(200);
+
+                painter.setBrush(QBrush(paint_color));
+
+                painter.drawRect(horizontal_margin + grid_size * (0.1 + pos_x), vertical_margin + grid_size * (0.1 + pos_y), 0.8 * grid_size, 0.8 * grid_size);
+            }
+        }
+
+
+    };
     auto drawTurnCount = [&]{
         QPoint text_point;
         text_point.setX(horizontal_margin + (size.x - 3) * grid_size);

@@ -20,7 +20,7 @@ public slots:
     void resetField();
     void runSimulator();
     bool simulateNextTurn();
-    bool moveAgents();
+    bool moveAgents(const std::vector<std::vector<procon::Point>>& inp_vec, std::vector<std::vector<int>> is_delete);
     void reverseField();
 
 private:
@@ -32,6 +32,8 @@ private:
 
     std::shared_ptr<const procon::Field> field;
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
+
+    unsigned int now_field = 0;
 
 };
 

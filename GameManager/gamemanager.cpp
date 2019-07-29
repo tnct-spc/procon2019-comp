@@ -77,15 +77,44 @@ bool GameManager::simulateNextTurn(){
     return true;
 }
 
-bool GameManager::moveAgents(){
-    Visualizer vis;
-    if(vis.isInputEnded()){
-        return false;
-    }
-    else{
-        vis.mousePressEvent()
-    }
+bool GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& inp_vec, std::vector<std::vector<int>> is_delete){
+    //is_deleteは自軍タイル除去時にのみ使う物 基本的に使わなさそう
+
+    std::cout << "turn : " << field->getTurn().now+1 << std::endl << std::endl;
+
+    std::vector<std::pair<int, int>> move_cipher;
+
+    for(int side = 0; side < 2; ++side)
+        for(int agent = 0; agent < 2; ++agent){
+
+            std::pair<int,int> origin_pos = field->getAgent(side, agent);
+
+            std::pair<int,int> pos = move.at(side).at(agent);
+
+            std::pair<int,int> new_pos = pos;
+
+            new_pos.first -= origin_pos.first;
+            new_pos.second -= origin_pos.second;
+
+            if (side == 0) move_cipher.push_back(new_pos);
+
+            //is_deleteなら強制的に削除
+            agentAct(side, agent,  std::make_tuple( ( is_delete.at(side).at(agent) || (field->getState(pos.first, pos.second).first == (side == 0 ? 2 : 1)) ? 2 : 1 ), new_pos.first, new_pos.second ) );
+
+        }
+
+    changeTurn();
+
+    now_field = field->getTurn().now;
+
     visualizer.update();
-    visualizer.repaint();
-    return true;
+
+    // ciphercard->updata(move_cipher);
+
+    if(field->getTurn().now == field->getTurn().final){
+
+        auto_mode = false;
+        // progresdock->show();
+    }else
+        nextMoveForManualMode();
 }
