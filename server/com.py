@@ -19,7 +19,7 @@ def checkConnection(ip, port, token = 'procon30_example_token'):
         'Authorization': token
     }
 
-    content = urllib.request.urlopen(url = url, headers=headers)
+    with urllib.request.Request(url = url, headers=headers) as content
 
     return json.loads(content)
 
@@ -33,7 +33,7 @@ def getMatches(ip, port, token = 'procon30_example_token'):
         'Authorization': token
     }
 
-    content = urllib.request.urlopen(url = url, headers=headers)
+    with urllib.request.Request(url = url, headers=headers) as content
 
     return json.loads(content)
 
@@ -47,7 +47,7 @@ def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = 6):
         'Authorization': token
     }
 
-    content = urllib.request.urlopen(url = url, headers=headers)
+    with urllib.request.Request(url = url, headers=headers) as content
 
     return json.loads(content)
 
@@ -62,7 +62,7 @@ def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = j
         'Authorization': token
     }
 
-    req = urllib.request.Request(url=url, headers=headers, data=json)
+    with urllib.request.Request(url=url, headers=headers, data=json) as content
     f = urllib.request.urlopen(req)
     return f.read().decode('utf-8')
 
