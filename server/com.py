@@ -19,15 +19,15 @@ def postRequest(address, token, data = None):
     if data != None:
         header['Content-Type'] = 'application/json'
         req = urllib.request.Request(address, headers=header, data=json.dumps(data).encode())
-    else: req = urllib.request.Request(address, headers=header)
+    else:
+        req = urllib.request.Request(address, headers=header)
 
     try:
         with urllib.request.urlopen(req) as content:
-
-        expect HTTPError as e:
-            pass
-        expect URLError as e:
-            pass
+            expect HTTPError as e:
+                pass
+            expect URLError as e:
+                pass
 
     return json.dumps(content.read().decode('utf-8'))
 
