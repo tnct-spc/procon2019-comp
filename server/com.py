@@ -21,7 +21,7 @@ def postRequest(address, token, data = None):
         req = urllib.request.Request(address, headers=header, data=json.dumps(data).encode())
     else : req = urllib.request.Request(address, headers=header)
     with urllib.request.urlopen(req) as content:
-        return json.loads(content.read().decode('utf-8'))
+        return json.dumps(content.read().decode('utf-8'))
 
 
 def checkConnection(ip, port, token = 'procon30_example_token'):
