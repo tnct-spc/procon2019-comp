@@ -10,19 +10,25 @@ import json
 args = sys.argv
 json_def = {'actions': [{'agentID': 0, 'dx': 0, 'dy': 0, 'type': 'move'}]}
 
-def checkConnection(ip, port, token = 'procon30_example_token'):
-    '''  check connection for procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/ping'
-
+def postRequest(address, token, data = None):
+    ''' make header & request and post it for server '''
     header = {
         'Authorization': token
     }
-
-    req =urllib.request.Request(url, headers=header)
+    if data != None:
+        header['Content-Type'] = 'application/json'
+    req = urllib.request.Request(address, headers=header)
     with urllib.request.urlopen(req) as content:
-
         return json.loads(content.read().decode('utf-8'))
+
+
+def checkConnection(ip, port, token = 'procon30_example_token'):
+    ''' check connection for procon30 comp server '''
+
+    url = 'http://' + str(ip) + ':' + str(port) + '/ping'    
+
+    return postRequest(url, token)
 
 
 def getMatches(ip, port, token = 'procon30_example_token'):
@@ -30,42 +36,24 @@ def getMatches(ip, port, token = 'procon30_example_token'):
 
     url = 'http://' + str(ip) + ':' + str(port) + '/matches'
 
-    headers = {
-        'Authorization': token
-    }
-
-    contet = urllib.request.Request(url = url, headers=headers)
-
-    return json.loads(content)
+    return postRequest(url, token)
 
 
 def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = 6):
     ''' get match status json data from procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/matches' + str(matchid)
+    url = 'http://' + str(ip) + ':' + str(port) + '/matches/' + str(matchid)
 
-    headers = {
-        'Authorization': token
-    }
-
-    content = urllib.request.Request(url = url, headers=headers)
-
-    return json.loads(content)
+    return postRequest(url, token)
 
 
 def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = json_def):
     ''' post action json data to procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/matches' + str(matchid) + '/action'
+    url = 'http://' + str(ip) + ':' + str(port) + '/matches/' + str(matchid) + '/action'
 
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': token
-    }
+    return postRequest(url, token)
 
-    content = urllib.request.Request(url=url, headers=headers, data=json)
-    f = urllib.request.urlopen(content)
-    return f.read().decode('utf-8')
 
 if __name__ == '__main__':
     if len(args) == 2:
