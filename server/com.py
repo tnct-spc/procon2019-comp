@@ -18,7 +18,8 @@ def postRequest(address, token, data = None):
     }
     if data != None:
         header['Content-Type'] = 'application/json'
-    req = urllib.request.Request(address, headers=header)
+        req = urllib.request.Request(address, headers=header, data=json.dumps(data).encode())
+    else : req = urllib.request.Request(address, headers=header)
     with urllib.request.urlopen(req) as content:
         return json.loads(content.read().decode('utf-8'))
 
@@ -39,7 +40,7 @@ def getMatches(ip, port, token = 'procon30_example_token'):
     return postRequest(url, token)
 
 
-def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = 6):
+def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = '6'):
     ''' get match status json data from procon30 comp server '''
 
     url = 'http://' + str(ip) + ':' + str(port) + '/matches/' + str(matchid)
@@ -52,7 +53,7 @@ def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = j
 
     url = 'http://' + str(ip) + ':' + str(port) + '/matches/' + str(matchid) + '/action'
 
-    return postRequest(url, token)
+    return postRequest(url, token, json)
 
 
 if __name__ == '__main__':
