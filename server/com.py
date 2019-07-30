@@ -15,13 +15,14 @@ def checkConnection(ip, port, token = 'procon30_example_token'):
 
     url = 'http://' + str(ip) + ':' + str(port) + '/ping'
 
-    headers = {
+    header = {
         'Authorization': token
     }
 
-    content = urllib.request.Request(url = url, headers=headers)
+    req =urllib.request.Request(url, headers=header)
+    with urllib.request.urlopen(req) as content:
 
-    return json.loads(content)
+        return json.loads(content.read().decode('utf-8'))
 
 
 def getMatches(ip, port, token = 'procon30_example_token'):
