@@ -41,12 +41,14 @@ public:
 
     std::vector<std::vector<std::bitset<2>>> reCalcRegion();
     void calcRegionPoint();
-    void calcRegionPoint(std::vector<std::vector<procon::Point>>& added_tiles, std::vector<std::vector<procon::Point>>& deleted_tiles);
+    void applyTileChange(std::vector<std::vector<procon::Point>>& put_tiles, std::vector<std::vector<procon::Point>>& remove_tiles);
 
     MoveState makeMoveState(bool side, const Point& p, int move_index) const;
 
     std::pair<bool, Point> outOfRangeCheck(Point p) const;
 
+    void setIsRegion(Point p, bool side, bool is_region);
+    void setIsRegion(int x, int y, bool side, bool is_region){setIsRegion(Point(x, y), side, is_region);}
     std::bitset<2> getIsRegion(Point p) const;
     std::bitset<2> getIsRegion(int x, int y) const{return getIsRegion(Point(x, y));}
 

@@ -29,11 +29,26 @@ void Field::setTile(Point p, int value){
     auto& state = states[p.x][p.y];
     assert(state.isEmpty() ^ value == false);
     if(state.isEmpty() && value){
+        setIsRegion(p, value - 1, false);
         scores.at(value - 1).tile += state.value;
     }else if(!state.isEmpty() && !value){
         scores.at(state.getDecrementedSide()).tile -= state.value;
     }
     states[p.x][p.y].tile = value;
+}
+
+void Field::setIsRegion(Point p, bool side, bool is_region){
+    assert(outOfRangeCheck(p).first == false);
+    bool bef = regions.at(p.x).at(p.y)[side];
+    if(bef && !is_region){
+        // reset
+        scores.at(side).region -= std::abs(getState(p).value);
+        regions.at(p.x).at(p.y)[side] = false;
+    }else if(!bef && is_region){
+        // set
+        scores.at(side).region += std::abs(getState(p).value);
+        regions.at(p.x).at(p.y)[side] = true;
+    }
 }
 
 const FieldState& Field::getState(Point p) const{
@@ -107,23 +122,61 @@ void Field::calcRegionPoint(){
                     scores.at(side).region += std::abs(getState(x_index, y_index).value);
 }
 
-void Field::calcRegionPoint(std::vector<std::vector<procon::Point>>& added_tiles, std::vector<std::vector<procon::Point>>& deleted_tiles){
-    assert(added_tiles.size() == 2);
-    assert(deleted_tiles.size() == 2);
+void Field::applyTileChange(std::vector<std::vector<procon::Point>>& put_tiles, std::vector<std::vector<procon::Point>>& remove_tiles){
+    assert(put_tiles.size() == 2);
+    assert(remove_tiles.size() == 2);
     for(int side = 0; side < 2; ++side){
-        auto& points = added_tiles.at(side);
+        auto& points = put_tiles.at(side);
         auto get_team_tile_num = [&side, this](auto point){
             int tile_cnt = 0;
             for(int move = 0; move < 8; ++move){
                 auto moved_point = point.getAppliedPosition(move);
-                if(outOfRangeCheck(moved_point).first == true)
+                if(outOfRangeCheck(moved_point).first)
                     continue;
-                tile_cnt += (getState(moved_point).tile == );
+                tile_cnt += (getState(moved_point).getDecrementedSide() == side);
             }
+            return tile_cnt;
         };
+        std::queue<procon::Point> p_que;
         for(auto& point : points){
+            if(get_team_tile_num(point) >= 2)
+                for(int move = 0; move < 4; ++move){
+                    auto moved_point = point.getAppliedPosition(move);
+                    if(!outOfRangeCheck(moved_point).first && getState(moved_point).getDecrementedSide() != side)
+                        p_que.emplace(moved_point);
+                }
+            // apply
+            setTileSide(point, side);
         }
+        // BFS labeling
     }
+    for(int side = 0; side < 2; ++side)
+        for(auto& point : remove_tiles.at(side)){
+            bool all_tile = true;
+            bool all_tile_or_region = true;
+            bool any_region = false;
+            for(int move = 0; move < 4; ++move){
+                auto moved_point = point.getAppliedPosition(move);
+                if(outOfRangeCheck(moved_point).first == true){
+                    all_tile = false;
+                    all_tile_or_region = false;
+                }else{
+                    bool tile_flag = (getState(moved_point).getDecrementedSide() == side);
+                    bool region_flag = regions.at(moved_point.x).at(moved_point.y)[side];
+                    all_tile &= tile_flag;
+                    all_tile_or_region &= (tile_flag | region_flag);
+                    any_region |= region_flag;
+                }
+            }
+            if(all_tile || (any_region && all_tile_or_region)){
+                // set region
+                setIsRegion(point, side, true);
+            }else if(any_region){
+                // delete 8 kinbou
+            }
+            // apply
+            setTileEmpty(point);
+        }
 }
 
 MoveState Field::makeMoveState(bool side, const Point &p, int move_index) const{
