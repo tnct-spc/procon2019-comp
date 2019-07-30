@@ -24,9 +24,9 @@ def postRequest(address, token, data = None):
 
     try:
         with urllib.request.urlopen(req) as content:
-            expect HTTPError as e:
+            except HTTPError as e:
                 pass
-            expect URLError as e:
+            except URLError as e:
                 pass
 
     return json.dumps(content.read().decode('utf-8'))
