@@ -107,6 +107,25 @@ void Field::calcRegionPoint(){
                     scores.at(side).region += std::abs(getState(x_index, y_index).value);
 }
 
+void Field::calcRegionPoint(std::vector<std::vector<procon::Point>>& added_tiles, std::vector<std::vector<procon::Point>>& deleted_tiles){
+    assert(added_tiles.size() == 2);
+    assert(deleted_tiles.size() == 2);
+    for(int side = 0; side < 2; ++side){
+        auto& points = added_tiles.at(side);
+        auto get_team_tile_num = [&side, this](auto point){
+            int tile_cnt = 0;
+            for(int move = 0; move < 8; ++move){
+                auto moved_point = point.getAppliedPosition(move);
+                if(outOfRangeCheck(moved_point).first == true)
+                    continue;
+                tile_cnt += (getState(moved_point).tile == );
+            }
+        };
+        for(auto& point : points){
+        }
+    }
+}
+
 MoveState Field::makeMoveState(bool side, const Point &p, int move_index) const{
     auto [out_of_range, moved_pos] = outOfRangeCheck(p.getAppliedPosition(move_index));
     if(out_of_range)

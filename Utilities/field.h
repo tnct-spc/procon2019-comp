@@ -41,6 +41,7 @@ public:
 
     std::vector<std::vector<std::bitset<2>>> reCalcRegion();
     void calcRegionPoint();
+    void calcRegionPoint(std::vector<std::vector<procon::Point>>& added_tiles, std::vector<std::vector<procon::Point>>& deleted_tiles);
 
     MoveState makeMoveState(bool side, const Point& p, int move_index) const;
 
