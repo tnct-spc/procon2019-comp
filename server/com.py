@@ -6,6 +6,8 @@
 import sys
 import urllib.request
 import json
+from urllib.error import URLErrr, HTTPError
+
 
 args = sys.argv
 json_def = {'actions': [{'agentID': 0, 'dx': 0, 'dy': 0, 'type': 'move'}]}
