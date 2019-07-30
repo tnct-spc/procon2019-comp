@@ -46,7 +46,7 @@ def getMatches(ip, port, token = 'procon30_example_token'):
     return postRequest(url, token)
 
 
-def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = '6'):
+def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = 1):
     ''' get match status json data from procon30 comp server '''
 
     url = 'http://' + str(ip) + ':' + str(port) + '/matches/' + str(matchid)
