@@ -23,11 +23,11 @@ def postRequest(address, token, data = None):
         req = urllib.request.Request(address, headers=header)
 
     try:
-        with urllib.request.urlopen(req) as content:
-            except HTTPError as e:
-                pass
-            except URLError as e:
-                pass
+        content = urllib.request.urlopen(req)
+    except HTTPError as e:
+        pass
+    except URLError as e:
+        pass
 
     return json.dumps(content.read().decode('utf-8'))
 
