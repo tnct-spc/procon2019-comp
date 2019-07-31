@@ -294,8 +294,6 @@ void Visualizer::paintEvent(QPaintEvent *event){
                 painter.drawRect(horizontal_margin + grid_size * (0.1 + pos_x), vertical_margin + grid_size * (0.1 + pos_y), 0.8 * grid_size, 0.8 * grid_size);
             }
         }
-
-
     };
     auto drawTurnCount = [&]{
         QPoint text_point;

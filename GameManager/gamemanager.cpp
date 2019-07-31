@@ -102,9 +102,8 @@ void GameManager::agentAct(const int turn, const int agent, const std::tuple<int
 
 void GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& move, std::vector<std::vector<int>> is_delete){
     //is_deleteは自軍タイル除去時にのみ使う物 基本的に使わなさそう
-
     std::cout << "turn : " << field->getTurn().now+1 << std::endl << std::endl;
-
+    std::vector<std::vector<procon::MoveState>> agent_act;
     for(int side = 0; side < 2; ++side)
         for(int agent = 0; agent < field->getAgentCount(); ++agent){
 
@@ -117,18 +116,17 @@ void GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& move
             new_pos.x -= origin_pos.x;
             new_pos.y -= origin_pos.y;
 
-
-
             //is_deleteなら強制的に削除
             agentAct(side, agent,  std::make_tuple( ( is_delete.at(side).at(agent) || (field->getState(pos.x, pos.y).tile == (side == 0 ? 2 : 1)) ? 2 : 1 ), new_pos.x, new_pos.y) );
-
+            agent_act[side][agent].move_index = field->getAgent(side, agent).getMoveIndex(move[side][agent]);
+            agent_act[side][agent].is_delete = is_delete[side][agent];
         }
-
     GameSimulator sim;
     sim.changeTurn(true);
 
     now_field = field->getTurn().now;
 
     visualizer.update();
+
 }
 
