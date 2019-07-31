@@ -6,7 +6,7 @@
 import sys
 import urllib.request
 import json
-from urllib.error import URLErrr, HTTPError
+from urllib.error import URLError, HTTPError
 
 
 args = sys.argv
