@@ -56,17 +56,16 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
 
         // 移動を入力するエージェントが選ばれているか
         if(selected){
-            std::vector<std::vector<procon::Point>> agents = field->getAgents();
+            std::vector<std::vector<procon::Point>> agents (2,std::vector<procon::Point>(agent_count));
             for (int team = 0; team < 2; team++) {//ここのループでエージェントごとに判定
                 for (int agent = 0; agent < agent_count; agent++) {
+                    agents[team][agent] = field->getAgent(team,agent);
                     // クリックされたマスとエージェントの位置が一致したら、チームとエージェントの番号を返す
                     if (clicked_grid == agents.at(team).at(agent)){
                         move_agent[team][agent]=clicked_grid;
                     }
                 }
             }
-            field->setTile(clicked_grid, selected_agent.first);
-            //field->setAgent(selected_agent.first, selected_agent.second, clicked_grid);//選んだエージェントをclicked_gridへ for内で出来てるはず
             selected = false;
             is_moving_agent = true;
 
@@ -95,7 +94,7 @@ void Visualizer::checkClickedAgent(procon::Point mass)
     std::vector<std::vector<procon::Point>> agents {2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
     for(int i = 0;i < 2;i++){
         for(int j = 0;j < agent_count;j++){
-            agents[i][j] = getAgent;//ここにgetAgentが入る予定です
+            agents[i][j] = field->getAgent(i, j);//ここにgetAgentが入る予定です
         }
     }
 

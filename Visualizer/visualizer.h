@@ -55,7 +55,7 @@ private:
     unsigned int confirm_count = 0;
 
     procon::Point clicked_grid;
-    std::pair<int, int> selected_agent;
+    std::pair<bool, int> selected_agent;
     procon::Point selected_agent_grid;
     bool is_moving_agent = false;
     std::vector<std::vector<int>> is_delete;

@@ -26,6 +26,7 @@ public slots:
 private:
 
     void setAlgorithms();
+    void agentAct(const int turn, const int agent, const std::tuple<int,int,int> tuple_val);
 
     std::shared_ptr<GameSimulator> game;
     Visualizer visualizer;
@@ -34,6 +35,7 @@ private:
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
 
     unsigned int now_field = 0;
+    std::vector<std::vector<std::tuple<int,int,int>>> act_stack;
 
 };
 

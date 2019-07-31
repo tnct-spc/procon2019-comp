@@ -77,7 +77,30 @@ bool GameManager::simulateNextTurn(){
     return true;
 }
 
-void GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& inp_vec, std::vector<std::vector<int>> is_delete){
+void GameManager::agentAct(const int turn, const int agent, const std::tuple<int, int, int> tuple_val){
+    //field->ifCreateArea(0, 0);
+    int type, x_inp, y_inp;
+    std::tie(type, x_inp, y_inp) = tuple_val;
+
+    procon::Point agent_pos = field->getAgent(turn, agent);
+    procon::Point grid_size = field->getSize();
+    int x_pos = agent_pos.x + x_inp;
+    int y_pos = agent_pos.y + y_inp;
+
+    if(
+        type == 0 ||
+        x_pos < 0 || x_pos >= grid_size.x ||
+        y_pos < 0 || y_pos >= grid_size.y ||
+        (type == 1 && field->getState(x_pos, y_pos).tile == (turn==1 ? 1 : 2)) ||
+        (type == 2 && field->getState(x_pos, y_pos).tile == 0)
+        ){
+        act_stack.at(turn).at(agent) = std::make_tuple(1, agent_pos.x, agent_pos.y);
+        return ;
+    }
+    act_stack.at(turn).at(agent) = std::make_tuple(type, x_pos, y_pos);
+}
+
+void GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& move, std::vector<std::vector<int>> is_delete){
     //is_deleteは自軍タイル除去時にのみ使う物 基本的に使わなさそう
 
     std::cout << "turn : " << field->getTurn().now+1 << std::endl << std::endl;
@@ -85,33 +108,27 @@ void GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& inp_
     for(int side = 0; side < 2; ++side)
         for(int agent = 0; agent < field->getAgentCount(); ++agent){
 
-            std::pair<int,int> origin_pos = field->getAgent(side, agent);
+            procon::Point origin_pos = field->getAgent(side, agent);
 
-            std::pair<int,int> pos = move.at(side).at(agent);
+            procon::Point pos = move.at(side).at(agent);
 
-            std::pair<int,int> new_pos = pos;
+            procon::Point new_pos = pos;
 
-            new_pos.first -= origin_pos.first;
-            new_pos.second -= origin_pos.second;
+            new_pos.x -= origin_pos.x;
+            new_pos.y -= origin_pos.y;
 
 
 
             //is_deleteなら強制的に削除
-            agentAct(side, agent,  std::make_tuple( ( is_delete.at(side).at(agent) || (field->getState(pos.first, pos.second).first == (side == 0 ? 2 : 1)) ? 2 : 1 ), new_pos.first, new_pos.second ) );
+            agentAct(side, agent,  std::make_tuple( ( is_delete.at(side).at(agent) || (field->getState(pos.x, pos.y).tile == (side == 0 ? 2 : 1)) ? 2 : 1 ), new_pos.x, new_pos.y) );
 
         }
 
     GameSimulator sim;
-    Visualizer vis;
     sim.changeTurn(true);
 
     now_field = field->getTurn().now;
 
     visualizer.update();
-
-    if(field->getTurn().now == field->getTurn().final){
-        vis.auto_mode = false;
-    }else
-        nextMoveForManualMode();
 }
 
