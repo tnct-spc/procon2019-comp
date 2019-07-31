@@ -173,7 +173,7 @@ void Visualizer::checkClickGrid(procon::Point mass, bool right_flag)
     this->update();
 
 
-    if(confirm_count == 4){
+    if(confirm_count == agent_count*2){
 
         confirm_count = 0;
 
