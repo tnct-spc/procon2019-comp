@@ -2,6 +2,7 @@
 #define FIELDCSVTRANSLATE_H
 
 #include "field.h"
+#include "csvtranslate.h"
 #include <iostream>// pathに存在しているファイルを読み込む
 #include <fstream>
 #include <string>
