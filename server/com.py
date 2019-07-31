@@ -67,9 +67,10 @@ def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = j
 
 
 if __name__ == '__main__':
-    if len(args) == 2:
-        print(checkConnection(args[1], args[2]), args[3])
-    elif len(args) == 3:
-        print(checkConnection(args[1], args[2]), args[3])
-    else:
-        pass
+    print(checkConnection('localhost', 8888))
+    print(getMatches('localhost', 8888))
+    print(getMatchStatus('localhost', 8888, matchid=1))
+    print(getMatchStatus('localhost', 8888, matchid=3))
+    print(getMatchStatus('localhost', 8888, matchid=6))
+    print(sendAction('localhost', 8888))
+
