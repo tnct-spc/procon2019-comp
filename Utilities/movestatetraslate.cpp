@@ -3,9 +3,16 @@
 std::vector<procon::MoveState> procon::json::translateToMoveStateData(std::string json_str){
 
 }
-std::string procon::json::translateFromMoveStateData(std::vector<procon::MoveState>){
+std::string procon::json::translateFromMoveStateData(std::vector<procon::MoveState> move_states){
 
+    nlohmann::json json_data;
+    json_data["actions"] = 0;
 
+    int dx, dy;
+    std::string type;
+    std::tie(type, dx, dy) = convertFromMoveState(move_states.at(0));
+
+    std::cout << json_data << std::endl;
 }
 
 std::tuple<std::string, int, int> procon::json::convertFromMoveState(procon::MoveState move_state){
