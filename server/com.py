@@ -3,13 +3,10 @@
 
 #default_token = 'procon30_example_token'
 
-import sys
 import urllib.request
 import json
 from urllib.error import URLError, HTTPError
 
-
-args = sys.argv
 json_def = {'actions': [{'agentID': 0, 'dx': 0, 'dy': 0, 'type': 'move'}]}
 
 
