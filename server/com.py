@@ -27,7 +27,8 @@ def postRequest(address, token, data = None):
     except HTTPError as e:
         ret['code'] = e.code
         ret['reason'] = e.reason
-        return json.dumps(ret)
+        #return json.dumps(ret)
+        return e.read().decode('utf-8')
     except URLError as e:
         ret['reason'] = e.reason
         return json.dumps(ret)
