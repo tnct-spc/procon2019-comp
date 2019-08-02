@@ -21,14 +21,18 @@ def postRequest(address, token, data = None):
     else:
         req = urllib.request.Request(address, headers=header)
 
+    ret = {}
     try:
         content = urllib.request.urlopen(req)
     except HTTPError as e:
-        pass
+        ret['code'] = e.code
+        ret['reason'] = e.reason
+        return json.dumps(ret)
     except URLError as e:
-        pass
-
-    return json.dumps(content.read().decode('utf-8'))
+        ret['reason'] = e.reason
+        return json.dumps(ret)
+    else:
+        return json.dumps(content.read().decode('utf-8'))
 
 
 def checkConnection(ip, port, token = 'procon30_example_token'):
