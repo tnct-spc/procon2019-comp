@@ -64,10 +64,16 @@ def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = j
 
 
 if __name__ == '__main__':
+    print('-----checkConnection()-----\n')
     print(checkConnection('localhost', 8888))
+    print('\n\n-----getMatches()-----\n')
     print(getMatches('localhost', 8888))
+    print('\n\n-----getMatchstatus(id=1)-----\n')
     print(getMatchStatus('localhost', 8888, matchid=1))
+    print('\n\n-----getMatchstatus(id=3)-----\n')
     print(getMatchStatus('localhost', 8888, matchid=3))
+    print('\n\n-----getMatchstatus(id=6)-----\n')
     print(getMatchStatus('localhost', 8888, matchid=6))
+    print('\n\n-----sendAction()-----\n')
     print(sendAction('localhost', 8888))
 
