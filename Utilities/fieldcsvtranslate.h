@@ -3,6 +3,7 @@
 
 #include "field.h"
 #include "csvtranslate.h"
+#include <nlohmann/json.hpp>
 #include <iostream>// pathに存在しているファイルを読み込む
 #include <fstream>
 #include <string>
@@ -10,10 +11,10 @@
 
 
 namespace procon::json{
-    std::string translateToFieldCsv(std::string json_str);
+    std::string translateToFieldCsv(std::string json_str, int team_id, int end_turn);
     std::string translateFromFieldCsv(std::string field_csv_str);
 
-    procon::Field importJsonToField(std::string path);
+    procon::Field importJsonToField(std::string path, int team_id, int end_turn);
 }
 
 #endif // FIELDCSVTRANSLATE_H
