@@ -24,7 +24,7 @@ public:
 
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
     bool isInputEnded();
-    bool auto_mode = false;
+    bool auto_mode = true;
 
 signals:
     void signalResetField();

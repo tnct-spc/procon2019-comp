@@ -104,7 +104,7 @@ void GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& move
     //is_deleteは自軍タイル除去時にのみ使う物 基本的に使わなさそう
     std::cout << "turn : " << field->getTurn().now+1 << std::endl << std::endl;
     std::vector<std::vector<procon::MoveState>> agent_act;
-    for(int side = 0; side < 2; ++side)
+    for(int side = 0; side < 2; ++side){
         for(int agent = 0; agent < field->getAgentCount(); ++agent){
 
             procon::Point origin_pos = field->getAgent(side, agent);
@@ -121,11 +121,11 @@ void GameManager::moveAgents(const std::vector<std::vector<procon::Point>>& move
             agent_act[side][agent].move_index = field->getAgent(side, agent).getMoveIndex(move[side][agent]);
             agent_act[side][agent].is_delete = is_delete[side][agent];
         }
-    GameSimulator sim;
-    sim.changeTurn(true);
-
+    }
+    game->addAgentAct(0,agent_act[0]);
+    game->addAgentAct(1,agent_act[1]);
+    game->changeTurn(true);
     now_field = field->getTurn().now;
-
     visualizer.update();
 
 }

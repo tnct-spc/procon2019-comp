@@ -1,4 +1,4 @@
-#include "visualizer.h"
+﻿#include "visualizer.h"
 #include "ui_visualizer.h"
 
 Visualizer::Visualizer(std::shared_ptr<const procon::Field> field, QWidget *parent) :
@@ -184,6 +184,7 @@ void Visualizer::checkClickGrid(procon::Point mass, bool right_flag)
         candidate = std::vector<std::vector<procon::Point>>{2,std::vector<procon::Point>(field->getAgentCount(),{-1,-1})};
 
         is_delete = std::vector<std::vector<int>>(2, std::vector<int>(2, 0));
+        auto_mode = true;
         emit signalMoveAgents(return_val, return_delete_flag);
     }
 }
@@ -322,8 +323,8 @@ void Visualizer::paintEvent(QPaintEvent *event){
         font.setPointSize(grid_size * 0.8);
         painter.setFont(font);
 
-        QString str(QString::fromStdString("Auto Mode"));
-        if(auto_mode)painter.drawText(text_point, str);
+        QString str(QString::fromStdString("Manual Mode"));
+        if(!auto_mode)painter.drawText(text_point, str);
     };
 
     auto drawScores = [&]{
@@ -372,7 +373,7 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
     }
     if(event->key() == Qt::Key_A){
-        auto_mode = !auto_mode;
+        auto_mode = false;
         this->update();
         this->repaint();
     }
