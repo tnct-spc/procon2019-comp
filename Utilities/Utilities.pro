@@ -25,14 +25,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         buttleapi.cpp \
         csvtranslate.cpp \
+        movestatetraslate.cpp \
         utils.cpp \
-        field.cpp
+        field.cpp \
+    fieldcsvtranslate.cpp
 
 HEADERS += \
         buttleapi.h \
         csvtranslate.h \
+        movestatetraslate.h \
         utils.h \
-        field.h
+        field.h \
+    fieldcsvtranslate.h
 
 unix {
     target.path = /usr/lib

@@ -124,7 +124,7 @@ struct FixPointForEach{
 template <typename F>
 decltype(auto) makeForEachFunc(F&& f){
 
-    constexpr auto rec = [&](auto&& f, auto&& head, auto&&... tail) -> void{
+    auto rec = [&](auto&& f, auto&& head, auto&&... tail) -> void{
         f._f(head);
         if(sizeof...(tail))
             f(std::forward<decltype(tail)>(tail)...);
