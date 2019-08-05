@@ -24,11 +24,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         csvtranslate.cpp \
+        movestatetraslate.cpp \
         utils.cpp \
         field.cpp
 
 HEADERS += \
         csvtranslate.h \
+        movestatetraslate.h \
         utils.h \
         field.h
 
