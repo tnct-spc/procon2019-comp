@@ -23,7 +23,6 @@ public:
     ~Visualizer();
 
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
-    bool isInputEnded();
     bool auto_mode = true;
 
 signals:
@@ -32,7 +31,7 @@ signals:
     void signalRunFullSimulation();
     void signalSimulateNextTurn();
     void signalReverseField();
-    void signalMoveAgents(const std::vector<std::vector<procon::Point>>& inp_vec, std::vector<std::vector<int>> is_delete);
+    void signalMoveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
 
 private:
 
@@ -44,7 +43,7 @@ private:
 
     Ui::Visualizer *ui;
     std::shared_ptr<const procon::Field> field;
-    std::vector<std::vector<procon::Point>> move_agent {2,std::vector<procon::Point>(field->getAgentCount(),procon::Point(-1,-1))};
+    std::vector<procon::Point> move_agent;
     int window_width;
     int window_height;
     int grid_size;
@@ -55,12 +54,13 @@ private:
     unsigned int confirm_count = 0;
 
     procon::Point clicked_grid;
-    std::pair<bool, int> selected_agent;
+    std::pair<int, int> selected_agent;
     procon::Point selected_agent_grid;
     bool is_moving_agent = false;
-    std::vector<std::vector<int>> is_delete;
-    std::vector<std::vector<procon::Point>> candidate;
+    std::vector<int> is_delete;
+    std::vector<procon::Point> candidate;
 
+    bool manual_team = false;
 
     const double margin = 2;
 
@@ -68,10 +68,10 @@ private:
     const QColor background_color = QColor(245, 245, 220);
     const QColor grid_color = QColor(220, 220, 180);
     const QColor score_color = QColor(250, 80, 80, 120);
-    const QColor automode_color = score_color;
     const QColor checked_color_a = QColor(255,120,0);
     const QColor checked_color_b = QColor(0,120,255);
     const std::array<QColor, 2> team_colors = {QColor(255, 0, 0), QColor(0, 0, 255)};
+    const std::array<QColor, 2> team_colors_deep = {QColor(150, 0, 0), QColor(0, 0, 150)};
 };
 
 #endif // VISUALIZER_H

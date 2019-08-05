@@ -20,13 +20,12 @@ public slots:
     void resetField();
     void runSimulator();
     bool simulateNextTurn();
-    void moveAgents(const std::vector<std::vector<procon::Point>>& inp_vec, std::vector<std::vector<int>> is_delete);
+    void moveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
     void reverseField();
 
 private:
 
     void setAlgorithms();
-    void agentAct(const int turn, const int agent, const std::tuple<int,int,int> tuple_val);
 
     std::shared_ptr<GameSimulator> game;
     Visualizer visualizer;
@@ -35,7 +34,6 @@ private:
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
 
     unsigned int now_field = 0;
-    std::vector<std::vector<std::tuple<int,int,int>>> act_stack;
 
 };
 
