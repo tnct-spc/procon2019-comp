@@ -25,7 +25,16 @@ private slots:
 private:
     Ui::Takao *ui;
 
-    std::shared_ptr<GameManager> manager;
+    ButtleAPI api;
+
+    std::vector<int> match_ids;
+
+    std::shared_ptr<AlgorithmWrapper> algorithm;
+    std::vector<std::shared_ptr<procon::Field>> fields;
+    std::vector<std::shared_ptr<SimpleVisualizer>> visualizers;
+
+    void getFromButtleDataApi();
+    void updateField(int buttle_index, std::string csv_str);
 };
 
 #endif // TAKAO_H

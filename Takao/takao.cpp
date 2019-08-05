@@ -21,3 +21,21 @@ Takao::~Takao()
 void Takao::loadCsvField(){
     emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
 }
+
+void Takao::getFromButtleDataApi(){
+    /*
+    それぞれのmatchIDについて, 対戦APIからデータを取得する
+    取得したデータをcsv形式に変換して, updateFieldに投げる
+    */
+
+}
+
+void Takao::updateField(int buttle_index, std::string csv_str){
+    /*
+    csv_strをField形式に変換する
+    buttle_index番目のFieldを更新する
+    更新したFieldについて, それをAlgorithmに投げてvector<procon::Movestate>を取得する
+    それを行動形式のjsonに変換して, 対戦APIに投げる
+    */
+
+}
