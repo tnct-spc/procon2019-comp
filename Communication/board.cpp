@@ -19,7 +19,7 @@ Board::Board(const GameSimulator& sim) :
 {
 }
 
-np::ndarray Board::getData(){
+np::ndarray Board::getDataFromField(const procon::Field field){
 
     auto size = field.getSize();
     auto agent_count = field.getAgentCount();
@@ -42,6 +42,69 @@ np::ndarray Board::getData(){
         }
 
     return data;
+}
+
+np::ndarray Board::getData(){
+    return getDataFromField(field);
+}
+
+np::ndarray Board::getCenterDataFromField(const procon::Field field){
+
+    /*
+    全エージェント分の {生の得点, {味方のタイル, 敵のタイル, 空のタイル}, 自分, 敵}
+    各sideの{タイル点, 領域点, 総和}
+    残りターン数
+    */
+
+    auto agent_count = field.getAgentCount();
+
+    int dim_size = 6 * (2 * agent_count) + 7;
+    auto shape = bp::make_tuple(dim_size, 39, 39);
+    auto data = np::zeros(shape, np::dtype::get_builtin<int>());
+
+    auto set_data = [&](int dim_index, int side, Point origin_agent_pos){
+        Point pos_dif(origin_agent_pos.x - 19, origin_agent_pos.y - 19);
+        for(int x_index = 0; x_index < 39; ++x_index)
+            for(int y_index = 0; y_index < 39; ++y_index){
+                Point pos(x_index + pos_dif.x, y_index + pos_dif.y);
+                for(int dim = 1; dim < 6; ++dim)
+                    data[dim_index * 6 + dim][x_index][y_index] = -1;
+                if(field.outOfRangeCheck(pos).first){
+                    data[dim_index * 6][x_index][y_index] = -50;
+                }else{
+                    auto state = field.getState(pos);
+                    data[dim_index * 6][x_index][y_index] = state.value;
+                    data[dim_index * 6 + 1 + (state.isEmpty() ? 2 : (state.getDecrementedSide() != side))][x_index][y_index] = 1;
+                }
+            }
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+            auto agent_pos = field.getAgent(side, agent_index) - pos_dif;
+            data[dim_index * 6 + 4][agent_pos.x][agent_pos.y] = agent_index;
+        }
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+            auto agent_pos = field.getAgent(!side, agent_index) - pos_dif;
+            data[dim_index * 6 + 5][agent_pos.x][agent_pos.y] = agent_index;
+        }
+    };
+    for(int side = 0; side < 2; ++side)
+        for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+            set_data(side * agent_count + agent_index, side, field.getAgent(side, agent_index));
+
+
+    auto scores = field.getScores();
+    std::vector<int> values{scores[0].tile, scores[0].region, scores[0].getSum(),
+                            scores[1].tile, scores[1].region, scores[1].getSum(),
+                            field.getTurn().getRemainTurn()};
+    for(int x_index = 0; x_index < 39; ++x_index)
+        for(int y_index = 0; y_index < 39; ++y_index)
+            for(int dim = 0; dim < 7; ++dim)
+                data[6 * (2 * agent_count) + dim][x_index][y_index] = values[dim];
+
+    return data;
+}
+
+np::ndarray Board::getCenterData(){
+    return getCenterDataFromField(field);
 }
 
 bp::tuple Board::getTurn(){
@@ -87,6 +150,7 @@ void Board::addAgentAct(bool side, np::ndarray arr){
     act_flag.set(side);
     if(act_flag.all()){
         sim.changeTurn(true);
+        field = sim.getField();
         act_flag.reset();
     }
 }

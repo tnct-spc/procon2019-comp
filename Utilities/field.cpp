@@ -9,6 +9,7 @@ procon::Field::Field(Point size) :
     agents(2),
     regions(size.x, std::vector<std::bitset<2>>(size.y))
 {
+    setAbsSum();
 }
 
 procon::Field::Field(int size_x, int size_y) :
@@ -18,6 +19,7 @@ procon::Field::Field(int size_x, int size_y) :
     agents(2),
     regions(size.x, std::vector<std::bitset<2>>(size.y))
 {
+    setAbsSum();
 }
 
 void Field::setTile(Point p, int value){
@@ -154,6 +156,13 @@ void Field::incrementTurn(){
     ++turn.now;
 }
 
+void Field::setAbsSum(){
+    score_abs_sum = 0;
+    for(int x_index = 0; x_index < size.x; ++x_index)
+        for(int y_index = 0; y_index < size.y; ++y_index)
+            score_abs_sum += std::abs(states.at(x_index).at(y_index).value);
+}
+
 std::vector<std::vector<int>> Field::getValidMoves(bool side) const{
     int agent_count = getAgentCount();
     std::vector<std::vector<int>> moves(agent_count);
@@ -239,6 +248,7 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         field.setAgent(!mask, index, inversed_point);
     }
 
+    field.setAbsSum();
     return field;
 }
 

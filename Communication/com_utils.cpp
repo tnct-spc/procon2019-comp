@@ -6,11 +6,9 @@ namespace communication{
 namespace bp = boost::python;
 namespace np = boost::python::numpy;
 
-bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, double temperature){
+bp::tuple simpleFastGreedy(const Field& field, bool side, int agent_move_bound, double temperature){
 
     assert(temperature >= 0.001);
-
-    const auto& field = board.getField();
 
     int agent_count = field.getAgentCount();
     std::vector<std::vector<std::pair<int, double>>> valid_moves(agent_count);
@@ -74,7 +72,7 @@ bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, 
         sum = moves.size();
     }
 
-    np::ndarray policy = np::zeros(bp::make_tuple(agent_count, 8), np::dtype::get_builtin<double>());
+    np::ndarray policy = np::zeros(bp::make_tuple(agent_count, 8), np::dtype::get_builtin<float>());
     for(auto& move : moves){
         double value = move.first / sum;
         int moves_bitset = move.second;
@@ -95,6 +93,50 @@ bp::tuple simpleFastGreedy(const Board& board, bool side, int agent_move_bound, 
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         moves_ndarr[agent_index] = (moves_bitset >> (3 * agent_index)) & 7;
     return bp::make_tuple(moves_ndarr, policy);
+}
+
+bp::tuple greedyFromBoard(const Board& board, bool side, int agent_move_bound, double temperature){return simpleFastGreedy(board.getField(), side, agent_move_bound, temperature);}
+
+std::pair<std::vector<int>, std::vector<float>> makeNpyFullData(const Field& field){
+    namespace bp = boost::python;
+    namespace np = boost::python::numpy;
+
+    auto data = communication::Board::getDataFromField(field);
+    std::vector<int> shape{9, field.getSize().x, field.getSize().y};
+    std::vector<float> data_vec;
+    for(int dim = 0; dim < 4; ++dim)
+        for(int x = 0; x < shape.at(1); ++x)
+            for(int y = 0; y < shape.at(2); ++y)
+                data_vec.emplace_back(bp::extract<int>(data[dim][x][y]));
+
+    auto set_full = [&](int val){
+        for(int x = 0; x < shape.at(1); ++x)
+            for(int y = 0; y < shape.at(2); ++y)
+                data_vec.emplace_back(val);
+    };
+
+    const auto& scores = field.getScores();
+    set_full(scores.at(0).tile);
+    set_full(scores.at(0).region);
+    set_full(scores.at(1).tile);
+    set_full(scores.at(1).region);
+    set_full(field.getTurn().getRemainTurn());
+
+    return std::make_pair(shape, data_vec);
+}
+
+std::pair<std::vector<int>, std::vector<float>> makeNpyFullCenterData(const Field& field){
+    namespace bp = boost::python;
+    namespace np = boost::python::numpy;
+
+    auto data = communication::Board::getCenterDataFromField(field);
+    std::vector<int> shape{6 * (2 * field.getAgentCount()) + 7, 39, 39};
+    std::vector<float> data_vec;
+    for(int dim = 0; dim < shape.at(0); ++dim)
+        for(int x = 0; x < shape.at(1); ++x)
+            for(int y = 0; y < shape.at(2); ++y)
+                data_vec.emplace_back(bp::extract<int>(data[dim][x][y]));
+    return std::make_pair(shape, data_vec);
 }
 
 }

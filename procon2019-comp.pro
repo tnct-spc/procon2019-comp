@@ -7,5 +7,5 @@ SUBDIRS += \
         Visualizer \
         GameManager \
         Takao \
-        Test \
-        Communication
+        Communication \
+        Test

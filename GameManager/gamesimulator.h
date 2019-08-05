@@ -32,6 +32,7 @@ public:
 
     void reverseField(){field = std::make_shared<procon::Field>(field->getSideReversedField());};
 
+    void calcRegionPoint(){field->calcRegionPoint();}
     virtual void changeTurn(bool calc_score_flag);
 
 protected:
