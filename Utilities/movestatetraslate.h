@@ -6,7 +6,7 @@
 
 namespace procon::json{
     std::vector<procon::MoveState> translateToMoveStateData(std::string json_str);
-    std::string translateFromMoveStateData(std::vector<procon::MoveState> move_states);
+    std::string translateFromMoveStateData(std::vector<procon::MoveState> move_states, std::vector<int> agent_ids);
     std::tuple<std::string, int, int> convertFromMoveState(procon::MoveState move_state);
 };
 
