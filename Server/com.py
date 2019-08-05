@@ -31,7 +31,7 @@ def postRequest(address, token, data = None):
         return e.read().decode('utf-8')
     except URLError as e:
         ret['reason'] = e.reason
-        return json.dumps(ret)
+        return e.reason#json.dumps(ret)
     else:
         return json.dumps(content.read().decode('utf-8'))
 
