@@ -26,13 +26,15 @@ SOURCES += \
         csvtranslate.cpp \
         movestatetraslate.cpp \
         utils.cpp \
-        field.cpp
+        field.cpp \
+    fieldcsvtranslate.cpp
 
 HEADERS += \
         csvtranslate.h \
         movestatetraslate.h \
         utils.h \
-        field.h
+        field.h \
+    fieldcsvtranslate.h
 
 unix {
     target.path = /usr/lib
