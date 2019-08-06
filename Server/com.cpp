@@ -7,6 +7,8 @@
 const char * filename = "com.py";
 namespace ns = boost::python;
 
+
+/*
 int main(){
     auto main_ns = init();
     //openpy
@@ -19,6 +21,7 @@ int main(){
     //output
     return bp::extract<string>(result);
 }
+*/
 
 auto init(){
     Py_Initialize();
@@ -26,9 +29,9 @@ auto init(){
     return main_mod;
 }
 
-std::string openfile(){
+std::string openfile(char fname){
     std::ifstream ifs(filename);
-    std::string script((std::istreambuf_iterator<char>(ifs)),std::istreambuf_iterator<char>());
+    std::string script((std::istreambuf_iterator<char>(ifs)),std::istreambuf_iterator<char>(fname));
     return script;
 }
 

@@ -1,5 +1,5 @@
 #include <string>
 
-int main();
+//int main();
 auto init();
 std::string openfile();
