@@ -45,26 +45,12 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
         // 移動を入力するエージェントが選ばれているか
         if(selected){
             std::vector<std::vector<procon::Point>> agents (2,std::vector<procon::Point>(agent_count));
-            /*
-            for (int team = 0; team < 2; team++) {//ここのループでエージェントごとに判定
-                for (int agent = 0; agent < agent_count; agent++) {
-                    agents[team][agent] = field->getAgent(team,agent);
-                    std::cout << "(" << agents[team][agent].x << "," << agents[team][agent].y << ")" << team << "," << agent << std::endl;
-                    // クリックされたマスとエージェントの位置が一致したら、チームとエージェントの番号を返す
-                    if (clicked_grid == agents[team][agent]){
-                        std::cout << "move to (" << clicked_grid.x << "," << clicked_grid.y << ")" << std::endl;
-                        move_agent[team][agent]=clicked_grid;
-                    }
-                }
-            }*/
             checkClickGrid(clicked_grid,right_flag);
-            is_moving_agent = true;
         }
         else {
             // クリックされたエージェントまたはマスを照合
             checkClickedAgent(clicked_grid);
         }
-        is_moving_agent = false;
         bool finished_move = true;
         for(int i = 0;i < agent_count;i++){
             if(move_agent[i].x == -1 || move_agent[i].y == -1){
@@ -102,7 +88,6 @@ void Visualizer::checkClickedAgent(procon::Point mass)
 
             // エージェントが選択されたことを記録
             selected = true;
-            is_moving_agent = true;
 
             // 選択されたエージェントの移動可能範囲を表示
             this->update();
@@ -162,7 +147,6 @@ void Visualizer::checkClickGrid(procon::Point mass, bool right_flag)
         std::vector<int> return_delete_flag = std::move(is_delete);
 
         move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
-        candidate = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
 
         is_delete = std::vector<int>(field->getAgentCount());
         auto_mode = true;
@@ -233,7 +217,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     };
 
-    auto drawAgents = [&]{is_delete = std::vector<int>(field->getAgentCount());
+    auto drawAgents = [&]{
         int agent_count = field->getAgentCount();
         for(int side = 0; side < 2; ++side){
             for(int agent_index = 0; agent_index < agent_count; ++agent_index){
@@ -272,49 +256,13 @@ void Visualizer::paintEvent(QPaintEvent *event){
                                    : checked_color_b);
 
             paint_color.setAlpha(120);
-
-            if(is_delete.at(index) || (field->getState(move_agent.at(index)).tile == (manual_team == 0 ? 2 : 1)))
+            std::cout << move_agent.at(index).x << "," << move_agent.at(index).y << std::endl;
+            if(is_delete.at(index) || (move_agent.at(index).x < field->getSize().x && move_agent.at(index).y < field->getSize().y && field->getState(move_agent.at(index)).tile == (manual_team == 0 ? 2 : 1)))
                 paint_color.setAlpha(200);
 
             painter.setBrush(QBrush(paint_color));
 
             painter.drawRect(horizontal_margin + grid_size * (0.1 + pos_x), vertical_margin + grid_size * (0.1 + pos_y), 0.8 * grid_size, 0.8 * grid_size);
-        }
-    };
-
-    //manual時の移動候補表示
-    auto drawCandidateMove = [&]{
-
-        painter.setPen(QPen(QBrush(QColor(20, 20, 20)), 0.3));
-
-        for(unsigned int index = 0; index < candidate.size(); ++index){
-
-            int pos_x = candidate.at(index).x;
-            int pos_y = candidate.at(index).y;
-
-            if(pos_x == -1 || candidate.at(index) == field->getAgent(manual_team, index) )continue;
-
-            QColor paint_color = ( manual_team == 0
-                                   ? checked_color_a
-                                   : checked_color_b);
-
-            paint_color.setAlpha(80);
-
-            if(is_delete.at(index) || (field->getState(pos_x, pos_y).tile == (manual_team == 0 ? 2 : 1)))
-                paint_color.setAlpha(160);
-
-            painter.setBrush(QBrush(paint_color));
-
-            //角が取れた四角形らしいです
-            painter.drawRoundRect(horizontal_margin + grid_size * (0.1 + pos_x), vertical_margin + grid_size * (0.1 + pos_y), 0.8 * grid_size, 0.8 * grid_size , 75, 50);
-
-            QColor qc(index ^ 0 ? Qt::red : Qt::black);
-
-            qc.setAlpha(80);
-
-            painter.setBrush(QBrush(qc));
-
-            painter.drawEllipse(horizontal_margin + grid_size * (0.05 + pos_x), vertical_margin + grid_size * (0.05 + pos_y), 0.3 * grid_size, 0.3 * grid_size);
         }
     };
 
@@ -408,7 +356,6 @@ void Visualizer::paintEvent(QPaintEvent *event){
         drawValues();
         drawAgents();
         drawAgentMove();
-//        drawCandidateMove();
         drawAroundAgent();
         drawTurnCount();
         drawScores();
@@ -417,8 +364,9 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
 void Visualizer::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_R){
-        auto_mode = true;
         emit signalResetField();
+        selected = false;
+        auto_mode = true;
         agent_count = field->getAgentCount();
         is_delete = std::vector<int>(field->getAgentCount());
         move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});

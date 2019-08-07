@@ -58,7 +58,6 @@ private:
     procon::Point selected_agent_grid;
     bool is_moving_agent = false;
     std::vector<int> is_delete;
-    std::vector<procon::Point> candidate;
 
     bool manual_team = false;
 
