@@ -39,4 +39,4 @@ private:
     const std::array<QColor, 2> team_colors = {QColor(255, 0, 0), QColor(0, 0, 255)};
 };
 
-#endif // VISUALIZER_H
+#endif // SIMPLEVISUALIZER_H
