@@ -4,71 +4,84 @@
 #include <boost/python.hpp>
 #include "com.h"
 
-namespace ns = boost::python;
+
+namespace bp = boost::python;
 const char * filename = "com.py";
 
 
-/*
-int main(){
-    auto main_ns = init();
-    //openpy
-    bp::exec(openfile().c_str(),main_ns);
-
-    //runpy
-    bp::object func = main_ns["func"];
-    bp::object result = func();
-
-    //output
-    return bp::extract<string>(result);
+Com::Com(std::string ipAddress, std::string portNumber, std::string postToken){
+    this->setData(ipAddress, portNumber, postToken);
 }
-*/
 
-auto init(){
+
+void Com::setData(std::string ipAddress, std::string portNumber, std::string postToken){
+    this->ip = ipAddress;
+    this->port = portNumber;
+    this->token = postToken;
     Py_Initialize();
-    auto main_mod = bp::import("___main__").attr("__dict__");
-    return main_mod;
+    this->openFile();
 }
 
-std::string openfile(char fname){
+
+void Com::openFile(){
+    //namespace
+    auto main_ns = bp::import("___main__").attr("__dict__");
+    //open file
     std::ifstream ifs(filename);
-    std::string script((std::istreambuf_iterator<char>(ifs)),std::istreambuf_iterator<char>(fname));
-    return script;
+    //read script
+    std::string script((std::istreambuf_iterator<char>(ifs)),std::istreambuf_iterator<char>());
+    bp::exec(script.c_str(),main_ns);
+    //obj
+    this->matches = main_ns["getMatches"];
+    this->matchstatus = main_ns["getMatchStatus"];
+    this->action = main_ns["sendAction"];
+    this->connection = main_ns["checkConnection"];
 }
 
-std::string getData(){
-    //init
-    auto main_ns = init();
-    
-    //openpy
-    bp::exec(openfile().c_str(),main_ns);
 
-    //output
-    /*
-    std::cout << checkConnection(); << endl;
-    
-    */
-
-    //output
-    return checkConnection(main_ns);
+std::string Com::getMatches(){
+    //get data
+    auto ret = this->matches(this->ip, this->port, this->token);
+    //parse pyobj
+    return bp::extract<std::string>(ret);
 }
 
-std::string getMatches(auto * arg){
-    bp::object obj = arg["getMatches"];
-    bp::object ret = obj();
+std::string Com::getMatchStatus(){
+    //get data
+    auto ret = this->matchstatus(this->ip, this->port, this->token);
+    //parse pyobj
     return bp::extract<std::string>(ret);
 }
-std::string getMatchStatus(auto * arg){
-    bp::object obj = arg["getMatchStatus"];
-    bp::object ret = obj();
+
+std::string Com::sendAction(){
+    //get data
+    auto ret = this->action(this->ip, this->port, this->token);
+    //parse pyobj
     return bp::extract<std::string>(ret);
 }
-std::string sendAction(auto * arg){
-    bp::object obj = arg["sendAction"];
-    bp::object ret = obj();
+
+std::string Com::checkConnection(){
+    //get data
+    auto ret = this->connection(this->ip, this->port, this->token);
+    //parse pyobj
     return bp::extract<std::string>(ret);
 }
-std::string chechConnection(auto * arg){
-    bp::object obj = arg["chechConnection"];
-    bp::object ret = obj();
-    return bp::extract<std::string>(ret);
+
+
+
+
+
+/* ----- usage example -----
+int main(){
+    //instance
+    Com ins("127.0.0.1", "8888", "procon30_example_token");
+    //pointer
+    Com * ins_p;
+    ins_p = new Com("127.0.0.1", "8888", "procon30_example_token");
+    //print data
+    std::cout << ins.getMatches() << endl;
+    //change ip/port/token
+    ins.setData("192.168.0.0", "404", "mokemoke");
+    return 0;
 }
+//*/
