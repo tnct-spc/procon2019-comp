@@ -33,8 +33,6 @@ HEADERS += \
 
 FORMS += \
         simplevisualizer.ui \
-        simplevisualizer.ui \
-        visjualizer.ui
         visualizer.ui
 
 # Default rules for deployment.
