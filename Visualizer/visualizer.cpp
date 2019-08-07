@@ -233,18 +233,18 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     };
 
-    auto drawAgents = [&]{
+    auto drawAgents = [&]{is_delete = std::vector<int>(field->getAgentCount());
         int agent_count = field->getAgentCount();
         for(int side = 0; side < 2; ++side){
             for(int agent_index = 0; agent_index < agent_count; ++agent_index){
                 QColor paint_color;
+                paint_color = team_colors.at(side);
+                if(side == manual_team && move_agent[agent_index].x != -1){
+                    paint_color = team_colors_pastel.at(side);
+                }
                 if(selected_agent.first == side && selected_agent.second == agent_index && selected){
                     paint_color = team_colors_deep.at(side);
                 }
-                else{
-                    paint_color = team_colors.at(side);
-                }
-
                 paint_color.setAlpha(128);
                 painter.setBrush(QBrush(paint_color));
 
@@ -259,7 +259,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.setPen(QPen(QBrush(Qt::black), 0.3));
 
         for(unsigned int index = 0; index < move_agent.size(); ++index){
-
+//            std::cout << move_agent[index].x <<","<< move_agent[index].x << std::endl;
 
 
             int pos_x = move_agent.at(index).x;
@@ -281,6 +281,75 @@ void Visualizer::paintEvent(QPaintEvent *event){
             painter.drawRect(horizontal_margin + grid_size * (0.1 + pos_x), vertical_margin + grid_size * (0.1 + pos_y), 0.8 * grid_size, 0.8 * grid_size);
         }
     };
+
+    //manual時の移動候補表示
+    auto drawCandidateMove = [&]{
+
+        painter.setPen(QPen(QBrush(QColor(20, 20, 20)), 0.3));
+
+        for(unsigned int index = 0; index < candidate.size(); ++index){
+
+            int pos_x = candidate.at(index).x;
+            int pos_y = candidate.at(index).y;
+
+            if(pos_x == -1 || candidate.at(index) == field->getAgent(manual_team, index) )continue;
+
+            QColor paint_color = ( manual_team == 0
+                                   ? checked_color_a
+                                   : checked_color_b);
+
+            paint_color.setAlpha(80);
+
+            if(is_delete.at(index) || (field->getState(pos_x, pos_y).tile == (manual_team == 0 ? 2 : 1)))
+                paint_color.setAlpha(160);
+
+            painter.setBrush(QBrush(paint_color));
+
+            //角が取れた四角形らしいです
+            painter.drawRoundRect(horizontal_margin + grid_size * (0.1 + pos_x), vertical_margin + grid_size * (0.1 + pos_y), 0.8 * grid_size, 0.8 * grid_size , 75, 50);
+
+            QColor qc(index ^ 0 ? Qt::red : Qt::black);
+
+            qc.setAlpha(80);
+
+            painter.setBrush(QBrush(qc));
+
+            painter.drawEllipse(horizontal_margin + grid_size * (0.05 + pos_x), vertical_margin + grid_size * (0.05 + pos_y), 0.3 * grid_size, 0.3 * grid_size);
+        }
+    };
+
+    // 選択されたエージェントの移動可能先を塗る
+    auto drawAroundAgent = [&] {
+
+        // チームごとに配色を変える
+        QColor paint_color = ( selected_agent.first == 0
+                               ? checked_color_a
+                               : checked_color_b);
+        paint_color.setAlpha(100);
+
+        painter.setBrush(QBrush(paint_color));
+
+        // フィールドをはみ出さない範囲で、エージェントの移動可能領域を描く
+        for (int x = -1; x < 2; x++) {
+
+            int draw_x = selected_agent_grid.x + x;
+
+            if ((draw_x >= 0) && ((unsigned int)draw_x < field->getSize().x) && selected) {
+
+                for (int y = -1; y < 2; y++) {
+
+                    int draw_y = selected_agent_grid.y + y;
+
+                    if ((draw_y >= 0) && ((unsigned int)draw_y < field->getSize().y)) {
+
+                        painter.drawRect(horizontal_margin + draw_x * grid_size, vertical_margin + draw_y * grid_size, grid_size, grid_size);
+                    }
+                }
+            }
+        }
+
+    };
+
     auto drawTurnCount = [&]{
         QPoint text_point;
         text_point.setX(horizontal_margin + (size.x - 3) * grid_size);
@@ -339,6 +408,8 @@ void Visualizer::paintEvent(QPaintEvent *event){
         drawValues();
         drawAgents();
         drawAgentMove();
+//        drawCandidateMove();
+        drawAroundAgent();
         drawTurnCount();
         drawScores();
     }
@@ -348,6 +419,12 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_R){
         auto_mode = true;
         emit signalResetField();
+        agent_count = field->getAgentCount();
+        is_delete = std::vector<int>(field->getAgentCount());
+        move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
+        confirm_count = 0;
+        this->update();
+        this->repaint();
     }
     if(event->key() == Qt::Key_S){
         auto_mode = true;
@@ -369,7 +446,7 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
     }
     if(event->key() == Qt::Key_A){
-        if(!auto_mode)manual_team = !manual_team;
+        if(!auto_mode && confirm_count==0 && !selected)manual_team = !manual_team;
         auto_mode = false;
         this->update();
         this->repaint();
