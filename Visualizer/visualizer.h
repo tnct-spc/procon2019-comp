@@ -23,6 +23,7 @@ public:
     ~Visualizer();
 
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
+    void resetAgentAct();
     bool auto_mode = true;
 
 signals:

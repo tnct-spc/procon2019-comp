@@ -28,6 +28,7 @@ void GameManager::setAlgorithms(){
 
 void GameManager::runFullSimulation(){
     resetField();
+    visualizer.resetAgentAct();
     runSimulator();
 }
 

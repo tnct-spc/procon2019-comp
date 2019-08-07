@@ -154,6 +154,17 @@ void Visualizer::checkClickGrid(procon::Point mass, bool right_flag)
     }
 }
 
+void Visualizer::resetAgentAct(){
+    is_delete = std::vector<int>(field->getAgentCount());
+    move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
+    confirm_count = 0;
+    selected = false;
+    auto_mode = true;
+    agent_count = field->getAgentCount();
+    this->update();
+    this->repaint();
+}
+
 void Visualizer::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
     QPainter painter(this);
@@ -243,8 +254,6 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.setPen(QPen(QBrush(Qt::black), 0.3));
 
         for(unsigned int index = 0; index < move_agent.size(); ++index){
-//            std::cout << move_agent[index].x <<","<< move_agent[index].x << std::endl;
-
 
             int pos_x = move_agent.at(index).x;
             int pos_y = move_agent.at(index).y;
@@ -256,7 +265,6 @@ void Visualizer::paintEvent(QPaintEvent *event){
                                    : checked_color_b);
 
             paint_color.setAlpha(120);
-            std::cout << move_agent.at(index).x << "," << move_agent.at(index).y << std::endl;
             if(is_delete.at(index) || (move_agent.at(index).x < field->getSize().x && move_agent.at(index).y < field->getSize().y && field->getState(move_agent.at(index)).tile == (manual_team == 0 ? 2 : 1)))
                 paint_color.setAlpha(200);
 
@@ -365,38 +373,32 @@ void Visualizer::paintEvent(QPaintEvent *event){
 void Visualizer::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_R){
         emit signalResetField();
-        selected = false;
-        auto_mode = true;
-        agent_count = field->getAgentCount();
-        is_delete = std::vector<int>(field->getAgentCount());
-        move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
-        confirm_count = 0;
-        this->update();
-        this->repaint();
+        resetAgentAct();//emitしてからresetしないとagent_countをreset前に合わせて配列外参照してしまうので下に書いている
     }
     if(event->key() == Qt::Key_S){
-        auto_mode = true;
+        resetAgentAct();
         emit signalRunSimulator();
     }
     if(event->key() == Qt::Key_F){
-        auto_mode = true;
         emit signalRunFullSimulation();
     }
     if(event->key() == Qt::Key_N){
-        auto_mode = true;
+        resetAgentAct();
         emit signalSimulateNextTurn();
     }
     if(event->key() == Qt::Key_I){
-        auto_mode = true;
+        resetAgentAct();
         emit signalReverseField();
     }
     if(event->key() == Qt::Key_E){
         procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
     }
     if(event->key() == Qt::Key_A){
-        if(!auto_mode && confirm_count==0 && !selected)manual_team = !manual_team;
-        auto_mode = false;
-        this->update();
-        this->repaint();
+        if(field->getTurn().now != field->getTurn().final){
+            if(!auto_mode && confirm_count==0 && !selected)manual_team = !manual_team;
+            auto_mode = false;
+            this->update();
+            this->repaint();
+        }
     }
 }
