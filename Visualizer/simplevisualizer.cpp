@@ -1,5 +1,5 @@
 #include "simplevisualizer.h"
-#include "ui_visualizer.h"
+#include "ui_simplevisualizer.h"
 
 SimpleVisualizer::SimpleVisualizer(std::shared_ptr<const procon::Field> field, QWidget *parent) :
     QMainWindow(parent),

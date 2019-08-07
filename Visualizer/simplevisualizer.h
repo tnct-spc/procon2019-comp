@@ -1,5 +1,5 @@
-#ifndef VISUALIZER_H
-#define VISUALIZER_H
+#ifndef SIMPLEVISUALIZER_H
+#define SIMPLEVISUALIZER_H
 
 #include <QMainWindow>
 #include <QPaintEvent>
