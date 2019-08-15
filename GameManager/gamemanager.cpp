@@ -2,7 +2,7 @@
 
 GameManager::GameManager() :
     game(std::make_shared<GameSimulator>()),
-    visualizer(),
+    visualizer(game->getFieldPtr()),
     field(game->getFieldPtr()),
     algo(2)
 {
@@ -12,6 +12,7 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalRunFullSimulation, this, &GameManager::runFullSimulation);
     connect(&visualizer, &Visualizer::signalReverseField, this, &GameManager::reverseField);
     connect(&visualizer, &Visualizer::signalSimulateNextTurn, this, &GameManager::simulateNextTurn);
+    connect(&visualizer, &Visualizer::signalMoveAgents, this, &GameManager::moveAgents);
 
     setAlgorithms();
 
@@ -27,6 +28,7 @@ void GameManager::setAlgorithms(){
 
 void GameManager::runFullSimulation(){
     resetField();
+    visualizer.resetAgentAct();
     runSimulator();
 }
 
@@ -75,3 +77,30 @@ bool GameManager::simulateNextTurn(){
     visualizer.repaint();
     return true;
 }
+
+void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector<int> is_delete, bool manual_team){
+    //is_deleteは自軍タイル除去時にのみ使う物 基本的に使わなさそう
+    std::cout << "turn : " << field->getTurn().now+1 << std::endl << std::endl;
+    std::vector<procon::MoveState> agent_act (std::vector<procon::MoveState>(field->getAgentCount()));
+    for(int agent = 0; agent < field->getAgentCount(); ++agent){
+
+        procon::Point origin_pos = field->getAgent(manual_team, agent);
+        procon::Point pos = move.at(agent);
+        procon::Point new_pos = pos;
+        new_pos.x -= origin_pos.x;
+        new_pos.y -= origin_pos.y;
+        //is_deleteなら強制的に削除
+        agent_act[agent].move_index = field->getAgent(manual_team,agent).getMoveIndex(move[agent]);
+        agent_act[agent].is_delete = is_delete[agent];
+    }
+
+    auto auto_move = algo[!manual_team]->agentAct();
+    game->addAgentAct(!manual_team, auto_move);
+    game->addAgentAct(manual_team,agent_act);
+
+    game->changeTurn(true);
+    now_field = field->getTurn().now;
+    visualizer.update();
+
+}
+
