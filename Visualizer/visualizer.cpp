@@ -9,6 +9,7 @@ Visualizer::Visualizer(std::shared_ptr<const procon::Field> field, QWidget *pare
     ui->setupUi(this);
     is_delete = std::vector<int>(field->getAgentCount());
     move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
+    strategy = std::vector<std::vector<bool>>(field->getSize().x,std::vector<bool>(field->getSize().y));
 }
 
 Visualizer::~Visualizer()
@@ -57,7 +58,20 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
                 finished_move = false;
             }
         }
-
+    }
+    else if(is_strategy == true){
+        if ((point.x() < horizontal_margin) || (point.x() > window_width - horizontal_margin)
+                        || (point.y() < vertical_margin) || (point.y() > window_height - vertical_margin)) {
+            return;
+        }
+        bool right_flag = (event->button() == Qt::RightButton);
+        procon::Point clicked_grid;
+        clicked_grid.x = (point.x() - horizontal_margin) / grid_size;
+        clicked_grid.y = (point.y() - vertical_margin) / grid_size;
+        strategy[clicked_grid.x][clicked_grid.y] = !strategy[clicked_grid.x][clicked_grid.y];
+        emit signalStrategy(strategy);
+        this->update();
+        this->repaint();
     }
 }
 
@@ -163,6 +177,14 @@ void Visualizer::resetAgentAct(){
     agent_count = field->getAgentCount();
     this->update();
     this->repaint();
+}
+
+void Visualizer::resetStrategy(bool setState){
+    for(int x = 0;x < field->getSize().x;x++){
+        for(int y = 0;y < field->getSize().y;y++){
+            strategy[x][y] = setState;
+        }
+    }
 }
 
 void Visualizer::paintEvent(QPaintEvent *event){
@@ -337,6 +359,37 @@ void Visualizer::paintEvent(QPaintEvent *event){
         if(!auto_mode)painter.drawText(text_point, str);
     };
 
+    auto drawStrategyGrid = [&]{
+        for(int x = 0;x < field->getSize().x;x++){
+            for(int y = 0;y < field->getSize().y;y++){
+                QColor paint_color = ( strategy[x][y] == true
+                                       ? strategy_grid_color[1]
+                                       : strategy_grid_color[0]);
+                paint_color.setAlpha(100);
+                painter.setBrush(QBrush(paint_color));
+                painter.drawRect(horizontal_margin + x * grid_size, vertical_margin + y * grid_size, grid_size, grid_size);
+            }
+        }
+    };
+
+    auto drawStrategymode = [&]{
+        if(is_strategy){
+            QPoint text_point;
+            text_point.setX(horizontal_margin);
+            text_point.setY(vertical_margin - 0.4 * grid_size);
+
+            painter.setPen(QPen(QBrush(strategy_color), 0.3));
+
+            QFont font = painter.font();
+            font.setPointSize(grid_size * 0.8);
+            painter.setFont(font);
+
+            QString str(QString::fromStdString("Strategy Mode"));
+            painter.drawText(text_point, str);
+            drawStrategyGrid();
+        }
+    };
+
     auto drawScores = [&]{
         auto scores = field->getScores();
 
@@ -355,7 +408,6 @@ void Visualizer::paintEvent(QPaintEvent *event){
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
         painter.drawText(side_1_point, QString::number(scores[1].tile) + QString::fromStdString(" + ") + QString::number(scores[1].region));
-        drawAutomode();
     };
 
     if(field){
@@ -366,39 +418,72 @@ void Visualizer::paintEvent(QPaintEvent *event){
         drawAgentMove();
         drawAroundAgent();
         drawTurnCount();
+        drawAutomode();
         drawScores();
+        drawStrategymode();
     }
 }
 
 void Visualizer::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_R){
-        emit signalResetField();
-        resetAgentAct();//emitしてからresetしないとagent_countをreset前に合わせて配列外参照してしまうので下に書いている
-    }
-    if(event->key() == Qt::Key_S){
-        resetAgentAct();
-        emit signalRunSimulator();
-    }
-    if(event->key() == Qt::Key_F){
-        emit signalRunFullSimulation();
-    }
-    if(event->key() == Qt::Key_N){
-        resetAgentAct();
-        emit signalSimulateNextTurn();
-    }
-    if(event->key() == Qt::Key_I){
-        resetAgentAct();
-        emit signalReverseField();
-    }
-    if(event->key() == Qt::Key_E){
-        procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
-    }
-    if(event->key() == Qt::Key_A){
-        if(field->getTurn().now != field->getTurn().final){
-            if(!auto_mode && confirm_count==0 && !selected)manual_team = !manual_team;
-            auto_mode = false;
+        if(!is_strategy){
+            emit signalResetField();
+            resetAgentAct();//emitしてからresetしないとagent_countをreset前に合わせて配列外参照してしまうので下に書いている
+        }
+        else{
+            resetStrategy(false);
             this->update();
             this->repaint();
         }
+    }
+    if(event->key() == Qt::Key_S){
+        if(!is_strategy){
+            resetAgentAct();
+            emit signalRunSimulator();
+        }
+    }
+    if(event->key() == Qt::Key_F){
+        if(!is_strategy){
+            emit signalRunFullSimulation();
+        }
+    }
+    if(event->key() == Qt::Key_N){
+        if(!is_strategy){
+            resetAgentAct();
+            emit signalSimulateNextTurn();
+        }
+    }
+    if(event->key() == Qt::Key_I){
+        if(!is_strategy){
+            resetAgentAct();
+            emit signalReverseField();
+        }
+    }
+    if(event->key() == Qt::Key_E){
+        if(!is_strategy){
+            procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
+        }
+    }
+    if(event->key() == Qt::Key_A){
+        if(!is_strategy){
+            if(field->getTurn().now != field->getTurn().final){
+                if(!auto_mode && confirm_count==0 && !selected)manual_team = !manual_team;
+                auto_mode = false;
+                this->update();
+                this->repaint();
+            }
+        }
+        else{
+            resetStrategy(true);
+            this->update();
+            this->repaint();
+        }
+    }
+    if(event->key() == Qt::Key_T){
+        resetAgentAct();
+        resetStrategy(false);
+        is_strategy = !is_strategy;
+        this->update();
+        this->repaint();
     }
 }
