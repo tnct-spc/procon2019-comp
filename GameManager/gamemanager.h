@@ -33,6 +33,7 @@ private:
 
     std::shared_ptr<const procon::Field> field;
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
+    std::vector<std::vector<bool>> clicked;
 
     unsigned int now_field = 0;
 

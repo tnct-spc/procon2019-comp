@@ -106,5 +106,5 @@ void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector
 }
 
 void GameManager::strategy(std::vector<std::vector<bool>> strategy){
-
+    clicked = strategy;
 }
