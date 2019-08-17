@@ -46,6 +46,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="lineEdit"/>
+        </item>
+       </layout>
+      </item>
      </layout>
     </item>
    </layout>
@@ -56,7 +63,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>18</height>
+     <height>28</height>
     </rect>
    </property>
   </widget>
