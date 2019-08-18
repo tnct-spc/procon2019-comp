@@ -185,6 +185,9 @@ void Visualizer::resetStrategy(bool setState){
             strategy[x][y] = setState;
         }
     }
+    emit signalStrategy(strategy);
+    this->update();
+    this->repaint();
 }
 
 void Visualizer::paintEvent(QPaintEvent *event){
@@ -350,7 +353,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     auto drawAutomode = [&]{
         QPoint text_point;
-        text_point.setX(horizontal_margin - 2r * grid_size);
+        text_point.setX(horizontal_margin - 2 * grid_size);
         text_point.setY(vertical_margin + grid_size);
 
         painter.setPen(QPen(QBrush(team_colors[manual_team]), 0.3));
@@ -444,8 +447,6 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         }
         else{
             resetStrategy(false);
-            this->update();
-            this->repaint();
         }
     }
     if(event->key() == Qt::Key_S){
@@ -487,8 +488,6 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         }
         else{
             resetStrategy(true);
-            this->update();
-            this->repaint();
         }
     }
     if(event->key() == Qt::Key_T){
