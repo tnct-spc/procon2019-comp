@@ -180,6 +180,7 @@ void Visualizer::resetAgentAct(){
 }
 
 void Visualizer::resetStrategy(bool setState){
+    strategy = std::vector<std::vector<bool>>(field->getSize().x,std::vector<bool>(field->getSize().y));
     for(int x = 0;x < field->getSize().x;x++){
         for(int y = 0;y < field->getSize().y;y++){
             strategy[x][y] = setState;
@@ -333,7 +334,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     auto drawTurnCount = [&]{
         QPoint text_point;
-        text_point.setX(horizontal_margin + (size.x + 0.5) * grid_size);
+        text_point.setX(horizontal_margin + (size.x + 0.2) * grid_size);
         text_point.setY(vertical_margin + grid_size);
 
         painter.setPen(QPen(QBrush(score_color), 0.3));
@@ -343,7 +344,6 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.setFont(font);
 
         auto turn = field->getTurn();
-        QString str(QString::number(turn.now) + QString::fromStdString("ー") + QString::number(turn.final));
         painter.drawText(text_point, QString::number(turn.now));
         text_point.setY(vertical_margin + grid_size * 2);
         painter.drawText(text_point, QString::fromStdString("ー"));
@@ -353,7 +353,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     auto drawAutomode = [&]{
         QPoint text_point;
-        text_point.setX(horizontal_margin - 2 * grid_size);
+        text_point.setX(horizontal_margin - 1.8 * grid_size);
         text_point.setY(vertical_margin + grid_size);
 
         painter.setPen(QPen(QBrush(team_colors[manual_team]), 0.3));
@@ -382,7 +382,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
     auto drawStrategymode = [&]{
         if(is_strategy){
             QPoint text_point;
-            text_point.setX(horizontal_margin - 2 * grid_size);
+            text_point.setX(horizontal_margin - 1.8 * grid_size);
             text_point.setY(vertical_margin + grid_size);
 
             painter.setPen(QPen(QBrush(strategy_color), 0.3));
@@ -401,23 +401,29 @@ void Visualizer::paintEvent(QPaintEvent *event){
         auto scores = field->getScores();
 
         QPoint side_0_point, side_1_point;
-        side_0_point.setX(horizontal_margin - grid_size * 2.0);
-        side_1_point.setX(horizontal_margin + (size.x + 0.5) * grid_size);
+        side_0_point.setX(horizontal_margin - grid_size * 2.2);
+        side_1_point.setX(horizontal_margin + (size.x + 0.2) * grid_size);
         side_0_point.setY(window_height - vertical_margin - grid_size * 2);
         side_1_point.setY(window_height - vertical_margin - grid_size * 2);
 
         QColor paint_color = team_colors.at(0);
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
-        painter.drawText(side_0_point, QString::number(scores[0].tile));
+        if(scores[0].tile <= -100 || scores[1].tile <= -100){
+            QFont font = painter.font();
+            font.setPointSize(font.pointSize()*0.8);
+            painter.setFont(font);
+        }
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::number(scores[0].tile));
         side_0_point.setY(window_height - vertical_margin - grid_size);
-        painter.drawText(side_0_point, QString::fromStdString("+"));
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::fromStdString("+"));
         side_0_point.setY(window_height - vertical_margin);
-        painter.drawText(side_0_point, QString::number(scores[0].region));
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::number(scores[0].region));
 
         paint_color = team_colors.at(1);
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
+
         painter.drawText(side_1_point, QString::number(scores[1].tile));
         side_1_point.setY(window_height - vertical_margin - grid_size);
         painter.drawText(side_1_point, QString::fromStdString("+"));
