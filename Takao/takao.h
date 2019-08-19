@@ -18,9 +18,11 @@ public:
 
 signals:
     void signalLoadField(procon::Field field);
+    void signalMatchID(procon::Field field);
 
 private slots:
     void loadCsvField();
+    void loadMatchID();
 
 private:
     Ui::Takao *ui;

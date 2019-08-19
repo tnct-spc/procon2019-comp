@@ -9,6 +9,7 @@ Takao::Takao(QWidget *parent) :
     ui->setupUi(this);
 
     connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
+    connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
 }
 
 Takao::~Takao()
@@ -18,4 +19,8 @@ Takao::~Takao()
 
 void Takao::loadCsvField(){
     emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
+}
+
+void Takao::loadMatchID(){
+    emit signalMatchID(procon::csv::MatchID(QLineEdit))
 }

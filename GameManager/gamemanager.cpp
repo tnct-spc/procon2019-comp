@@ -44,6 +44,18 @@ void GameManager::loadField(procon::Field field){
     visualizer.repaint();
 }
 
+void GameManager::loadMatchID(procon::Field field){
+
+    game = std::make_shared<GameSimulator>(field);
+    auto field_ptr = game->getFieldPtr();
+
+    setAlgorithms();
+
+    visualizer.setFieldPtr(field_ptr);
+    visualizer.update();
+    visualizer.repaint();
+}
+
 void GameManager::resetField(){
 
     game = std::make_shared<GameSimulator>();
