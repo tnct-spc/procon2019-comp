@@ -8,8 +8,6 @@ Takao::Takao(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->runButton, &QPushButton::clicked, manager.get(), &GameManager::runFullSimulation);
-    connect(ui->csvImportButton, &QPushButton::clicked, this, &Takao::loadCsvField);
     connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
 }
 
