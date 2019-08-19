@@ -38,16 +38,4 @@ unix {
     INSTALLS += target
 }
 
-LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
-INCLUDEPATH += $$PWD/../Utilities
-DEPENDPATH += $$PWD/../Utilities
-
-LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
-INCLUDEPATH += $$PWD/../Algorithms
-DEPENDPATH += $$PWD/../Algorithms
-
-LIBS += -L$$OUT_PWD/../GameManager/ -lGameManager
-INCLUDEPATH += $$PWD/../GameManager
-DEPENDPATH += $$PWD/../GameManager
-
 INCLUDEPATH += /usr/include/python3.7m
