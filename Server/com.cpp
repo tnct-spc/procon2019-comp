@@ -73,7 +73,7 @@ int main(){
         //other way to set data(not recommended)
         Com::ip = "192.168.0.0";
         Com::port = "404";
-        Com::token = "パイプ椅子に座ってたせいで腰が痛い";
+        Com::token = "腰痛治った。\nヘルニアじゃなくてよかった。";
     //open file
     Com::openfile();
     //print data
