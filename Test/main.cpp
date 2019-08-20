@@ -9,5 +9,6 @@ int main(int argc, char *argv[])
     boost::python::numpy::initialize();
     RandomPlayoutForPolicyPlayer test;
     QTimer::singleShot(0, &test, &RandomPlayoutForPolicyPlayer::run);
+    testServer();
     return a.exec();
 }
