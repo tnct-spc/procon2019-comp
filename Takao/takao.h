@@ -18,11 +18,11 @@ public:
 
 signals:
     void signalLoadField(procon::Field field);
-    void signalMatchID(procon::Field field);
+    void signalMatchID(QString MatchID,QString IP,QString Port);
 
 private slots:
     void loadCsvField();
-    void loadMatchID();
+    void loadText();
 
 private:
     Ui::Takao *ui;
