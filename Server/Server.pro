@@ -39,3 +39,6 @@ unix {
 }
 
 INCLUDEPATH += /usr/include/python3.7m
+
+DISTFILES += \
+    com.py
