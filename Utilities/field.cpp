@@ -1,4 +1,4 @@
-#include "field.h"
+﻿#include "field.h"
 
 namespace procon{
 
@@ -194,7 +194,9 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
     Field field(size);
     field.turn.final = random::call(30, 60);
     field.agents.resize(agent_count);
+    int is_x_symmetry = random::call(3);
 
+    if(is_x_symmetry = random::call(2);){
     bool is_x_symmetry = random::call(2);
 
     int random_x_size = is_x_symmetry ? (size.x + 1) / 2 : size.x;
@@ -247,7 +249,51 @@ Field Field::generateRandomField(Point size, size_t agent_count, int min_value, 
         field.setAgent(mask, index, *it);
         field.setAgent(!mask, index, inversed_point);
     }
+    }else {
+        int random_x_size1 = (size.x + 1) / 2;
+        int random_y_size1 = (size.y + 1) / 2;
+        int Point_sum
+        int
+         do {
+            point_sum+=0;
+            for( x_index = 0; x_index < random_x_size1; ++x_index)
+                    for( y_index = 0; y_index < random_y_size1; ++y_index)
+                        int value;
+                        if(minus_flag && (1.0 * random::call() / std::numeric_limits<unsigned long>::max()) <= minus_per)
+                            value = random::call(minus_range.first, minus_range.second);
+                        else
+                            value = random::call(plus_range.first, plus_range.second);
+                        field.states[x_index][y_index].value = value;
+           Field.states[size.x - x_index1- 1][size.y - y_index - 1].value = value;
+    }
+        int random_x_size2 = (size.x + 1) / 2;
+        int random_y_size2 = size.y ;
+        do {
+           point_sum+=0;
+           for( x_index = 0; x_index < random_x_size2; ++x_index)
+                   for( y_index = 0; y_index < random_y_size2; ++y_index)
+                       int value;
+                       if(minus_flag && (1.0 * random::call() / std::numeric_limits<unsigned long>::max()) <= minus_per)
+                           value = random::call(minus_range.first, minus_range.second);
+                       else
+                           value = random::call(plus_range.first, plus_range.second);
+                       field.states[x_index][y_index].value = value;
+          Field.states[size.x - x_index - 1][size.y - y_index - 1].value = value;
+   }
+        for(int index = 0; it != agent_values.end(); ++it, ++index){
 
+            bool mask = (is_first_side_left >> index) & 1;
+
+            Point inversed_point;
+            inversed_point.x =  size.x - it->x - 1
+            inversed_point.y =  size.y - it->y - 1;
+
+            field.scores[mask].tile += field.getState(*it).tile;
+            field.scores[!mask].tile += field.getState(inversed_point).tile;
+            field.setAgent(mask, index, *it);
+            field.setAgent(!mask, index, inversed_point);
+        }
+    }
     field.setAbsSum();
     return field;
 }
