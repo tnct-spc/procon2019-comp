@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QTimer>
 #include "randomplayoutforpolicyplayer.h"
+#include "com.h"
 
 int main(int argc, char *argv[])
 {
