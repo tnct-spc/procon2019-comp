@@ -9,6 +9,7 @@ Visualizer::Visualizer(std::shared_ptr<const procon::Field> field, QWidget *pare
     ui->setupUi(this);
     is_delete = std::vector<int>(field->getAgentCount());
     move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
+    strategy = std::vector<std::vector<bool>>(field->getSize().x,std::vector<bool>(field->getSize().y));
 }
 
 Visualizer::~Visualizer()
@@ -57,7 +58,20 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
                 finished_move = false;
             }
         }
-
+    }
+    else if(is_strategy == true){
+        if ((point.x() < horizontal_margin) || (point.x() > window_width - horizontal_margin)
+                        || (point.y() < vertical_margin) || (point.y() > window_height - vertical_margin)) {
+            return;
+        }
+        bool right_flag = (event->button() == Qt::RightButton);
+        procon::Point clicked_grid;
+        clicked_grid.x = (point.x() - horizontal_margin) / grid_size;
+        clicked_grid.y = (point.y() - vertical_margin) / grid_size;
+        strategy[clicked_grid.x][clicked_grid.y] = !strategy[clicked_grid.x][clicked_grid.y];
+        emit signalStrategy(strategy);
+        this->update();
+        this->repaint();
     }
 }
 
@@ -165,6 +179,18 @@ void Visualizer::resetAgentAct(){
     this->repaint();
 }
 
+void Visualizer::resetStrategy(bool setState){
+    strategy = std::vector<std::vector<bool>>(field->getSize().x,std::vector<bool>(field->getSize().y));
+    for(int x = 0;x < field->getSize().x;x++){
+        for(int y = 0;y < field->getSize().y;y++){
+            strategy[x][y] = setState;
+        }
+    }
+    emit signalStrategy(strategy);
+    this->update();
+    this->repaint();
+}
+
 void Visualizer::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
     QPainter painter(this);
@@ -174,7 +200,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     procon::Point size = field ? field->getSize() : procon::Point(10, 10);
 
-    grid_size = std::min(1.0 * window_width / ( (margin * 2) + size.x), 1.0 * window_height / ( (margin * 2) + size.y));
+    grid_size = std::min(1.0 * window_width / ( (margin * 2) + size.x), 1.0 * window_height / ( (margin * 0.5) + size.y));
     horizontal_margin = (window_width - grid_size * size.x) / 2;
     vertical_margin = (window_height - grid_size * size.y) / 2;
 
@@ -308,8 +334,8 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     auto drawTurnCount = [&]{
         QPoint text_point;
-        text_point.setX(horizontal_margin + (size.x - 3) * grid_size);
-        text_point.setY(vertical_margin - 0.4 * grid_size);
+        text_point.setX(horizontal_margin + (size.x + 0.2) * grid_size);
+        text_point.setY(vertical_margin + grid_size);
 
         painter.setPen(QPen(QBrush(score_color), 0.3));
 
@@ -318,14 +344,17 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.setFont(font);
 
         auto turn = field->getTurn();
-        QString str(QString::number(turn.now) + QString::fromStdString(" / ") + QString::number(turn.final));
-        painter.drawText(text_point, str);
+        painter.drawText(text_point, QString::number(turn.now));
+        text_point.setY(vertical_margin + grid_size * 2);
+        painter.drawText(text_point, QString::fromStdString("ー"));
+        text_point.setY(vertical_margin + grid_size * 3);
+        painter.drawText(text_point, QString::number(turn.final));
     };
 
     auto drawAutomode = [&]{
         QPoint text_point;
-        text_point.setX(horizontal_margin);
-        text_point.setY(vertical_margin - 0.4 * grid_size);
+        text_point.setX(horizontal_margin - 1.8 * grid_size);
+        text_point.setY(vertical_margin + grid_size);
 
         painter.setPen(QPen(QBrush(team_colors[manual_team]), 0.3));
 
@@ -333,29 +362,73 @@ void Visualizer::paintEvent(QPaintEvent *event){
         font.setPointSize(grid_size * 0.8);
         painter.setFont(font);
 
-        QString str(QString::fromStdString("Manual Mode"));
+        QString str(QString::fromStdString("Man"));
         if(!auto_mode)painter.drawText(text_point, str);
+    };
+
+    auto drawStrategyGrid = [&]{
+        for(int x = 0;x < field->getSize().x;x++){
+            for(int y = 0;y < field->getSize().y;y++){
+                QColor paint_color = ( strategy[x][y] == true
+                                       ? strategy_grid_color[1]
+                                       : strategy_grid_color[0]);
+                paint_color.setAlpha(100);
+                painter.setBrush(QBrush(paint_color));
+                painter.drawRect(horizontal_margin + x * grid_size, vertical_margin + y * grid_size, grid_size, grid_size);
+            }
+        }
+    };
+
+    auto drawStrategymode = [&]{
+        if(is_strategy){
+            QPoint text_point;
+            text_point.setX(horizontal_margin - 1.8 * grid_size);
+            text_point.setY(vertical_margin + grid_size);
+
+            painter.setPen(QPen(QBrush(strategy_color), 0.3));
+
+            QFont font = painter.font();
+            font.setPointSize(grid_size * 0.8);
+            painter.setFont(font);
+
+            QString str(QString::fromStdString("Str"));
+            painter.drawText(text_point, str);
+            drawStrategyGrid();
+        }
     };
 
     auto drawScores = [&]{
         auto scores = field->getScores();
 
         QPoint side_0_point, side_1_point;
-        side_0_point.setX(horizontal_margin);
-        side_1_point.setX(window_width - horizontal_margin - grid_size * 3.5);
-        side_0_point.setY(window_height - vertical_margin + grid_size * 1.3);
-        side_1_point.setY(window_height - vertical_margin + grid_size * 1.3);
+        side_0_point.setX(horizontal_margin - grid_size * 2.2);
+        side_1_point.setX(horizontal_margin + (size.x + 0.2) * grid_size);
+        side_0_point.setY(window_height - vertical_margin - grid_size * 2);
+        side_1_point.setY(window_height - vertical_margin - grid_size * 2);
 
         QColor paint_color = team_colors.at(0);
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
-        painter.drawText(side_0_point, QString::number(scores[0].tile) + QString::fromStdString(" + ") + QString::number(scores[0].region));
+        if(scores[0].tile <= -100 || scores[1].tile <= -100){
+            QFont font = painter.font();
+            font.setPointSize(font.pointSize()*0.8);
+            painter.setFont(font);
+        }
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::number(scores[0].tile));
+        side_0_point.setY(window_height - vertical_margin - grid_size);
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::fromStdString("+"));
+        side_0_point.setY(window_height - vertical_margin);
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::number(scores[0].region));
 
         paint_color = team_colors.at(1);
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
-        painter.drawText(side_1_point, QString::number(scores[1].tile) + QString::fromStdString(" + ") + QString::number(scores[1].region));
-        drawAutomode();
+
+        painter.drawText(side_1_point, QString::number(scores[1].tile));
+        side_1_point.setY(window_height - vertical_margin - grid_size);
+        painter.drawText(side_1_point, QString::fromStdString("+"));
+        side_1_point.setY(window_height - vertical_margin);
+        painter.drawText(side_1_point, QString::number(scores[1].region));
     };
 
     if(field){
@@ -366,39 +439,68 @@ void Visualizer::paintEvent(QPaintEvent *event){
         drawAgentMove();
         drawAroundAgent();
         drawTurnCount();
+        drawAutomode();
         drawScores();
+        drawStrategymode();
     }
 }
 
 void Visualizer::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_R){
-        emit signalResetField();
-        resetAgentAct();//emitしてからresetしないとagent_countをreset前に合わせて配列外参照してしまうので下に書いている
+        if(!is_strategy){
+            emit signalResetField();
+            resetAgentAct();//emitしてからresetしないとagent_countをreset前に合わせて配列外参照してしまうので下に書いている
+        }
+        else{
+            resetStrategy(false);
+        }
     }
     if(event->key() == Qt::Key_S){
-        resetAgentAct();
-        emit signalRunSimulator();
+        if(!is_strategy){
+            resetAgentAct();
+            emit signalRunSimulator();
+        }
     }
     if(event->key() == Qt::Key_F){
-        emit signalRunFullSimulation();
+        if(!is_strategy){
+            emit signalRunFullSimulation();
+        }
     }
     if(event->key() == Qt::Key_N){
-        resetAgentAct();
-        emit signalSimulateNextTurn();
+        if(!is_strategy){
+            resetAgentAct();
+            emit signalSimulateNextTurn();
+        }
     }
     if(event->key() == Qt::Key_I){
-        resetAgentAct();
-        emit signalReverseField();
+        if(!is_strategy){
+            resetAgentAct();
+            emit signalReverseField();
+        }
     }
     if(event->key() == Qt::Key_E){
-        procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
+        if(!is_strategy){
+            procon::csv::csvExport(QFileDialog::getSaveFileName(this, tr("Save CSV")).toStdString(), *field);
+        }
     }
     if(event->key() == Qt::Key_A){
-        if(field->getTurn().now != field->getTurn().final){
-            if(!auto_mode && confirm_count==0 && !selected)manual_team = !manual_team;
-            auto_mode = false;
-            this->update();
-            this->repaint();
+        if(!is_strategy){
+            if(field->getTurn().now != field->getTurn().final){
+                if(!auto_mode && confirm_count==0 && !selected)manual_team = !manual_team;
+                auto_mode = false;
+                this->update();
+                this->repaint();
+            }
         }
+        else{
+            resetStrategy(true);
+        }
+    }
+    if(event->key() == Qt::Key_T){
+        resetAgentAct();
+        resetStrategy(false);
+        is_strategy = !is_strategy;
+        this->update();
+        this->repaint();
     }
 }

@@ -13,6 +13,7 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalReverseField, this, &GameManager::reverseField);
     connect(&visualizer, &Visualizer::signalSimulateNextTurn, this, &GameManager::simulateNextTurn);
     connect(&visualizer, &Visualizer::signalMoveAgents, this, &GameManager::moveAgents);
+    connect(&visualizer, &Visualizer::signalStrategy, this, &GameManager::strategy);
 
     setAlgorithms();
 
@@ -104,3 +105,6 @@ void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector
 
 }
 
+void GameManager::strategy(std::vector<std::vector<bool>> strategy){
+    clicked = strategy;
+}

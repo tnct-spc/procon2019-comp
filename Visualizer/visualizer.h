@@ -24,6 +24,7 @@ public:
 
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
     void resetAgentAct();
+    void resetStrategy(bool setState);
     bool auto_mode = true;
 
 signals:
@@ -33,6 +34,7 @@ signals:
     void signalSimulateNextTurn();
     void signalReverseField();
     void signalMoveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
+    void signalStrategy(std::vector<std::vector<bool>> strategy);
 
 private:
 
@@ -53,21 +55,23 @@ private:
     int agent_count;
     bool selected = false;
     unsigned int confirm_count = 0;
-
     procon::Point clicked_grid;
     std::pair<int, int> selected_agent;
     procon::Point selected_agent_grid;
     bool is_moving_agent = false;
     std::vector<int> is_delete;
-
     bool manual_team = false;
-
     const double margin = 2;
+
+    bool is_strategy = false;
+    std::vector<std::vector<bool>> strategy;
 
     const QColor font_color = QColor(0, 0, 0, 64);
     const QColor background_color = QColor(245, 245, 220);
     const QColor grid_color = QColor(220, 220, 180);
     const QColor score_color = QColor(250, 80, 80, 120);
+    const QColor strategy_color = QColor(0, 200, 170);
+    const std::array<QColor, 2> strategy_grid_color = {QColor(200, 200, 200), QColor(100, 200, 170)};
     const QColor checked_color_a = QColor(255,120,0);
     const QColor checked_color_b = QColor(0,120,255);
     const std::array<QColor, 2> team_colors = {QColor(255, 0, 0), QColor(0, 0, 255)};
