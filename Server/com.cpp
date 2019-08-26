@@ -20,7 +20,7 @@ void Com::setData(std::string ipAddress, std::string portNumber, std::string pos
 
 void Com::openFile(){
     //namespace
-    auto main_ns = bp::import("___main__").attr("__dict__");
+    auto main_ns = bp::import("__main__").attr("__dict__");
     //open file
     std::ifstream ifs(filename);
     //read script
