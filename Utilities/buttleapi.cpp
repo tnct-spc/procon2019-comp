@@ -1,17 +1,21 @@
 #include "buttleapi.h"
+#include "com.h"
 
 procon::ButtleAPI::ButtleAPI(std::string host, int port, std::string token){
-
+    Com::setData(host,port,token);
+    Com::checkConnection();
 }
 
 std::vector<std::pair<int,int>> procon::ButtleAPI::getMatches() {
-    //Communicationにある同名のAPIを叩いてstd::stringを取得する
-
+    std::string getmatches;
+    getmaches = com::getMaches();
+    json js = getmatches;
 }
 
 procon::Field procon::ButtleAPI::getField(int match_id){
-    //CommunicationにあるgetMatchStatusという関数を使ってstd::stringを取得する
-    procon::Field field = csv::csvDecode(std::csv_str);
+    std::string matchStatus;
+    matchStatus = Com::getMatchStatus(id);
+    procon::Field field = csv::csvDecode(csv_str);
 }
 
 void procon::ButtleAPI::setMove(int match_id, std::vector<procon::MoveState> moves, std::vector<int> agent_ids){
