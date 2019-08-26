@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>200</height>
+    <height>256</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,24 +31,8 @@
       </property>
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="MatchID">
-          <property name="inputMask">
-           <string/>
-          </property>
-          <property name="dragEnabled">
-           <bool>false</bool>
-          </property>
-          <property name="clearButtonEnabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="IP"/>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="Port"/>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label">
@@ -68,6 +52,30 @@
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>Port</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="Token"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Token</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="MatchID">
+          <property name="maximum">
+           <number>1000000000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="Port">
+          <property name="maximum">
+           <number>1000000000</number>
           </property>
          </widget>
         </item>

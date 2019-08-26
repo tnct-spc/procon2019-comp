@@ -16,7 +16,7 @@ public:
 
 public slots:
     void loadField(procon::Field field);
-    void loadMatchID(QString MatchID,QString IP,QString Port);
+    void loadMatchID(QString IP,QString Token);
     void runFullSimulation();
     void resetField();
     void runSimulator();
