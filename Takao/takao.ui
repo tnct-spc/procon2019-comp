@@ -32,7 +32,11 @@
       <item>
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="1">
-         <widget class="QLineEdit" name="IP"/>
+         <widget class="QLineEdit" name="IP">
+          <property name="text">
+           <string>192.168.0.16</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label">
@@ -56,7 +60,11 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLineEdit" name="Token"/>
+         <widget class="QLineEdit" name="Token">
+          <property name="text">
+           <string>procon30_example_token</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_4">
@@ -70,12 +78,27 @@
           <property name="maximum">
            <number>1000000000</number>
           </property>
+          <property name="value">
+           <number>1</number>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
          <widget class="QSpinBox" name="Port">
+          <property name="suffix">
+           <string/>
+          </property>
+          <property name="prefix">
+           <string/>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
           <property name="maximum">
            <number>1000000000</number>
+          </property>
+          <property name="value">
+           <number>8888</number>
           </property>
          </widget>
         </item>
