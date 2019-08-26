@@ -18,7 +18,7 @@ public:
 
 signals:
     void signalLoadField(procon::Field field);
-    void signalMatchID(QString IP,QString Token);
+    void signalMatchID(QString IP,QString Token,QString MatchID,QString Port);
 
 private slots:
     void loadCsvField();

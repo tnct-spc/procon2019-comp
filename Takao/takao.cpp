@@ -25,6 +25,8 @@ void Takao::loadCsvField(){
 void Takao::loadText(){
     QString IP = ui->IP->text();
     QString Token = ui->Token->text();
+    QString MatchID = ui->MatchID->text();
+    QString Port = ui->Port->text();
 
-    emit signalMatchID(IP,Token);
+    emit signalMatchID(IP,Token,MatchID,Port);
 }
