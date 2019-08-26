@@ -6,10 +6,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Py_Initialize();
-    boost::python::numpy::initialize();
-    RandomPlayoutForPolicyPlayer test;
-    QTimer::singleShot(0, &test, &RandomPlayoutForPolicyPlayer::run);
-    testServer();
+    try{
+        testServer();
+    }
+    catch (boost::python::error_already_set) {
+        PyErr_Print();
+    }
     return a.exec();
 }
