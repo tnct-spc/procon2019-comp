@@ -7,7 +7,8 @@
 
 namespace bp = boost::python;
 
-#define FILENAME "./com.py" //something does not work ?
+#define FILENAME "./../../procon2019-comp/Server/com.py" //:thiking_face:
+//#define FILENAME "./com.py" //something does not work ?
 //#define FILENAME "/home/okdwtr/Documents/procon2019-comp/Server/com.py"   //this works good but...
 
 void Com::setData(std::string ipAddress, std::string portNumber, std::string postToken){
