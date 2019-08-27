@@ -6,8 +6,9 @@
 
 
 namespace bp = boost::python;
-const char * filename = "com.py";
 
+#define FILENAME "./com.py" //something does not work ?
+//#define FILENAME "/home/okdwtr/Documents/procon2019-comp/Server/com.py"   //this works good but...
 
 void Com::setData(std::string ipAddress, std::string portNumber, std::string postToken){
     ip = ipAddress;
@@ -22,7 +23,7 @@ void Com::openFile(){
     //namespace
     auto main_ns = bp::import("__main__").attr("__dict__");
     //open file
-    std::ifstream ifs(filename);
+    std::ifstream ifs(FILENAME);
     //read script
     std::string script((std::istreambuf_iterator<char>(ifs)),std::istreambuf_iterator<char>());
     bp::exec(script.c_str(),main_ns);
