@@ -14,7 +14,6 @@ void Com::setData(std::string ipAddress, std::string portNumber, std::string pos
     ip = ipAddress;
     port = portNumber;
     token = postToken;
-    Py_Initialize();
     openFile();
 }
 
