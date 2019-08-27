@@ -1,3 +1,5 @@
+#define BOOST_PYTHON_STATIC_LIB
+
 #include <QApplication>
 #include <QTimer>
 #include "randomplayoutforpolicyplayer.h"
