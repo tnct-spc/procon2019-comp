@@ -21,12 +21,17 @@ void Takao::loadCsvField(){
     emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
 }
 
-
 void Takao::loadText(){
     QString IP = ui->IP->text();
     QString Token = ui->Token->text();
+
     QString MatchID = ui->MatchID->text();
+
+    int Matchid = MatchID.split(" ")[0].toInt();
+
     QString Port = ui->Port->text();
 
-    emit signalMatchID(IP,Token,MatchID,Port);
+    int port = Port.split(" ")[0].toInt();
+
+    emit signalMatchID(IP,Token,Matchid,port);
 }
