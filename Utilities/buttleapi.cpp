@@ -1,5 +1,7 @@
 #include "buttleapi.h"
 #include "com.h"
+#include "csvtranslate.h"
+
 
 procon::ButtleAPI::ButtleAPI(std::string host, int port, std::string token){
     Com::setData(host,port,token);
@@ -8,14 +10,14 @@ procon::ButtleAPI::ButtleAPI(std::string host, int port, std::string token){
 
 std::vector<std::pair<int,int>> procon::ButtleAPI::getMatches() {
     std::string getmatches;
-    getmaches = com::getMaches();
-    json js = getmatches;
+    getmatches = com::getMaches();
+
 }
 
 procon::Field procon::ButtleAPI::getField(int match_id){
     std::string matchStatus;
-    matchStatus = Com::getMatchStatus(id);
-    procon::Field field = csv::csvDecode(csv_str);
+    matchStatus = Com::getMatchStatus(match_id);
+    procon::Field field =
 }
 
 void procon::ButtleAPI::setMove(int match_id, std::vector<procon::MoveState> moves, std::vector<int> agent_ids){
