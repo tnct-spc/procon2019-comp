@@ -23,11 +23,11 @@ std::vector<std::pair<int,int>> procon::ButtleAPI::getMatches(){
 procon::Field procon::ButtleAPI::getField(int match_id){
     std::string matchStatus;
     matchStatus = Com::getMatchStatus(match_id);
-    procon::Field field = procon::Field csvDecode(csv_string);
+    procon::Field field = csvDecode(csv_string);
 }
 
 void procon::ButtleAPI::setMove(int match_id, std::vector<procon::MoveState> moves, std::vector<int> agent_ids){
 
     std::string json_str = json::translateFromMoveStateData(moves, agent_ids);
-    //cominicationのsendActionという関数を使ってAPIにstringを送信
+    Com::sendAction(id,arg);
 }
