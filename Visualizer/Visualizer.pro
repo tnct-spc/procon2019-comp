@@ -24,12 +24,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
+        simplevisualizer.cpp \
         visualizer.cpp
 
 HEADERS += \
+        simplevisualizer.h \
         visualizer.h
 
 FORMS += \
+        simplevisualizer.ui \
         visualizer.ui
 
 # Default rules for deployment.
