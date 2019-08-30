@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
         testServer();
     }
     catch (boost::python::error_already_set) {
-        PyErr_Print();
+        //PyErr_Print();    //for debug
     }
     return a.exec();
 }
