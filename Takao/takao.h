@@ -22,7 +22,7 @@ signals:
 
 private slots:
     void loadCsvField();
-    void loadText();
+    void on_Send_clicked();
 
 private:
     Ui::Takao *ui;
