@@ -1,6 +1,7 @@
 #include "buttleapi.h"
 #include "com.h"
 #include "nlohmann/json.hpp"
+#include "./csvtranslate.h"
 
 //namespace
 using std::string;
@@ -20,7 +21,7 @@ std::vector<std::pair<int,int>> procon::ButtleAPI::getMatches(){
     getData = {"hoge"};
 
     nlohmann::json js;
-    getData >> js;
+    js = getData;
 
     vector<pair<int,int>> ret;
     for (short i = 0; ; i++) {
@@ -35,7 +36,7 @@ std::vector<std::pair<int,int>> procon::ButtleAPI::getMatches(){
 Field procon::ButtleAPI::getField(int match_id){
     string matchStatus;
     matchStatus = Com::getMatchStatus(match_id);
-    Field field = csvDecode(csv_string);
+    Field field = csv::csvDecode(matchStatus);
     return field;
 }
 
