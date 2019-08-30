@@ -26,7 +26,7 @@ std::vector<std::pair<int,int>> procon::ButtleAPI::getMatches(){
     for (short i = 0; ; i++) {
         if (js["id"] == nullptr) break;
         pair<int,int> temp;
-        temp.first = js["id"＞];
+        temp.first = js["id"];
         temp.second = js["turn"];
         ret.push_back(temp);
     }
