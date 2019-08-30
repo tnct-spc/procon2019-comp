@@ -6,28 +6,42 @@
 using std::string;
 using nlohmann::json;
 using procon::Field;
+using procon::ButtleAPI;
+using std::vector;
+using ste::pair;
 
-procon::ButtleAPI::ButtleAPI(std::string host, int port, std::string token){
+ButtleAPI::ButtleAPI(std::string host, int port, std::string token){
     Com::setData(host,port,token);
     Com::checkConnection();
 }
 
 std::vector<std::pair<int,int>> procon::ButtleAPI::getMatches(){
-    std::string getData;
+    string getData;
     getData = {"hoge"};
 
     nlohmann::json js;
-    getData = js;
+    getData >> js;
+
+    vector<pair<int,int>> ret;
+    for (short i = 0; i < ; i++) {
+        if (js["id"].num(i) == nullptr) break;){
+        pair<int,int> temp;
+        temp.first = js["id"];
+        temp.second = js["turn"];
+        ret.push_back(temp);
+        }
+    }
 }
 
-procon::Field procon::ButtleAPI::getField(int match_id){
-    std::string matchStatus;
+Field procon::ButtleAPI::getField(int match_id){
+    string matchStatus;
     matchStatus = Com::getMatchStatus(match_id);
-    procon::Field field = csvDecode(csv_string);
+    Field field = csvDecode(csv_string);
+    return field
 }
 
 void procon::ButtleAPI::setMove(int match_id, std::vector<procon::MoveState> moves, std::vector<int> agent_ids){
 
-    std::string json_str = json::translateFromMoveStateData(moves, agent_ids);
-    Com::sendAction(id,arg);
+    string json_str = json::translateFromMoveStateData(moves, agent_ids);
+    Com::sendAction(match_id, json_str);
 }
