@@ -8,5 +8,5 @@ SUBDIRS += \
         GameManager \
         Takao \
         Communication \
+        Server \
         Test \
-        Server
