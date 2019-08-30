@@ -39,7 +39,7 @@ def postRequest(address, token, data = None):
 def checkConnection(ip, port, token = 'procon30_example_token'):
     ''' check connection for procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/ping'    
+    url = 'http://' + str(ip) + ':' + str(port) + '/ping'
 
     return postRequest(url, token)
 

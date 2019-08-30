@@ -1,13 +1,19 @@
+#define BOOST_PYTHON_STATIC_LIB
+
 #include <QApplication>
 #include <QTimer>
 #include "randomplayoutforpolicyplayer.h"
+#include "com.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Py_Initialize();
-    boost::python::numpy::initialize();
-    RandomPlayoutForPolicyPlayer test;
-    QTimer::singleShot(0, &test, &RandomPlayoutForPolicyPlayer::run);
+    try{
+        testServer();
+    }
+    catch (boost::python::error_already_set) {
+        //PyErr_Print();    //for debug
+    }
     return a.exec();
 }

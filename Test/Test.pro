@@ -5,12 +5,14 @@ CONFIG -= app_bundle
 QT += core gui widgets
 
 SOURCES += \
+    com.cpp \
     generatecnpyboarddata.cpp \
         main.cpp \
     generaterandomsimulateddata.cpp \
     randomplayoutforpolicyplayer.cpp
 
 HEADERS += \
+    com.h \
     generatecnpyboarddata.h \
     generaterandomsimulateddata.h \
     randomplayoutforpolicyplayer.h
@@ -40,5 +42,9 @@ DEPENDPATH += $$PWD/../Visualizer
 LIBS += -L$$OUT_PWD/../Communication/ -lCommunication
 INCLUDEPATH += $$PWD/../Communication
 DEPENDPATH += $$PWD/../Communication
+
+LIBS += -L$$OUT_PWD/../Server/ -lServer
+INCLUDEPATH += $$PWD/../Server
+DEPENDPATH += $$PWD/../Server
 
 INCLUDEPATH += /usr/include/python3.7m

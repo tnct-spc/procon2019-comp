@@ -1,15 +1,15 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-04-01T14:08:23
+# Project created by QtCreator 2019-04-01T16:10:55
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       -= gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-TARGET = Visualizer
+TARGET = Server
 TEMPLATE = lib
+
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -23,23 +23,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
-        simplevisualizer.cpp \
-        visualizer.cpp
+        com.cpp
 
 HEADERS += \
-        simplevisualizer.h \
-        visualizer.h
+        com.h
 
-FORMS += \
-        simplevisualizer.ui \
-        visualizer.ui
+LIBS += -lboost_python3
+LIBS += -lboost_numpy3
+LIBS += -lpython3.7m
+LIBS += -lcnpy
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+unix {
+    target.path = /usr/lib
+    INSTALLS += target
+}
 
-LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
-INCLUDEPATH += $$PWD/../Utilities
-DEPENDPATH += $$PWD/../Utilities
+INCLUDEPATH += /usr/include/python3.7m
+
+DISTFILES += \
+    com.py
