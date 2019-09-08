@@ -45,6 +45,10 @@ void GameManager::loadField(procon::Field field){
     visualizer.repaint();
 }
 
+void GameManager::loadMatchID(QString IP,QString Token,int MatchID,int Port){
+
+}
+
 void GameManager::resetField(){
 
     game = std::make_shared<GameSimulator>();
