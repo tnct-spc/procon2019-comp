@@ -22,7 +22,7 @@ void Takao::loadCsvField(){
 }
 
 void Takao::on_Send_clicked(){
-    std::cout << "test" << std::endl;
+    std::cout << "Datas were sent to GameManager" << std::endl;
     QString IP = ui->IP->text();
     QString Token = ui->Token->text();
 
