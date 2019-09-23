@@ -10,7 +10,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
 
     int agent_count = field.getAgentCount();
 
-    std::map<procon::Point, std::vector<int>> select_point_agents;
+    std::map<procon::Point, std::vector<int>> select_points;
     for(int x_index = 0; x_index < field.getSize().x; ++x_index)
         for(int y_index = 0; y_index < field.getSize().y; ++y_index)
             if(select_flag.at(x_index).at(y_index)){
@@ -18,23 +18,12 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
                 for(int agent_index = 0; agent_index < agent_count; ++agent_index){
                     auto agent_point = field.getAgent(side, agent_index);
                     auto point_diff = select_point - agent_point;
-                    if(std::abs(point_diff.x) <= 1 && std::abs(point_diff.y) <= 1)
-                        select_point_agents[select_point].emplace_back(agent_index);
+                    if(std::abs(point_diff.x) <= 1 && std::abs(point_diff.y) <= 1){
+                        select_points.emplace(select_point);
+                        continue;
+                    }
                 }
             }
-
-    std::vector<procon::Point> select_points_vec;
-    std::vector<int> select_points_agent_count;
-    for(auto& elm : select_point_agents){
-        select_points_vec.emplace_back(elm.first);
-        select_points_agent_count.emplace_back(elm.second.size());
-    }
-    long prod = std::accumulate(select_points_agent_count.begin(), select_points_agent_count.end(), 1L, [](auto x, auto y){return x * y;});
-
-    int points_count = select_points_vec.size();
-
-
-    // calc all move value
 
     struct BsState{
         double value;
@@ -52,7 +41,9 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
         { // init
             auto start_pos = field.getAgent(side, agent_index).getAppliedPosition(move_index);
             if(field.outOfRangeCheck(start_pos).first)
-                return -1e9;
+                return 0.0;
+            if(select_points.find(start_pos) != select_points.end())
+                return 1e9;
             std::set<procon::Point> first_set;
             first_set.emplace(start_pos);
             state_que.emplace(BsState{static_cast<double>(field.getState(start_pos).equalSide(side) ? 0 : field.getState(start_pos).value), start_pos, first_set});
@@ -63,7 +54,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
             while(!state_que.empty()){
                 auto state = state_que.top();
                 state_que.pop();
-                for(int move_index = 0; move_index < 8; ++move_index){
+                for(int move_index = 0; move_index < 9; ++move_index){
                     auto nex_pos = state.pos.getAppliedPosition(move_index);
                     if(field.outOfRangeCheck(nex_pos).first)
                         continue;
@@ -82,47 +73,80 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
         return state_que.top().value;
     };
 
-
-    std::vector<std::vector<double>> eval_values(agent_count, std::vector<double>(8));
+    std::vector<procon::Point> use_point_vec;
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
-        for(int move_index = 0; move_index < 8; ++move_index)
-            eval_values.at(agent_index).at(move_index) = calc(agent_index, move_index);
-
-
-    auto check = [&](std::vector<int>& point_agent_list){
-        std::vector<int> moves(agent_count, -1);
-        for(int point_index = 0; point_index < points_count; ++point_index){
-            int agent_index = point_agent_list.at(point_index);
-            moves.at(agent_index) = field.getAgent(side, agent_index).getMoveIndex(select_points_vec.at(point_index));
+        for(int move_index = 0; move_index < 9; ++move_index){
+            auto nex_pos = field.getAgent(side, agent_index).getAppliedPosition(move_index);
+            if(field.outOfRangeCheck(nex_pos).first == false)
+                use_point_vec.emplace_back(nex_pos);
         }
-        // bfs
-        std::vector<std::vector<double>> values(8, std::vector<double>(8, -1e9));
-        for(int agent_index = 0; agent_index < agent_count; ++agent_index){
-            if(moves.at(agent_index) != -1)
-                continue;
-            for(int move_index = 0; move_index < 8; ++move_index){
-                auto moved_point = field.getAgent(side, agent_index).getAppliedPosition(move_index);
-                if(select_point_agents.find(moved_point) != select_point_agents.end())
-                    continue;
 
-                values.at(agent_index).at(move_index) = eval_values.at(agent_index).at(move_index);
+    sort(use_point_vec.begin(), use_point_vec.end());
+    use_point_vec.erase(unique(use_point_vec.begin(), use_point_vec.end()), use_point_vec.end());
+
+    int matrix_size = std::max(agent_count, static_cast<int>(use_point_vec.size()));
+    std::vector<std::vector<double>> eval_values(matrix_size, std::vector<double>(matrix_size, 0.0));
+
+    auto get_index = [&use_point_vec](procon::Point p){return std::distance(use_point_vec.begin(), std::lower_bound(use_point_vec.begin(), use_point_vec.end(), p));};
+
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+        for(int move_index = 0; move_index < 9; ++move_index){
+            auto nex_pos = field.getAgent(side, agent_index).getAppliedPosition(move_index);
+            if(field.outOfRangeCheck(nex_pos).first == false){
+                int point_index = get_index(nex_pos);
+                eval_values.at(agent_index).at(point_index) = calc(agent_index, move_index) + 1e-3;
             }
         }
-        // TODO: merge
-        return 0;
-    };
-
-
-    for(int flag = 0; flag < prod; ++flag){
-        std::vector<int> point_agent_list(points_count);
-        int flag_div = flag;
-        for(int point_index = 0; point_index < points_count; ++point_index){
-            point_agent_list.at(point_index) = select_point_agents[select_points_vec.at(point_index)].at(flag_div % select_points_agent_count.at(point_index));
-            flag_div /= select_points_agent_count.at(point_index);
-        }
-        check(point_agent_list);
     }
 
+    auto hungarian = [&](std::vector<std::vector<double>> a){
+        int n = a.size();
+        int p, q;
+        std::vector<double> fx(n, 1e17), fy(n, 0);
+        std::vector<int> x(n, -1), y(n, -1);
 
-    return std::vector<procon::MoveState>();
+        for(int i = 0; i < n; ++i)
+            for(int j = 0; j < n; ++j)
+                fx.at(i) = std::max(fx.at(i), a.at(i).at(j));
+
+        for(int i = 0; i < n;){
+            std::vector<int> t(n, -1), s(n + 1, i);
+            for(p = 0, q = 0; p <= q && x.at(i) < 0; ++p){
+                for(int k = s.at(p), j = 0; j < n && x.at(i) < 0; ++j)
+                    if(fx.at(k) + fy.at(j) == a.at(k).at(j) && t.at(j) < 0){
+                        s.at(++q) = y.at(j);
+                        t.at(j) = k;
+                        if(s.at(q) < 0){
+                            for(p = j; p >= 0; j = p){
+                                y.at(j) = t.at(j);
+                                k = t.at(j);
+                                p = x.at(k);
+                                x.at(k) = j;
+                            }
+                        }
+                    }
+            }
+            if(x.at(i) < 0){
+                double d = 1e17;
+                for(int k = 0; k <= q; ++k)
+                    for(int j = 0; j < n; ++j)
+                        if(t.at(j) < 0)
+                            d = std::min(d, fx.at(s.at(k)) + fy.at(j) - a.at(s.at(k)).at(j));
+                for(int j = 0; j < n; ++j)
+                    fy.at(j) += (t.at(j) < 0 ? 0 : d);
+                for(int k = 0; k <= q; ++k)
+                    fx.at(s.at(k)) -= d;
+            }
+            else
+                ++i;
+        }
+        return x;
+    };
+
+    auto ret = hungarian(eval_values);
+    std::vector<procon::MoveState> ret_state(agent_count);
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
+        ret_state.at(agent_index) = field.getAgent(side, agent_index).getMoveIndex(use_point_vec.at(ret.at(agent_index)));
+
+    return ret_state;
 }
