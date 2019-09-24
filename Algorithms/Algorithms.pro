@@ -31,6 +31,7 @@ SOURCES += \
         PolicyPlayer/Searcher/simplesearcher.cpp \
         PolicyPlayer/policyplayer.cpp \
         algorithmwrapper.cpp \
+        newalgorithm.cpp \
         testalgorithm.cpp \
         randommove.cpp \
         simplebeamsearch.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
         PolicyPlayer/policyplayer.h \
         PolicyPlayer/selectors.h \
         algorithmwrapper.h \
+        newalgorithm.h \
         testalgorithm.h \
         randommove.h \
         simplebeamsearch.h \
