@@ -33,7 +33,7 @@ def postRequest(address, token, data = None):
         ret['reason'] = e.reason
         return e.reason#json.dumps(ret)
     else:
-        return json.dumps(content.read().decode('utf-8'))
+        return content.read().decode('utf-8')
 
 
 def checkConnection(ip, port, token = 'procon30_example_token'):
