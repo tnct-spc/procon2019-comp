@@ -14,6 +14,7 @@
 
 class GameManager : public QObject
 {
+    Q_OBJECT
 
 public:
     GameManager();
@@ -27,7 +28,6 @@ public slots:
     bool simulateNextTurn();
     void moveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
     void strategy(std::vector<std::vector<bool>> strategy);
-    void setStrategyFlag(bool flag);
     void strategyApplyMove();
     void reverseField();
 

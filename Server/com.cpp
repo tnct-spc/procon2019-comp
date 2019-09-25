@@ -1,9 +1,7 @@
 #include <fstream>
 #include <streambuf>
 #include <string>
-#include <boost/python.hpp>
 #include "com.h"
-
 
 namespace bp = boost::python;
 
@@ -85,4 +83,4 @@ int main(){
     //change ip/port/token
     return 0;
 }
-//*/
+*/

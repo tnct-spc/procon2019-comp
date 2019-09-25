@@ -43,3 +43,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
 INCLUDEPATH += $$PWD/../Utilities
 DEPENDPATH += $$PWD/../Utilities
+
+# LIBS += -L$$OUT_PWD/../Server/ -lServer
+# INCLUDEPATH += $$PWD/../Server
+# DEPENDPATH += $$PWD/../Server

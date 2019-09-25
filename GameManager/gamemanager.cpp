@@ -1,4 +1,5 @@
 #include "gamemanager.h"
+#include "com.h"
 
 GameManager::GameManager() :
     game(std::make_shared<GameSimulator>()),
@@ -53,6 +54,7 @@ void GameManager::loadField(procon::Field field){
 
 void GameManager::loadMatchID(QString IP, QString Token, int MatchID, int Port, int team_id, std::vector<int> agent_id){
     setting = procon::ConnectionSettings(MatchID, Token.toStdString(), Port, Token.toStdString(), team_id, agent_id);
+    Com::setData(setting.ip, std::to_string(setting.port), setting.token);
 }
 
 void GameManager::resetField(){
