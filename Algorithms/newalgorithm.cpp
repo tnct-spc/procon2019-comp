@@ -10,7 +10,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
 
     int agent_count = field.getAgentCount();
 
-    std::map<procon::Point, std::vector<int>> select_points;
+    std::set<procon::Point> select_points;
     for(int x_index = 0; x_index < field.getSize().x; ++x_index)
         for(int y_index = 0; y_index < field.getSize().y; ++y_index)
             if(select_flag.at(x_index).at(y_index)){

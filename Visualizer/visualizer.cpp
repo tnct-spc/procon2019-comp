@@ -500,6 +500,8 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         resetAgentAct();
         resetStrategy(false);
         is_strategy = !is_strategy;
+        emit signalStrategyFlag(is_strategy);
+        emit signalStrategy(strategy);
         this->update();
         this->repaint();
     }

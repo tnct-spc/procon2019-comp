@@ -7,6 +7,7 @@
 #include "testalgorithm.h"
 #include "simplebeamsearch.h"
 #include "boarddividealgorithm.h"
+#include "newalgorithm.h"
 
 class GameManager : public QObject
 {
@@ -23,6 +24,7 @@ public slots:
     bool simulateNextTurn();
     void moveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
     void strategy(std::vector<std::vector<bool>> strategy);
+    void setStrategyFlag(bool flag);
     void reverseField();
 
 private:
@@ -33,10 +35,12 @@ private:
     Visualizer visualizer;
 
     std::shared_ptr<const procon::Field> field;
+    std::shared_ptr<NewAlgorithm> strategy_algo;
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
     std::vector<std::vector<bool>> clicked;
 
     unsigned int now_field = 0;
+    bool is_strategy = false;
 
 };
 

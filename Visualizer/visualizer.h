@@ -35,6 +35,7 @@ signals:
     void signalReverseField();
     void signalMoveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
     void signalStrategy(std::vector<std::vector<bool>> strategy);
+    void signalStrategyFlag(bool flag);
 
 private:
 
