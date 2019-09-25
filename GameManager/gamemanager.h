@@ -9,6 +9,9 @@
 #include "boarddividealgorithm.h"
 #include "newalgorithm.h"
 
+#include "fieldcsvtranslate.h"
+#include "movestatetraslate.h"
+
 class GameManager : public QObject
 {
 
@@ -17,7 +20,7 @@ public:
 
 public slots:
     void loadField(procon::Field field);
-    void loadMatchID(QString IP,QString Token,int MatchID,int Port);
+    void loadMatchID(QString IP, QString Token, int MatchID, int Port, int team_id, std::vector<int> agent_id);
     void runFullSimulation();
     void resetField();
     void runSimulator();
@@ -28,9 +31,14 @@ public slots:
     void strategyApplyMove();
     void reverseField();
 
+    void recieveField();
+    void sendMove();
+
 private:
 
     void setAlgorithms();
+
+    procon::ConnectionSettings setting;
 
     std::shared_ptr<GameSimulator> game;
     Visualizer visualizer;

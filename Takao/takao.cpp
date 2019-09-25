@@ -10,6 +10,7 @@ Takao::Takao(QWidget *parent) :
 
     connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
     connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
+    on_Send_clicked();
 }
 
 Takao::~Takao()
@@ -32,5 +33,6 @@ void Takao::on_Send_clicked(){
     QString Port = ui->Port->text();
     int port = Port.split(" ")[0].toInt();
 
-    emit signalMatchID(IP,Token,Matchid,port);
+    // TODO: add team_id and agent_id
+    emit signalMatchID(IP, Token, Matchid, port, 1001, {8, 6, 9, 120});
 }

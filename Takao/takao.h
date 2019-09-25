@@ -18,7 +18,7 @@ public:
 
 signals:
     void signalLoadField(procon::Field field);
-    void signalMatchID(QString IP,QString Token,int MatchID,int Port);
+    void signalMatchID(QString IP,QString Token,int MatchID,int Port,int team_id, std::vector<int> agent_id);
 
 private slots:
     void loadCsvField();
