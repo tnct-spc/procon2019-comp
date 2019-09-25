@@ -505,4 +505,8 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
         this->update();
         this->repaint();
     }
+    if(is_strategy && event->key() == Qt::Key_G){
+        emit signalSendMove();
+        resetStrategy(false);
+    }
 }

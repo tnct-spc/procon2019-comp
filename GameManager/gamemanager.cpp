@@ -15,6 +15,7 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalMoveAgents, this, &GameManager::moveAgents);
     connect(&visualizer, &Visualizer::signalStrategy, this, &GameManager::strategy);
     connect(&visualizer, &Visualizer::signalStrategyFlag, this, &GameManager::setStrategyFlag);
+    connect(&visualizer, &Visualizer::signalSendMove, this, &GameManager::strategyApplyMove);
 
     setAlgorithms();
 
@@ -113,12 +114,22 @@ void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector
 
 void GameManager::strategy(std::vector<std::vector<bool>> strategy){
     clicked = strategy;
-    auto result = strategy_algo->agentAct(clicked);
-    for(auto& res : result)
+    moves = strategy_algo->agentAct(clicked);
+    for(auto& res : moves)
         std::cout << res.move_index << " ";
     std::cout << std::endl;
 }
 
 void GameManager::setStrategyFlag(bool flag){
     is_strategy = flag;
+}
+
+void GameManager::strategyApplyMove(){
+    if(game->isSimulationEnded())
+        return ;
+    game->addAgentAct(0, moves);
+    game->addAgentAct(1, algo.at(1)->agentAct());
+    game->changeTurn(true);
+    now_field = field->getTurn().now;
+    visualizer.update();
 }

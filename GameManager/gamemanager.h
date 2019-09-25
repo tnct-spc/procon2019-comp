@@ -25,6 +25,7 @@ public slots:
     void moveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
     void strategy(std::vector<std::vector<bool>> strategy);
     void setStrategyFlag(bool flag);
+    void strategyApplyMove();
     void reverseField();
 
 private:
@@ -35,9 +36,11 @@ private:
     Visualizer visualizer;
 
     std::shared_ptr<const procon::Field> field;
-    std::shared_ptr<NewAlgorithm> strategy_algo;
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
+
+    std::shared_ptr<NewAlgorithm> strategy_algo;
     std::vector<std::vector<bool>> clicked;
+    std::vector<procon::MoveState> moves;
 
     unsigned int now_field = 0;
     bool is_strategy = false;
