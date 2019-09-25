@@ -52,8 +52,8 @@ void GameManager::loadField(procon::Field field){
     visualizer.repaint();
 }
 
-void GameManager::loadMatchID(QString IP, QString Token, int MatchID, int Port, int team_id, std::vector<int> agent_id){
-    setting = procon::ConnectionSettings(MatchID, Token.toStdString(), Port, Token.toStdString(), team_id, agent_id);
+void GameManager::loadMatchID(QString IP, QString Token, int MatchID, int Port, int team_id, std::vector<int> agent_id, int end_turn){
+    setting = procon::ConnectionSettings(MatchID, IP.toStdString(), Port, Token.toStdString(), team_id, agent_id, end_turn);
     Com::setData(setting.ip, std::to_string(setting.port), setting.token);
 }
 
@@ -137,8 +137,15 @@ void GameManager::strategyApplyMove(){
 }
 
 void GameManager::recieveField(){
+    std::string ret_field = Com::getMatchStatus(setting.match_id);
+    std::cout << "-------recieve field-------" << std::endl;
+    std::cout << ret_field << std::endl;
+    std::string field_csv = procon::json::translateToFieldCsv(ret_field, setting.team_id, setting.agent_id, setting.end_turn);
 }
 
 void GameManager::sendMove(){
-
+    std::string action_json_str = procon::json::translateFromMoveStateData(moves, setting.agent_id);
+    std::string result = Com::sendAction(setting.match_id, action_json_str);
+    std::cout << "-------send move-------" << std::endl;
+    std::cout << result << std::endl;
 }

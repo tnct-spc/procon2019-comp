@@ -34,5 +34,5 @@ void Takao::on_Send_clicked(){
     int port = Port.split(" ")[0].toInt();
 
     // TODO: add team_id and agent_id
-    emit signalMatchID(IP, Token, Matchid, port, 1001, {8, 6, 9, 120});
+    emit signalMatchID(IP, Token, Matchid, port, 1001, {8, 6, 9, 120}, 40);
 }
