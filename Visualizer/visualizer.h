@@ -25,6 +25,7 @@ public:
     void setFieldPtr(std::shared_ptr<const procon::Field> field);
     void resetAgentAct();
     void resetStrategy(bool setState);
+    void setMoves(std::vector<procon::MoveState>& moves);
     bool auto_mode = true;
 
 signals:
@@ -35,7 +36,6 @@ signals:
     void signalReverseField();
     void signalMoveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
     void signalStrategy(std::vector<std::vector<bool>> strategy);
-    void signalStrategyFlag(bool flag);
     void signalSendMove();
 
 private:
@@ -59,13 +59,14 @@ private:
     unsigned int confirm_count = 0;
     procon::Point clicked_grid;
     std::pair<int, int> selected_agent;
+    std::vector<procon::MoveState> moves;
     procon::Point selected_agent_grid;
     bool is_moving_agent = false;
     std::vector<int> is_delete;
     bool manual_team = false;
     const double margin = 2;
 
-    bool is_strategy = false;
+    bool is_strategy = true;
     std::vector<std::vector<bool>> strategy;
 
     const QColor font_color = QColor(0, 0, 0, 64);

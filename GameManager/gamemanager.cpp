@@ -14,7 +14,6 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalSimulateNextTurn, this, &GameManager::simulateNextTurn);
     connect(&visualizer, &Visualizer::signalMoveAgents, this, &GameManager::moveAgents);
     connect(&visualizer, &Visualizer::signalStrategy, this, &GameManager::strategy);
-    connect(&visualizer, &Visualizer::signalStrategyFlag, this, &GameManager::setStrategyFlag);
     connect(&visualizer, &Visualizer::signalSendMove, this, &GameManager::strategyApplyMove);
 
     setAlgorithms();
@@ -26,7 +25,7 @@ GameManager::GameManager() :
 void GameManager::setAlgorithms(){
     // 仮実装という事で、algoにランダムウォーク2つを入れて、Visualizerがクリックされる毎に更新を行うようなものを考える
     algo.at(0) = std::make_shared<SimpleBeamSearch>(*field, 0);
-    algo.at(1) = std::make_shared<TestAlgorithm>(*field, 1);
+    algo.at(1) = std::make_shared<SimpleBeamSearch>(*field, 1);
     strategy_algo = std::make_shared<NewAlgorithm>(*field, 0);
 }
 
@@ -115,21 +114,18 @@ void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector
 void GameManager::strategy(std::vector<std::vector<bool>> strategy){
     clicked = strategy;
     moves = strategy_algo->agentAct(clicked);
-    for(auto& res : moves)
-        std::cout << res.move_index << " ";
-    std::cout << std::endl;
-}
-
-void GameManager::setStrategyFlag(bool flag){
-    is_strategy = flag;
+    visualizer.setMoves(moves);
 }
 
 void GameManager::strategyApplyMove(){
     if(game->isSimulationEnded())
         return ;
+    if(moves.empty())
+        strategy(std::vector<std::vector<bool>>(field->getSize().x, std::vector<bool>(field->getSize().y, false)));
     game->addAgentAct(0, moves);
     game->addAgentAct(1, algo.at(1)->agentAct());
     game->changeTurn(true);
+    moves.clear();
     now_field = field->getTurn().now;
     visualizer.update();
 }

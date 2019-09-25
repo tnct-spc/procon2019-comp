@@ -43,7 +43,6 @@ private:
     std::vector<procon::MoveState> moves;
 
     unsigned int now_field = 0;
-    bool is_strategy = false;
 
 };
 
