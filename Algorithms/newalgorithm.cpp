@@ -10,7 +10,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
 
     int agent_count = field.getAgentCount();
 
-    std::map<procon::Point, std::vector<int>> select_points;
+    std::set<procon::Point> select_points;
     for(int x_index = 0; x_index < field.getSize().x; ++x_index)
         for(int y_index = 0; y_index < field.getSize().y; ++y_index)
             if(select_flag.at(x_index).at(y_index)){
@@ -146,7 +146,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
     auto ret = hungarian(eval_values);
     std::vector<procon::MoveState> ret_state(agent_count);
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
-        ret_state.at(agent_index) = field.getAgent(side, agent_index).getMoveIndex(use_point_vec.at(ret.at(agent_index)));
+        ret_state.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), field.getAgent(side, agent_index).getMoveIndex(use_point_vec.at(ret.at(agent_index))));
 
     return ret_state;
 }
