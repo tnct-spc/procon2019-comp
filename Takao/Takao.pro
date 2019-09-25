@@ -35,7 +35,6 @@ FORMS += \
         takao.ui
 
 LIBS += -lboost_python3
-LIBS += -lboost_numpy3
 LIBS += -lpython3.7m
 
 # Default rules for deployment.
@@ -46,6 +45,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 LIBS += -L$$OUT_PWD/../Utilities/ -lUtilities
 INCLUDEPATH += $$PWD/../Utilities
 DEPENDPATH += $$PWD/../Utilities
+
+LIBS += -L$$OUT_PWD/../Server/ -lServer
+INCLUDEPATH += $$PWD/../Server
+DEPENDPATH += $$PWD/../Server
 
 LIBS += -L$$OUT_PWD/../GameManager/ -lGameManager
 INCLUDEPATH += $$PWD/../GameManager

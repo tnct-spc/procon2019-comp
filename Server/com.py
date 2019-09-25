@@ -33,7 +33,7 @@ def postRequest(address, token, data = None):
         ret['reason'] = e.reason
         return e.reason#json.dumps(ret)
     else:
-        return json.dumps(content.read().decode('utf-8'))
+        return content.read().decode('utf-8')
 
 
 def checkConnection(ip, port, token = 'procon30_example_token'):
@@ -69,6 +69,7 @@ def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = j
 
 
 if __name__ == '__main__':
+	'''
     print('-----checkConnection()-----\n')
     print(checkConnection('localhost', 8888))
     print('\n\n-----getMatches()-----\n')
@@ -81,4 +82,5 @@ if __name__ == '__main__':
     print(getMatchStatus('localhost', 8888, matchid=6))
     print('\n\n-----sendAction()-----\n')
     print(sendAction('localhost', 8888))
+	'''
 

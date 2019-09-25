@@ -539,5 +539,9 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
             emit signalSendMove();
             resetStrategy(false);
         }
+        if(event->key() == Qt::Key_N)
+            emit signalGetField();
+        if(event->key() == Qt::Key_M)
+            emit signalSetMove();
     }
 }

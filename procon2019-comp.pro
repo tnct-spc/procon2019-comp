@@ -5,8 +5,8 @@ SUBDIRS += \
         Utilities \
         Algorithms \
         Visualizer \
+        Server \
         GameManager \
         Takao \
         Communication \
-        Server \
         Test \
