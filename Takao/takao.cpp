@@ -21,7 +21,8 @@ void Takao::loadCsvField(){
     emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
 }
 
-void Takao::on_Send_clicked(){
+void Takao::on_SendButton_clicked()
+{
     std::cout << "Datas were sent to GameManager" << std::endl;
     QString IP = ui->IP->text();
     QString Token = ui->Token->text();

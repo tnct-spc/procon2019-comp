@@ -22,11 +22,10 @@ signals:
 
 private slots:
     void loadCsvField();
-    void on_Send_clicked();
+    void on_SendButton_clicked();
 
 private:
     Ui::Takao *ui;
-
     std::shared_ptr<GameManager> manager;
 };
 
