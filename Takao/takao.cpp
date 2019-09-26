@@ -9,7 +9,7 @@ Takao::Takao(QWidget *parent) :
     ui->setupUi(this);
 
     connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
-    connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
+    connect(this, &Takao::signalGameData, manager.get(), &GameManager::loadMatchID);
 }
 
 Takao::~Takao()
@@ -33,5 +33,32 @@ void Takao::on_SendButton_clicked()
     QString Port = ui->Port->text();
     int port = Port.split(" ")[0].toInt();
 
-    emit signalMatchID(IP,Token,Matchid,port);
+    QString TeamID = ui->TeamID->text();
+    int team_id = Port.split(" ")[0].toInt();
+
+    QString AgentID_1 = ui->AgentID1->text();
+    int agent_id_1 = Port.split(" ")[0].toInt();
+
+    QString AgentID_2 = ui->AgentID2->text();
+    int agent_id_2 = Port.split(" ")[0].toInt();
+
+    QString AgentID_3 = ui->AgentID3->text();
+    int agent_id_3 = Port.split(" ")[0].toInt();
+
+    QString AgentID_4 = ui->AgentID4->text();
+    int agent_id_4 = Port.split(" ")[0].toInt();
+
+    QString AgentID_5 = ui->AgentID5->text();
+    int agent_id_5 = Port.split(" ")[0].toInt();
+
+    QString AgentID_6 = ui->AgentID6->text();
+    int agent_id_6 = Port.split(" ")[0].toInt();
+
+    QString AgentID_7 = ui->AgentID7->text();
+    int agent_id_7 = Port.split(" ")[0].toInt();
+
+    QString AgentID_8 = ui->AgentID8->text();
+    int agent_id_8 = Port.split(" ")[0].toInt();
+
+    emit signalGameData(IP,Token,Matchid,port,team_id,agent_id_1,agent_id_2,agent_id_3,agent_id_4,agent_id_5,agent_id_6,agent_id_7,agent_id_8);
 }
