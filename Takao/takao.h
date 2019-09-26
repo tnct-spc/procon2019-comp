@@ -20,13 +20,13 @@ signals:
     void signalLoadField(procon::Field field);
     void signalMatchID(QString IP,QString Token,int MatchID,int Port,int team_id, std::vector<int> agent_id, int end_turn);
 
+
 private slots:
     void loadCsvField();
-    void on_Send_clicked();
+    void on_SendButton_clicked();
 
 private:
     Ui::Takao *ui;
-
     std::shared_ptr<GameManager> manager;
 };
 
