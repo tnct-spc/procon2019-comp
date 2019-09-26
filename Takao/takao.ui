@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1006</width>
-    <height>537</height>
+    <height>542</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -75,6 +75,9 @@
         <property name="maximum">
          <number>1000000000</number>
         </property>
+        <property name="value">
+         <number>8</number>
+        </property>
        </widget>
       </item>
       <item row="5" column="3">
@@ -106,6 +109,9 @@
         </property>
         <property name="maximum">
          <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -167,6 +173,9 @@
         <property name="maximum">
          <number>1000000000</number>
         </property>
+        <property name="value">
+         <number>2</number>
+        </property>
        </widget>
       </item>
       <item row="1" column="5">
@@ -174,12 +183,18 @@
         <property name="maximum">
          <number>1000000000</number>
         </property>
+        <property name="value">
+         <number>1</number>
+        </property>
        </widget>
       </item>
       <item row="3" column="5">
        <widget class="QSpinBox" name="AgentID3">
         <property name="maximum">
          <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>3</number>
         </property>
        </widget>
       </item>
@@ -221,6 +236,9 @@
         <property name="maximum">
          <number>1000000000</number>
         </property>
+        <property name="value">
+         <number>4</number>
+        </property>
        </widget>
       </item>
       <item row="1" column="4">
@@ -234,6 +252,9 @@
        <widget class="QSpinBox" name="AgentID6">
         <property name="maximum">
          <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>6</number>
         </property>
        </widget>
       </item>
@@ -288,6 +309,9 @@
         <property name="maximum">
          <number>1000000000</number>
         </property>
+        <property name="value">
+         <number>7</number>
+        </property>
        </widget>
       </item>
       <item row="7" column="3">
@@ -321,6 +345,9 @@
        <widget class="QSpinBox" name="AgentID5">
         <property name="maximum">
          <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>5</number>
         </property>
        </widget>
       </item>

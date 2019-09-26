@@ -45,7 +45,7 @@ void GameManager::loadField(procon::Field field){
     visualizer.repaint();
 }
 
-void GameManager::loadMatchID(QString IP,QString Token,int MatchID,int Port){
+void GameManager::loadMatchID(QString IP,QString Token,int MatchID,int Port,int team_id,std::vector<int> agent_id){
 
 }
 
