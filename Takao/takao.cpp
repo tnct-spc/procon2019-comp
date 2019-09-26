@@ -62,8 +62,9 @@ void Takao::on_SendButton_clicked()
     QString AgentID8 = ui->AgentID8->text();
     int agent_id_8 = Port.split(" ")[0].toInt();
 
+    int end_turn = ui->EndTurn->text().split(" ")[0].toInt();
     std::vector<int> agent_id{agent_id_1,agent_id_2,agent_id_3,agent_id_4,agent_id_5,agent_id_6,agent_id_7,agent_id_8};
 
-    emit signalMatchID(IP, Token, Matchid, port, team_id, agent_id, 40);
+    emit signalMatchID(IP, Token, Matchid, port, team_id, agent_id, end_turn);
 
 }
