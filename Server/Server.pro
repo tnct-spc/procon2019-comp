@@ -22,23 +22,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
-        com.cpp
-
 HEADERS += \
         com.h
 
+SOURCES += \
+        com.cpp
+
 LIBS += -lboost_python3
-LIBS += -lboost_numpy3
 LIBS += -lpython3.7m
-LIBS += -lcnpy
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
 
-INCLUDEPATH += /usr/include/python3.7m
-
 DISTFILES += \
     com.py
+
+INCLUDEPATH += /usr/include/python3.7m

@@ -1,7 +1,9 @@
 #include "gamemanager.h"
+#include "com.h"
 
 GameManager::GameManager() :
     game(std::make_shared<GameSimulator>()),
+    setting(),
     visualizer(game->getFieldPtr()),
     field(game->getFieldPtr()),
     algo(2)
@@ -14,6 +16,10 @@ GameManager::GameManager() :
     connect(&visualizer, &Visualizer::signalSimulateNextTurn, this, &GameManager::simulateNextTurn);
     connect(&visualizer, &Visualizer::signalMoveAgents, this, &GameManager::moveAgents);
     connect(&visualizer, &Visualizer::signalStrategy, this, &GameManager::strategy);
+    connect(&visualizer, &Visualizer::signalSendMove, this, &GameManager::strategyApplyMove);
+
+    connect(&visualizer, &Visualizer::signalGetField, this, &GameManager::recieveField);
+    connect(&visualizer, &Visualizer::signalSetMove, this, &GameManager::sendMove);
 
     setAlgorithms();
 
@@ -24,7 +30,8 @@ GameManager::GameManager() :
 void GameManager::setAlgorithms(){
     // 仮実装という事で、algoにランダムウォーク2つを入れて、Visualizerがクリックされる毎に更新を行うようなものを考える
     algo.at(0) = std::make_shared<SimpleBeamSearch>(*field, 0);
-    algo.at(1) = std::make_shared<TestAlgorithm>(*field, 1);
+    algo.at(1) = std::make_shared<SimpleBeamSearch>(*field, 1);
+    strategy_algo = std::make_shared<NewAlgorithm>(*field, 0);
 }
 
 void GameManager::runFullSimulation(){
@@ -45,8 +52,10 @@ void GameManager::loadField(procon::Field field){
     visualizer.repaint();
 }
 
-void GameManager::loadMatchID(QString IP,QString Token,int MatchID,int Port,int team_id,std::vector<int> agent_id){
 
+void GameManager::loadMatchID(QString IP, QString Token, int MatchID, int Port, int team_id, std::vector<int> agent_id, int end_turn){
+    setting = procon::ConnectionSettings(MatchID, IP.toStdString(), Port, Token.toStdString(), team_id, agent_id, end_turn);
+    Com::setData(setting.ip, std::to_string(setting.port), setting.token);
 }
 
 void GameManager::resetField(){
@@ -111,4 +120,33 @@ void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector
 
 void GameManager::strategy(std::vector<std::vector<bool>> strategy){
     clicked = strategy;
+    moves = strategy_algo->agentAct(clicked);
+    visualizer.setMoves(moves);
+}
+
+void GameManager::strategyApplyMove(){
+    if(game->isSimulationEnded())
+        return ;
+    if(moves.empty())
+        strategy(std::vector<std::vector<bool>>(field->getSize().x, std::vector<bool>(field->getSize().y, false)));
+    game->addAgentAct(0, moves);
+    game->addAgentAct(1, algo.at(1)->agentAct());
+    game->changeTurn(true);
+    moves.clear();
+    now_field = field->getTurn().now;
+    visualizer.update();
+}
+
+void GameManager::recieveField(){
+    std::string ret_field = Com::getMatchStatus(setting.match_id);
+    std::cout << "-------recieve field-------" << std::endl;
+    std::cout << ret_field << std::endl;
+    std::string field_csv = procon::json::translateToFieldCsv(ret_field, setting.team_id, setting.agent_id, setting.end_turn);
+}
+
+void GameManager::sendMove(){
+    std::string action_json_str = procon::json::translateFromMoveStateData(moves, setting.agent_id);
+    std::string result = Com::sendAction(setting.match_id, action_json_str);
+    std::cout << "-------send move-------" << std::endl;
+    std::cout << result << std::endl;
 }

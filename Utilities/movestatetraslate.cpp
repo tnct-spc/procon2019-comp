@@ -14,6 +14,7 @@ std::string procon::json::translateFromMoveStateData(std::vector<procon::MoveSta
         std::tie(type, dx, dy) = convertFromMoveState(move_states.at(i));
 
         nlohmann::json array_data;
+        array_data["agentID"] = agent_ids.at(i);
         array_data["type"] = type;
         array_data["dx"] = dx;
         array_data["dy"] = dy;

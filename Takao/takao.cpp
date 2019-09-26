@@ -10,7 +10,8 @@ Takao::Takao(QWidget *parent) :
     ui->setupUi(this);
 
     connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
-    connect(this, &Takao::signalGameData, manager.get(), &GameManager::loadMatchID);
+    connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
+    on_Send_clicked();
 }
 
 Takao::~Takao()
@@ -62,5 +63,6 @@ void Takao::on_SendButton_clicked()
     int agent_id_8 = Port.split(" ")[0].toInt();
 
     std::vector<int> agent_id{agent_id_1,agent_id_2,agent_id_3,agent_id_4,agent_id_5,agent_id_6,agent_id_7,agent_id_8};
-    emit signalGameData(IP,Token,Matchid,port,team_id,agent_id);
-}
+
+    emit signalMatchID(IP, Token, Matchid, port, team_id, agent_id, 1001, {8, 6, 9, 120}, 40);
+

@@ -80,6 +80,21 @@ struct Turn{
     int now, final;
 };
 
+struct ConnectionSettings{
+    ConnectionSettings(int match_id = 1, std::string ip = "192.168.0.16", int port = 8888, std::string token = "procon30_example_token", int team_id = 1, std::vector<int> agent_id = std::vector<int>{8, 6, 9, 120}, int end_turn = 40) :
+        match_id(match_id),
+        port(port),
+        team_id(team_id),
+        end_turn(end_turn),
+        agent_id(agent_id),
+        ip(ip),
+        token(token)
+    {}
+    int match_id, port, team_id, end_turn;
+    std::vector<int> agent_id;
+    std::string ip, token;
+};
+
 namespace random{
 
     unsigned long call(unsigned long mod = std::numeric_limits<unsigned long>::max());

@@ -39,6 +39,13 @@ unix {
     INSTALLS += target
 }
 
+LIBS += -lboost_python3
+LIBS += -lpython3.7m
+
+LIBS += -L$$OUT_PWD/../Server/ -lServer
+INCLUDEPATH += $$PWD/../Server
+DEPENDPATH += $$PWD/../Server
+
 LIBS += -L$$OUT_PWD/../Algorithms/ -lAlgorithms
 INCLUDEPATH += $$PWD/../Algorithms
 DEPENDPATH += $$PWD/../Algorithms
@@ -50,3 +57,5 @@ DEPENDPATH += $$PWD/../Utilities
 LIBS += -L$$OUT_PWD/../Visualizer/ -lVisualizer
 INCLUDEPATH += $$PWD/../Visualizer
 DEPENDPATH += $$PWD/../Visualizer
+
+INCLUDEPATH += /usr/include/python3.7m
