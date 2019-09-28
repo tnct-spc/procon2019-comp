@@ -4,7 +4,7 @@
 
 void testServer(){
     //set data
-    Com::setData("127.0.0.1", "8888", "procon30_example_token");
+    Com::setData("127.0.0.1:8888", "procon30_example_token");
     //open file
     Com::openFile();
     //print data

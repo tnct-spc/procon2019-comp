@@ -9,13 +9,11 @@ namespace bp = boost::python;
 //#define FILENAME "./com.py" //something does not work ?
 //#define FILENAME "/home/okdwtr/Documents/procon2019-comp/Server/com.py"   //this works good but...
 
-void Com::setData(std::string ipAddress, std::string portNumber, std::string postToken){
-    ip = ipAddress;
-    port = portNumber;
+void Com::setData(std::string address, std::string postToken){
+    address = address;
     token = postToken;
     openFile();
 }
-
 
 void Com::openFile(){
     //namespace
@@ -35,28 +33,28 @@ void Com::openFile(){
 
 std::string Com::getMatches(){
     //get data
-    auto ret = matches(ip, port, token);
+    auto ret = matches(ip, token);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
 
 std::string Com::getMatchStatus(int id){
     //get data
-    auto ret = matchstatus(ip, port, token, id);
+    auto ret = matchstatus(ip, token, id);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
 
 std::string Com::sendAction(int id, std::string arg){
     //get data
-    auto ret = action(ip, port, token, id, arg);
+    auto ret = action(ip, token, id, arg);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
 
 std::string Com::checkConnection(){
     //get data
-    auto ret = connection(ip, port, token);
+    auto ret = connection(ip, token);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
