@@ -26,10 +26,9 @@ std::string procon::json::translateToFieldCsv(std::string json_str, int team_id,
     add_integer (j["teams"][!my_id]["tilePoint"]);//1タイル点
     add_integer (j["teams"][!my_id]["areaPoint"]);//1領域点
 
-    int agent_count = j["teams"][0]["agents"];//チーム０のエージェント数
+    int agent_count = j["teams"][0]["agents"].size();//チーム０のエージェント数
     add_integer (agent_count);
 
-    assert(agent_count == agent_ids.size());
     std::vector<nlohmann::json> agent_datas(agent_count);
 
     for(int i = 0; i < agent_count; ++i){
@@ -40,17 +39,17 @@ std::string procon::json::translateToFieldCsv(std::string json_str, int team_id,
         }
     }
     for(int i = 0; i < agent_count; ++i){
-        auto& data_json = agent_ids[i];
-        int x = agent_datas[i]["x"];
-        int y = agent_datas[i]["y"];
-        int pos = pointToInt(procon::Point(x, y));
+        auto& data_json = agent_datas[i];
+        int x = data_json["x"];
+        int y = data_json["y"];
+        int pos = pointToInt(procon::Point(x - 1, y - 1));
         add_integer (pos);
     }
     for(int i = 0; i < agent_count; ++i){
         auto& data_json = j["teams"][!my_id]["agents"][i];
-        int x = agent_datas[i]["x"];
-        int y = agent_datas[i]["y"];
-        int pos = pointToInt(procon::Point(x, y));
+        int x = data_json["x"];
+        int y = data_json["y"];
+        int pos = pointToInt(procon::Point(x - 1, y - 1));
         add_integer (pos);
     }
 
