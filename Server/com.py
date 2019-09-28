@@ -39,7 +39,7 @@ def postRequest(address, token, data = None):
 def checkConnection(ip, token = 'procon30_example_token'):
     ''' check connection for procon30 comp server '''
 
-    url = 'http://' + str(ip) + '/ping'
+    url = ip + '/ping'
 
     return postRequest(url, token)
 
@@ -47,7 +47,7 @@ def checkConnection(ip, token = 'procon30_example_token'):
 def getMatches(ip, token = 'procon30_example_token'):
     ''' get matches json data from procon30 comp server '''
 
-    url = 'http://' + str(ip) + '/matches'
+    url = ip + '/matches'
 
     return postRequest(url, token)
 
@@ -55,7 +55,7 @@ def getMatches(ip, token = 'procon30_example_token'):
 def getMatchStatus(ip, token = 'procon30_example_token', matchid = 1):
     ''' get match status json data from procon30 comp server '''
 
-    url = 'http://' + str(ip) + '/matches/' + str(matchid)
+    url = ip + '/matches/' + str(matchid)
 
     return postRequest(url, token)
 
@@ -63,7 +63,7 @@ def getMatchStatus(ip, token = 'procon30_example_token', matchid = 1):
 def sendAction(ip, token = 'procon30_example_token', matchid = 1, json = json_def):
     ''' post action json data to procon30 comp server '''
 
-    url = 'http://' + str(ip) + '/matches/' + str(matchid) + '/action'
+    url = ip + '/matches/' + str(matchid) + '/action'
 
     return postRequest(url, token, json)
 

@@ -7,7 +7,7 @@
 #pragma pop_macro("slots")
 
 namespace Com{
-    std::string ip, token;
+    std::string address, token;
     boost::python::object obj;
     boost::python::object matches, matchstatus, action, connection;
     void openFile();

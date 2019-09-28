@@ -9,8 +9,8 @@ namespace bp = boost::python;
 //#define FILENAME "./com.py" //something does not work ?
 //#define FILENAME "/home/okdwtr/Documents/procon2019-comp/Server/com.py"   //this works good but...
 
-void Com::setData(std::string address, std::string postToken){
-    address = address;
+void Com::setData(std::string inpAddress, std::string postToken){
+    address = inpAddress;
     token = postToken;
     openFile();
 }
@@ -33,28 +33,28 @@ void Com::openFile(){
 
 std::string Com::getMatches(){
     //get data
-    auto ret = matches(ip, token);
+    auto ret = matches(address, token);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
 
 std::string Com::getMatchStatus(int id){
     //get data
-    auto ret = matchstatus(ip, token, id);
+    auto ret = matchstatus(address, token, id);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
 
 std::string Com::sendAction(int id, std::string arg){
     //get data
-    auto ret = action(ip, token, id, arg);
+    auto ret = action(address, token, id, arg);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
 
 std::string Com::checkConnection(){
     //get data
-    auto ret = connection(ip, token);
+    auto ret = connection(address, token);
     //parse pyobj
     return bp::extract<std::string>(ret);
 }
@@ -68,7 +68,7 @@ int main(){
     //set data
     Com::setData("127.0.0.1", "8888", "procon30_example_token");
         //other way to set data(not recommended)
-        Com::ip = "192.168.0.0";
+        Com::address = "192.168.0.0";
         Com::port = "404";
         Com::token = "not found";
     //open file
@@ -78,7 +78,6 @@ int main(){
     std::cout << Com::getMatches(1) << endl;
     std::cout << Com::sendAction(1, ""); << endl;
     std::cout << Com::checkConnection(); << endl;
-    //change ip/port/token
     return 0;
 }
 */
