@@ -36,41 +36,41 @@ def postRequest(address, token, data = None):
         return content.read().decode('utf-8')
 
 
-def checkConnection(ip, port, token = 'procon30_example_token'):
+def checkConnection(ip, token = 'procon30_example_token'):
     ''' check connection for procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/ping'
+    url = 'http://' + str(ip) + '/ping'
 
     return postRequest(url, token)
 
 
-def getMatches(ip, port, token = 'procon30_example_token'):
+def getMatches(ip, token = 'procon30_example_token'):
     ''' get matches json data from procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/matches'
+    url = 'http://' + str(ip) + '/matches'
 
     return postRequest(url, token)
 
 
-def getMatchStatus(ip, port, token = 'procon30_example_token', matchid = 1):
+def getMatchStatus(ip, token = 'procon30_example_token', matchid = 1):
     ''' get match status json data from procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/matches/' + str(matchid)
+    url = 'http://' + str(ip) + '/matches/' + str(matchid)
 
     return postRequest(url, token)
 
 
-def sendAction(ip, port, token = 'procon30_example_token', matchid = 1, json = json_def):
+def sendAction(ip, token = 'procon30_example_token', matchid = 1, json = json_def):
     ''' post action json data to procon30 comp server '''
 
-    url = 'http://' + str(ip) + ':' + str(port) + '/matches/' + str(matchid) + '/action'
+    url = 'http://' + str(ip) + '/matches/' + str(matchid) + '/action'
 
     return postRequest(url, token, json)
 
 
 if __name__ == '__main__':
 	'''
-    print('-----checkConnection()-----\n')
+	print('-----checkConnection()-----\n')
     print(checkConnection('localhost', 8888))
     print('\n\n-----getMatches()-----\n')
     print(getMatches('localhost', 8888))

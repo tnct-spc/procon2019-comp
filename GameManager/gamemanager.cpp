@@ -53,9 +53,9 @@ void GameManager::loadField(procon::Field field){
 }
 
 
-void GameManager::loadMatchID(QString IP, QString Token, int MatchID, int Port, int team_id, std::vector<int> agent_id, int end_turn){
-    setting = procon::ConnectionSettings(MatchID, IP.toStdString(), Port, Token.toStdString(), team_id, agent_id, end_turn);
-    Com::setData(setting.ip, std::to_string(setting.port), setting.token);
+void GameManager::loadMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn){
+    setting = procon::ConnectionSettings(MatchID, Address.toStdString(), Token.toStdString(), team_id, agent_id, end_turn);
+    Com::setData(setting.address, setting.token);
 }
 
 void GameManager::resetField(){
