@@ -142,6 +142,16 @@ void GameManager::recieveField(){
     std::cout << "-------recieve field-------" << std::endl;
     std::cout << ret_field << std::endl;
     std::string field_csv = procon::json::translateToFieldCsv(ret_field, setting.team_id, setting.agent_id, setting.end_turn);
+    procon::Field new_field = procon::csv::csvDecode(field_csv);
+
+    game = std::make_shared<GameSimulator>(new_field);
+    field = game->getFieldPtr();
+
+    setAlgorithms();
+
+    visualizer.setFieldPtr(field);
+    visualizer.update();
+    visualizer.repaint();
 }
 
 void GameManager::sendMove(){

@@ -17,7 +17,7 @@ def postRequest(address, token, data = None):
     }
     if data != None:
         header['Content-Type'] = 'application/json'
-        req = urllib.request.Request(address, headers=header, data=json.dumps(data).encode())
+        req = urllib.request.Request(address, headers=header, data=data.encode())
     else:
         req = urllib.request.Request(address, headers=header)
 
