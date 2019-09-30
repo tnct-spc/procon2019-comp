@@ -32,6 +32,8 @@ void GameManager::setAlgorithms(){
     algo.at(0) = std::make_shared<SimpleBeamSearch>(*field, 0);
     algo.at(1) = std::make_shared<SimpleBeamSearch>(*field, 1);
     strategy_algo = std::make_shared<NewAlgorithm>(*field, 0);
+    clicked = std::vector<std::vector<bool>>(field->getSize().x, std::vector<bool>(field->getSize().y, false));
+    moves = strategy_algo->agentAct(clicked);
 }
 
 void GameManager::runFullSimulation(){
@@ -147,6 +149,7 @@ void GameManager::recieveField(){
     game = std::make_shared<GameSimulator>(new_field);
     field = game->getFieldPtr();
 
+    visualizer.resetStrategy(false);
     setAlgorithms();
 
     visualizer.setFieldPtr(field);

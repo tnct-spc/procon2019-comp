@@ -99,10 +99,10 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
         }
     }
 
-    auto hungarian = [&](std::vector<std::vector<double>> a){
+    auto hungarian = [&](std::vector<std::vector<double>>& a){
         int n = a.size();
         int p, q;
-        std::vector<double> fx(n, 1e17), fy(n, 0);
+        std::vector<double> fx(n, 1e10), fy(n, 0);
         std::vector<int> x(n, -1), y(n, -1);
 
         for(int i = 0; i < n; ++i)
@@ -112,8 +112,8 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
         for(int i = 0; i < n;){
             std::vector<int> t(n, -1), s(n + 1, i);
             for(p = 0, q = 0; p <= q && x.at(i) < 0; ++p){
-                for(int k = s.at(p), j = 0; j < n && x.at(i) < 0; ++j)
-                    if(fx.at(k) + fy.at(j) == a.at(k).at(j) && t.at(j) < 0){
+                for(int k = s.at(p), j = 0; j < n && x.at(i) < 0; ++j){
+                    if(std::abs(fx.at(k) + fy.at(j) - a.at(k).at(j)) <= 1e-6 && t.at(j) < 0){
                         s.at(++q) = y.at(j);
                         t.at(j) = k;
                         if(s.at(q) < 0){
@@ -125,9 +125,10 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
                             }
                         }
                     }
+                }
             }
             if(x.at(i) < 0){
-                double d = 1e17;
+                double d = 1e10;
                 for(int k = 0; k <= q; ++k)
                     for(int j = 0; j < n; ++j)
                         if(t.at(j) < 0)
