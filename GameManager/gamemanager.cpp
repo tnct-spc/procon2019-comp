@@ -143,6 +143,8 @@ void GameManager::recieveField(){
     std::string ret_field = Com::getMatchStatus(setting.match_id);
     std::cout << "-------recieve field-------" << std::endl;
     std::cout << ret_field << std::endl;
+    if(ret_field == "error")
+        return ;
     std::string field_csv = procon::json::translateToFieldCsv(ret_field, setting.team_id, setting.agent_id, setting.end_turn);
     procon::Field new_field = procon::csv::csvDecode(field_csv);
 
