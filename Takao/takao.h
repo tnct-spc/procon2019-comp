@@ -19,11 +19,13 @@ public:
 signals:
     void signalLoadField(procon::Field field);
     void signalMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn);
+    std::vector<int> signalGetAgentID(int team_id);
 
 
 private slots:
     void loadCsvField();
     void on_SendButton_clicked();
+    void on_DetectButton_clicked();
 
 private:
     Ui::Takao *ui;

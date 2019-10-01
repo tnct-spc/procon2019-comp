@@ -11,6 +11,8 @@ Takao::Takao(QWidget *parent) :
 
     connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
     connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
+    connect(this, &Takao::signalGetAgentID, manager.get(), &GameManager::getAgentIDs);
+
     on_SendButton_clicked();
 }
 
@@ -23,8 +25,7 @@ void Takao::loadCsvField(){
     emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
 }
 
-void Takao::on_SendButton_clicked()
-{
+void Takao::on_SendButton_clicked(){
     std::cout << "Datas were sent to GameManager" << std::endl;
     QString Address = ui->Address->text();
     QString Token = ui->Token->text();
@@ -64,4 +65,28 @@ void Takao::on_SendButton_clicked()
 
     emit signalMatchID(Address, Token, Matchid, team_id, agent_id, end_turn);
 
+}
+
+void Takao::on_DetectButton_clicked(){
+    QString TeamID = ui->TeamID->text();
+    int team_id = TeamID.split(" ")[0].toInt();
+    auto agent_ids = emit signalGetAgentID(team_id);
+    // kuso
+    if(agent_ids.size() >= 1)
+        ui->AgentID1->setValue(agent_ids.at(0));
+    if(agent_ids.size() >= 2)
+        ui->AgentID2->setValue(agent_ids.at(1));
+    if(agent_ids.size() >= 3)
+        ui->AgentID3->setValue(agent_ids.at(2));
+    if(agent_ids.size() >= 4)
+        ui->AgentID4->setValue(agent_ids.at(3));
+    if(agent_ids.size() >= 5)
+        ui->AgentID5->setValue(agent_ids.at(4));
+    if(agent_ids.size() >= 6)
+        ui->AgentID6->setValue(agent_ids.at(5));
+    if(agent_ids.size() >= 7)
+        ui->AgentID7->setValue(agent_ids.at(6));
+    if(agent_ids.size() >= 8)
+        ui->AgentID8->setValue(agent_ids.at(7));
+    on_SendButton_clicked();
 }
