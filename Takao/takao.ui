@@ -80,13 +80,6 @@
         </property>
        </spacer>
       </item>
-      <item row="7" column="1">
-       <widget class="QPushButton" name="DetectButton">
-        <property name="text">
-         <string>Detect AgentID</string>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="4">
        <widget class="QLabel" name="label_3">
         <property name="text">

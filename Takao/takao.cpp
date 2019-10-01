@@ -13,7 +13,7 @@ Takao::Takao(QWidget *parent) :
     connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
     connect(this, &Takao::signalGetAgentID, manager.get(), &GameManager::getAgentIDs);
 
-    on_SendButton_clicked();
+    updateField();
 }
 
 Takao::~Takao()
@@ -25,7 +25,7 @@ void Takao::loadCsvField(){
     emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
 }
 
-void Takao::on_SendButton_clicked(){
+void Takao::updateField(){
     std::cout << "Datas were sent to GameManager" << std::endl;
     QString Address = ui->Address->text();
     QString Token = ui->Token->text();
@@ -67,7 +67,7 @@ void Takao::on_SendButton_clicked(){
 
 }
 
-void Takao::on_DetectButton_clicked(){
+void Takao::on_SendButton_clicked(){
     QString TeamID = ui->TeamID->text();
     int team_id = TeamID.split(" ")[0].toInt();
     auto agent_ids = emit signalGetAgentID(team_id);
@@ -88,5 +88,5 @@ void Takao::on_DetectButton_clicked(){
         ui->AgentID7->setValue(agent_ids.at(6));
     if(agent_ids.size() >= 8)
         ui->AgentID8->setValue(agent_ids.at(7));
-    on_SendButton_clicked();
+    updateField();
 }
