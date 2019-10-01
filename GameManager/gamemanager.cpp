@@ -58,6 +58,7 @@ void GameManager::loadField(procon::Field field){
 void GameManager::loadMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn){
     setting = procon::ConnectionSettings(MatchID, Address.toStdString(), Token.toStdString(), team_id, agent_id, end_turn);
     Com::setData(setting.address, setting.token);
+    recieveField();
 }
 
 void GameManager::resetField(){
@@ -137,6 +138,15 @@ void GameManager::strategyApplyMove(){
     moves.clear();
     now_field = field->getTurn().now;
     visualizer.update();
+}
+
+std::vector<int> GameManager::getAgentIDs(int team_id){
+    std::string ret_field = Com::getMatchStatus(setting.match_id);
+    std::cout << "-------set agent_id-------" << std::endl;
+    std::cout << ret_field << std::endl;
+    if(ret_field == "error")
+        return std::vector<int>();
+    return procon::json::getAgentIds(ret_field, team_id);
 }
 
 void GameManager::recieveField(){

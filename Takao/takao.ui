@@ -23,73 +23,23 @@
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="5">
-       <widget class="QSpinBox" name="AgentID1">
-        <property name="maximum">
-         <number>1000000000</number>
+      <item row="5" column="3">
+       <spacer name="verticalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <property name="value">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="Address">
-        <property name="maximumSize">
+        <property name="sizeHint" stdset="0">
          <size>
-          <width>300</width>
-          <height>16777215</height>
+          <width>20</width>
+          <height>40</height>
          </size>
         </property>
+       </spacer>
+      </item>
+      <item row="7" column="4">
+       <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>http://127.0.0.1:8888</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="MatchID">
-        <property name="maximumSize">
-         <size>
-          <width>300</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="maximum">
-         <number>1000000000</number>
-        </property>
-        <property name="value">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>EndTurn</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="5">
-       <widget class="QSpinBox" name="AgentID5">
-        <property name="maximum">
-         <number>1000000000</number>
-        </property>
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="4">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Agent ID 5</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Address</string>
+         <string>Agent ID 7</string>
         </property>
        </widget>
       </item>
@@ -100,16 +50,50 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="Token">
-        <property name="maximumSize">
+      <item row="4" column="5">
+       <widget class="QSpinBox" name="AgentID4">
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QSpinBox" name="EndTurn">
+        <property name="value">
+         <number>40</number>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <spacer name="verticalSpacer_9">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
          <size>
-          <width>300</width>
-          <height>16777215</height>
+          <width>20</width>
+          <height>40</height>
          </size>
         </property>
+       </spacer>
+      </item>
+      <item row="4" column="4">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>procon30_example_token</string>
+         <string>Agent ID 4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="5">
+       <widget class="QSpinBox" name="AgentID7">
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -123,15 +107,15 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="4">
-       <widget class="QLabel" name="label_9">
+      <item row="8" column="4">
+       <widget class="QLabel" name="label_13">
         <property name="text">
-         <string>Agent ID 6</string>
+         <string>Agent ID 8</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_2">
+      <item row="3" column="4">
+       <widget class="QLabel" name="label_6">
         <property name="maximumSize">
          <size>
           <width>100</width>
@@ -139,9 +123,35 @@
          </size>
         </property>
         <property name="text">
-         <string>Team ID</string>
+         <string>Agent ID 3</string>
         </property>
        </widget>
+      </item>
+      <item row="6" column="3">
+       <spacer name="verticalSpacer_7">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="4" column="3">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item row="8" column="5">
        <widget class="QSpinBox" name="AgentID8">
@@ -153,23 +163,34 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="4">
-       <widget class="QLabel" name="label_7">
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_14">
         <property name="text">
-         <string>Agent ID 7</string>
+         <string>EndTurn</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
+      <item row="6" column="4">
+       <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Token</string>
+         <string>Agent ID 6</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QPushButton" name="SendButton">
+        <property name="text">
+         <string>Send to GameManager</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QSpinBox" name="AgentID1">
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>1</number>
         </property>
        </widget>
       </item>
@@ -199,36 +220,6 @@
         </property>
        </spacer>
       </item>
-      <item row="5" column="1">
-       <widget class="QSpinBox" name="EndTurn">
-        <property name="value">
-         <number>40</number>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="5">
-       <widget class="QSpinBox" name="AgentID7">
-        <property name="maximum">
-         <number>1000000000</number>
-        </property>
-        <property name="value">
-         <number>7</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item row="2" column="3">
        <spacer name="verticalSpacer_3">
         <property name="orientation">
@@ -242,20 +233,6 @@
         </property>
        </spacer>
       </item>
-      <item row="4" column="4">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Agent ID 4</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Agent ID 2</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="5">
        <widget class="QSpinBox" name="AgentID3">
         <property name="maximum">
@@ -263,72 +240,6 @@
         </property>
         <property name="value">
          <number>3</number>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="3">
-       <spacer name="verticalSpacer_7">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="4" column="5">
-       <widget class="QSpinBox" name="AgentID4">
-        <property name="maximum">
-         <number>1000000000</number>
-        </property>
-        <property name="value">
-         <number>4</number>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="5">
-       <widget class="QSpinBox" name="AgentID6">
-        <property name="maximum">
-         <number>1000000000</number>
-        </property>
-        <property name="value">
-         <number>6</number>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="3">
-       <spacer name="verticalSpacer_9">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Match ID</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
-       <widget class="QLabel" name="label_6">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Agent ID 3</string>
         </property>
        </widget>
       </item>
@@ -345,6 +256,29 @@
         </property>
        </spacer>
       </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_2">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Team ID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="5">
+       <widget class="QSpinBox" name="AgentID6">
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>6</number>
+        </property>
+       </widget>
+      </item>
       <item row="7" column="3">
        <spacer name="verticalSpacer_8">
         <property name="orientation">
@@ -357,6 +291,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="2" column="4">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Agent ID 2</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="5">
        <widget class="QSpinBox" name="TeamID">
@@ -380,47 +321,93 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="3">
-       <spacer name="verticalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+      <item row="5" column="4">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Agent ID 5</string>
         </property>
-        <property name="sizeHint" stdset="0">
+       </widget>
+      </item>
+      <item row="5" column="5">
+       <widget class="QSpinBox" name="AgentID5">
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="Address">
+        <property name="maximumSize">
          <size>
-          <width>20</width>
-          <height>40</height>
+          <width>300</width>
+          <height>16777215</height>
          </size>
         </property>
-       </spacer>
-      </item>
-      <item row="8" column="4">
-       <widget class="QLabel" name="label_13">
         <property name="text">
-         <string>Agent ID 8</string>
+         <string>http://127.0.0.1:8888</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="Token">
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>procon30_example_token</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Token</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QSpinBox" name="MatchID">
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Match ID</string>
         </property>
        </widget>
       </item>
      </layout>
-    </item>
-    <item>
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QPushButton" name="SendButton">
-      <property name="text">
-       <string>Send to GameManager</string>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>

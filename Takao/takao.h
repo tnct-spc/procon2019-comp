@@ -19,6 +19,7 @@ public:
 signals:
     void signalLoadField(procon::Field field);
     void signalMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn);
+    std::vector<int> signalGetAgentID(int team_id);
 
 
 private slots:
@@ -26,6 +27,7 @@ private slots:
     void on_SendButton_clicked();
 
 private:
+    void updateField();
     Ui::Takao *ui;
     std::shared_ptr<GameManager> manager;
 };

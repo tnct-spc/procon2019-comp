@@ -85,6 +85,24 @@ std::string procon::json::translateToFieldCsv(std::string json_str, int team_id,
     csv_str = csv::csvEncode(field) ; // Fieldをcsv形式に変換
     return csv_str;// csvをreturnする
 }
+
+std::vector<int> procon::json::getAgentIds(std::string json_str, int team_id){
+    nlohmann::json j = nlohmann::json::parse(json_str);
+    bool my_id = (j["teams"][0]["teamID"] != team_id);
+    if(j["teams"][my_id]["teamID"] != team_id){
+        std::cout << "team id error" << std::endl;
+        return std::vector<int>(0);
+    }
+    auto agents_json = j["teams"][my_id]["agents"];
+    int agent_count = agents_json.size();//チーム０のエージェント数
+    std::vector<int> agent_ids(agent_count, -1);
+    for(int i = 0; i < agent_count; ++i){
+        agent_ids.at(i) = agents_json.at(i)["agentID"];
+    }
+    std::cout << "update agent_id" << std::endl;
+    return agent_ids;
+}
+
 std::string procon::json::translateFromFieldCsv(std::string field_csv_str){
 
 }
