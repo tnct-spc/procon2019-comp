@@ -146,6 +146,14 @@ void GameManager::recieveField(){
     if(ret_field == "error")
         return ;
     std::string field_csv = procon::json::translateToFieldCsv(ret_field, setting.team_id, setting.agent_id, setting.end_turn);
+    if(field_csv == "team_error"){
+        std::cout << "team id error" << std::endl;
+        return ;
+    }
+    if(field_csv == "agent_error"){
+        std::cout << "agent id error" << std::endl;
+        return ;
+    }
     procon::Field new_field = procon::csv::csvDecode(field_csv);
 
     game = std::make_shared<GameSimulator>(new_field);

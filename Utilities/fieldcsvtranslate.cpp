@@ -19,7 +19,8 @@ std::string procon::json::translateToFieldCsv(std::string json_str, int team_id,
     add_integer (end_turn);//終了ターン数
 
     bool my_id = (j["teams"][0]["teamID"] != team_id);
-    assert(j["teams"][my_id]["teamID"] == team_id);
+    if(j["teams"][my_id]["teamID"] != team_id)
+        return "team_error";
 
     add_integer (j["teams"][my_id]["tilePoint"]);//0タイル点
     add_integer (j["teams"][my_id]["areaPoint"]);//０領域点
@@ -32,11 +33,17 @@ std::string procon::json::translateToFieldCsv(std::string json_str, int team_id,
     std::vector<nlohmann::json> agent_datas(agent_count);
 
     for(int i = 0; i < agent_count; ++i){
+        bool agent_found_flag = false;
         for(int k = 0; k < agent_count; ++k){
             int agent_id = j["teams"][my_id]["agents"][k]["agentID"];
-            if(agent_id == agent_ids.at(i))
+            if(agent_id == agent_ids.at(i)){
                 agent_datas[i] = j["teams"][my_id]["agents"][k];
+                agent_found_flag = true;
+                break;
+            }
         }
+        if(!agent_found_flag)
+            return "agent_error";
     }
     for(int i = 0; i < agent_count; ++i){
         auto& data_json = agent_datas[i];
