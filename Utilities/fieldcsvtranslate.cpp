@@ -60,8 +60,8 @@ std::string procon::json::translateToFieldCsv(std::string json_str, int team_id,
         add_integer (pos);
     }
 
-    for(int x = 0; x < size_x; ++x){
-        for(int y = 0; y < size_y; ++y){
+    for(int y = 0; y < size_y; ++y){
+        for(int x = 0; x < size_x; ++x){
             int value = j["points"][x][y];
             int tile_team_id = j["tiled"][x][y];
             int tile;
@@ -90,7 +90,6 @@ std::vector<int> procon::json::getAgentIds(std::string json_str, int team_id){
     nlohmann::json j = nlohmann::json::parse(json_str);
     bool my_id = (j["teams"][0]["teamID"] != team_id);
     if(j["teams"][my_id]["teamID"] != team_id){
-        std::cout << "team id error" << std::endl;
         return std::vector<int>(0);
     }
     auto agents_json = j["teams"][my_id]["agents"];

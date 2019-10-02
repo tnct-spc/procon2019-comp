@@ -3,6 +3,8 @@
 
 #include <QTimer>
 #include <QTimerEvent>
+#include <fstream>
+#include <streambuf>
 #include "visualizer.h"
 #include "gamesimulator.h"
 
@@ -22,7 +24,6 @@ public:
     GameManager();
 
 public slots:
-    void loadField(procon::Field field);
     void loadMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn);
     void runFullSimulation();
     void resetField();
@@ -39,10 +40,14 @@ public slots:
 
     void setAutoUpdate(bool is_update, double send_interval, double update_interval);
 
+    void importCsvField(std::string path);
+    void importJsonField(std::string path);
+
 private:
 
     void timerEvent(QTimerEvent *event) override;
 
+    void updateField(procon::Field& new_field);
     void setAlgorithms();
 
     procon::ConnectionSettings setting;

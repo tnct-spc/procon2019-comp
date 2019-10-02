@@ -2,6 +2,7 @@
 #define TAKAO_H
 
 #include <QMainWindow>
+#include <QFileDialog>
 #include "gamemanager.h"
 
 namespace Ui {
@@ -17,18 +18,21 @@ public:
     ~Takao();
 
 signals:
-    void signalLoadField(procon::Field field);
     void signalMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn);
     std::vector<int> signalGetAgentID(int team_id);
     void signalAutoUpdate(bool update_flag, double send_interval, double update_interval);
+    void signalImportJsonField(std::string path);
+    void signalImportCsvField(std::string path);
 
 
 private slots:
-    void loadCsvField();
     void on_SendButton_clicked();
+    void on_GetMatchDataButton_clicked();
+    void on_ImportJSONButton_clicked();
+    void on_ImportCSVButton_clicked();
 
 private:
-    void updateField();
+    void updateField(std::vector<int> agent_ids);
     Ui::Takao *ui;
     std::shared_ptr<GameManager> manager;
 };

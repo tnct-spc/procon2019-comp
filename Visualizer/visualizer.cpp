@@ -20,6 +20,7 @@ Visualizer::~Visualizer()
 
 void Visualizer::setFieldPtr(std::shared_ptr<const procon::Field> field){
     this->field = field;
+    resetStrategy(false);
     this->update();
     this->repaint();
 }
