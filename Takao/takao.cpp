@@ -14,7 +14,7 @@ Takao::Takao(QWidget *parent) :
     connect(this, &Takao::signalGetAgentID, manager.get(), &GameManager::getAgentIDs);
     connect(this, &Takao::signalAutoUpdate, manager.get(), &GameManager::setAutoUpdate);
 
-    updateField();
+    updateField(std::vector<int>());
 }
 
 Takao::~Takao()
@@ -26,7 +26,7 @@ void Takao::loadCsvField(){
     emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
 }
 
-void Takao::updateField(){
+void Takao::updateField(std::vector<int> agent_ids){
     std::cout << "Datas were sent to GameManager" << std::endl;
     QString Address = ui->Address->text();
     QString Token = ui->Token->text();
@@ -37,6 +37,7 @@ void Takao::updateField(){
     QString TeamID = ui->TeamID->text();
     int team_id = TeamID.split(" ")[0].toInt();
 
+    /*
     QString AgentID1 = ui->AgentID1->text();
     int agent_id_1 = AgentID1.split(" ")[0].toInt();
 
@@ -60,11 +61,11 @@ void Takao::updateField(){
 
     QString AgentID8 = ui->AgentID8->text();
     int agent_id_8 = AgentID8.split(" ")[0].toInt();
+    */
 
     int end_turn = ui->EndTurn->text().split(" ")[0].toInt();
-    std::vector<int> agent_id{agent_id_1,agent_id_2,agent_id_3,agent_id_4,agent_id_5,agent_id_6,agent_id_7,agent_id_8};
 
-    emit signalMatchID(Address, Token, Matchid, team_id, agent_id, end_turn);
+    emit signalMatchID(Address, Token, Matchid, team_id, agent_ids, end_turn);
 
 }
 
@@ -72,6 +73,7 @@ void Takao::on_SendButton_clicked(){
     QString TeamID = ui->TeamID->text();
     int team_id = TeamID.split(" ")[0].toInt();
     auto agent_ids = emit signalGetAgentID(team_id);
+    /*
     // kuso
     if(agent_ids.size() >= 1)
         ui->AgentID1->setValue(agent_ids.at(0));
@@ -89,10 +91,12 @@ void Takao::on_SendButton_clicked(){
         ui->AgentID7->setValue(agent_ids.at(6));
     if(agent_ids.size() >= 8)
         ui->AgentID8->setValue(agent_ids.at(7));
+    */
 
     bool is_auto_update = ui->AutoSendBox->isChecked();
     double send_interval = ui->SendInterval->value();
     double update_interval = ui->UpdateInterval->value();
     emit signalAutoUpdate(is_auto_update, send_interval, update_interval);
-    updateField();
+    if(!agent_ids.empty())
+        updateField(agent_ids);
 }

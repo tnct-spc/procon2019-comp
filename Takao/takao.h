@@ -28,7 +28,7 @@ private slots:
     void on_SendButton_clicked();
 
 private:
-    void updateField();
+    void updateField(std::vector<int> agent_ids);
     Ui::Takao *ui;
     std::shared_ptr<GameManager> manager;
 };
