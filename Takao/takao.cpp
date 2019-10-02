@@ -1,6 +1,7 @@
 #include "takao.h"
 #include "ui_takao.h"
-#include <vector>
+
+#include "com.h"
 
 Takao::Takao(QWidget *parent) :
     QMainWindow(parent),
@@ -99,4 +100,9 @@ void Takao::on_SendButton_clicked(){
     emit signalAutoUpdate(is_auto_update, send_interval, update_interval);
     if(!agent_ids.empty())
         updateField(agent_ids);
+}
+
+void Takao::on_GetMatchDataButton_clicked(){
+    std::cout << "-------get match data-------" << std::endl;
+    std::cout << Com::getMatches() << std::endl;
 }

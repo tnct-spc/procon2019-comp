@@ -26,6 +26,7 @@ signals:
 private slots:
     void loadCsvField();
     void on_SendButton_clicked();
+    void on_GetMatchDataButton_clicked();
 
 private:
     void updateField(std::vector<int> agent_ids);

@@ -192,6 +192,10 @@ void GameManager::recieveField(){
 }
 
 void GameManager::sendMove(){
+    if(setting.agent_id.empty()){
+        std::cout << "send move error : agent_id is not defined" << std::endl;
+        return ;
+    }
     std::string action_json_str = procon::json::translateFromMoveStateData(moves, setting.agent_id);
     std::string result = Com::sendAction(setting.match_id, action_json_str);
     std::cout << "-------send move-------" << std::endl;
