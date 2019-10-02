@@ -42,19 +42,6 @@ void GameManager::runFullSimulation(){
     runSimulator();
 }
 
-void GameManager::loadField(procon::Field field){
-
-    game = std::make_shared<GameSimulator>(field);
-    auto field_ptr = game->getFieldPtr();
-
-    setAlgorithms();
-
-    visualizer.setFieldPtr(field_ptr);
-    visualizer.update();
-    visualizer.repaint();
-}
-
-
 void GameManager::loadMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn){
     setting = procon::ConnectionSettings(MatchID, Address.toStdString(), Token.toStdString(), team_id, agent_id, end_turn);
     Com::setData(setting.address, setting.token);
@@ -100,6 +87,17 @@ void GameManager::timerEvent(QTimerEvent *event){
         recieveField();
     if(event->timerId() == send_timer_id)
         sendMove();
+}
+
+void GameManager::updateField(procon::Field& new_field){
+    std::cout << "field updated" << std::endl;
+    game = std::make_shared<GameSimulator>(new_field);
+    field = game->getFieldPtr();
+
+    // visualizer.resetStrategy(false);
+    setAlgorithms();
+
+    visualizer.setFieldPtr(field);
 }
 
 void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector<int> is_delete, bool manual_team){
@@ -178,6 +176,9 @@ void GameManager::recieveField(){
     prev_field_json = ret_field;
     procon::Field new_field = procon::csv::csvDecode(field_csv);
 
+    updateField(new_field);
+
+    /*
     game = std::make_shared<GameSimulator>(new_field);
     field = game->getFieldPtr();
 
@@ -189,6 +190,7 @@ void GameManager::recieveField(){
     visualizer.setFieldPtr(field);
     visualizer.update();
     visualizer.repaint();
+    */
 }
 
 void GameManager::sendMove(){
@@ -222,17 +224,7 @@ void GameManager::importCsvField(std::string path){
     std::cout << field_csv << std::endl;
     procon::Field new_field = procon::csv::csvDecode(field_csv);
 
-    game = std::make_shared<GameSimulator>(new_field);
-    field = game->getFieldPtr();
-
-    visualizer.resetStrategy(false);
-    setAlgorithms();
-
-    std::cout << "field updated" << std::endl;
-
-    visualizer.setFieldPtr(field);
-    visualizer.update();
-    visualizer.repaint();
+    updateField(new_field);
 }
 
 void GameManager::importJsonField(std::string path){
@@ -257,15 +249,5 @@ void GameManager::importJsonField(std::string path){
     std::cout << field_csv << std::endl;
     procon::Field new_field = procon::csv::csvDecode(field_csv);
 
-    game = std::make_shared<GameSimulator>(new_field);
-    field = game->getFieldPtr();
-
-    visualizer.resetStrategy(false);
-    setAlgorithms();
-
-    std::cout << "field updated" << std::endl;
-
-    visualizer.setFieldPtr(field);
-    visualizer.update();
-    visualizer.repaint();
+    updateField(new_field);
 }

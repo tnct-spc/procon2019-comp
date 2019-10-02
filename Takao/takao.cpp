@@ -10,7 +10,6 @@ Takao::Takao(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
     connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
     connect(this, &Takao::signalGetAgentID, manager.get(), &GameManager::getAgentIDs);
     connect(this, &Takao::signalAutoUpdate, manager.get(), &GameManager::setAutoUpdate);
@@ -23,10 +22,6 @@ Takao::Takao(QWidget *parent) :
 Takao::~Takao()
 {
     delete ui;
-}
-
-void Takao::loadCsvField(){
-    emit signalLoadField(procon::csv::csvImport(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString()));
 }
 
 void Takao::updateField(std::vector<int> agent_ids){

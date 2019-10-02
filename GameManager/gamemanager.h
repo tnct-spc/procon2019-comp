@@ -24,7 +24,6 @@ public:
     GameManager();
 
 public slots:
-    void loadField(procon::Field field);
     void loadMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn);
     void runFullSimulation();
     void resetField();
@@ -48,6 +47,7 @@ private:
 
     void timerEvent(QTimerEvent *event) override;
 
+    void updateField(procon::Field& new_field);
     void setAlgorithms();
 
     procon::ConnectionSettings setting;
