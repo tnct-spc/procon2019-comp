@@ -12,6 +12,7 @@ Takao::Takao(QWidget *parent) :
     connect(this, &Takao::signalLoadField, manager.get(), &GameManager::loadField);
     connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
     connect(this, &Takao::signalGetAgentID, manager.get(), &GameManager::getAgentIDs);
+    connect(this, &Takao::signalAutoUpdate, manager.get(), &GameManager::setAutoUpdate);
 
     updateField();
 }
@@ -88,5 +89,10 @@ void Takao::on_SendButton_clicked(){
         ui->AgentID7->setValue(agent_ids.at(6));
     if(agent_ids.size() >= 8)
         ui->AgentID8->setValue(agent_ids.at(7));
+
+    bool is_auto_update = ui->AutoSendBox->isChecked();
+    double send_interval = ui->SendInterval->value();
+    double update_interval = ui->UpdateInterval->value();
+    emit signalAutoUpdate(is_auto_update, send_interval, update_interval);
     updateField();
 }

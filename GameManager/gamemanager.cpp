@@ -94,6 +94,13 @@ bool GameManager::simulateNextTurn(){
     visualizer.repaint();
     return true;
 }
+void GameManager::timerEvent(QTimerEvent *event){
+
+    if(event->timerId() == update_timer_id)
+        recieveField();
+    if(event->timerId() == send_timer_id)
+        sendMove();
+}
 
 void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector<int> is_delete, bool manual_team){
     //is_deleteは自軍タイル除去時にのみ使う物 基本的に使わなさそう
@@ -164,6 +171,11 @@ void GameManager::recieveField(){
         std::cout << "agent id error" << std::endl;
         return ;
     }
+    if(prev_field_json == ret_field){
+        std::cout << "passed" << std::endl;
+        return ;
+    }
+    prev_field_json = ret_field;
     procon::Field new_field = procon::csv::csvDecode(field_csv);
 
     game = std::make_shared<GameSimulator>(new_field);
@@ -171,6 +183,8 @@ void GameManager::recieveField(){
 
     visualizer.resetStrategy(false);
     setAlgorithms();
+
+    std::cout << "field updated" << std::endl;
 
     visualizer.setFieldPtr(field);
     visualizer.update();
@@ -182,4 +196,17 @@ void GameManager::sendMove(){
     std::string result = Com::sendAction(setting.match_id, action_json_str);
     std::cout << "-------send move-------" << std::endl;
     std::cout << result << std::endl;
+}
+
+void GameManager::setAutoUpdate(bool is_update, double send_interval, double update_interval){
+    auto_update = is_update;
+    std::cout << "set auto_update: " << (auto_update ? "true" : "false") << std::endl;
+    if(send_timer_id != -1)
+        killTimer(send_timer_id);
+    if(update_timer_id != -1)
+        killTimer(update_timer_id);
+    if(auto_update){
+        send_timer_id = startTimer(send_interval * 1000);
+        update_timer_id = startTimer(update_interval * 1000);
+    }
 }

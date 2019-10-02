@@ -20,6 +20,7 @@ signals:
     void signalLoadField(procon::Field field);
     void signalMatchID(QString Address, QString Token, int MatchID, int team_id, std::vector<int> agent_id, int end_turn);
     std::vector<int> signalGetAgentID(int team_id);
+    void signalAutoUpdate(bool update_flag, double send_interval, double update_interval);
 
 
 private slots:
