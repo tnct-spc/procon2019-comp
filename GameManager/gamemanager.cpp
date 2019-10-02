@@ -214,3 +214,44 @@ void GameManager::setAutoUpdate(bool is_update, double send_interval, double upd
         update_timer_id = startTimer(update_interval * 1000);
     }
 }
+
+void GameManager::importCsvField(std::string path){
+    std::cout << "import csv field" << std::endl;
+    std::ifstream stream(path);
+    std::string field_csv((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+    std::cout << field_csv << std::endl;
+    procon::Field new_field = procon::csv::csvDecode(field_csv);
+
+    game = std::make_shared<GameSimulator>(new_field);
+    field = game->getFieldPtr();
+
+    visualizer.resetStrategy(false);
+    setAlgorithms();
+
+    std::cout << "field updated" << std::endl;
+
+    visualizer.setFieldPtr(field);
+    visualizer.update();
+    visualizer.repaint();
+}
+
+void GameManager::importJsonField(std::string path){
+    std::cout << "import json field" << std::endl;
+    std::ifstream stream(path);
+    std::string field_json((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+    std::cout << field_json << std::endl;
+    std::string field_csv = procon::json::translateToFieldCsv(field_json, setting.team_id, setting.agent_id, setting.end_turn);
+    procon::Field new_field = procon::csv::csvDecode(field_csv);
+
+    game = std::make_shared<GameSimulator>(new_field);
+    field = game->getFieldPtr();
+
+    visualizer.resetStrategy(false);
+    setAlgorithms();
+
+    std::cout << "field updated" << std::endl;
+
+    visualizer.setFieldPtr(field);
+    visualizer.update();
+    visualizer.repaint();
+}

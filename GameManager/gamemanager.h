@@ -3,6 +3,8 @@
 
 #include <QTimer>
 #include <QTimerEvent>
+#include <fstream>
+#include <streambuf>
 #include "visualizer.h"
 #include "gamesimulator.h"
 
@@ -38,6 +40,9 @@ public slots:
     void sendMove();
 
     void setAutoUpdate(bool is_update, double send_interval, double update_interval);
+
+    void importCsvField(std::string path);
+    void importJsonField(std::string path);
 
 private:
 

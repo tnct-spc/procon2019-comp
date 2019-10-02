@@ -14,6 +14,8 @@ Takao::Takao(QWidget *parent) :
     connect(this, &Takao::signalMatchID, manager.get(), &GameManager::loadMatchID);
     connect(this, &Takao::signalGetAgentID, manager.get(), &GameManager::getAgentIDs);
     connect(this, &Takao::signalAutoUpdate, manager.get(), &GameManager::setAutoUpdate);
+    connect(this, &Takao::signalImportCsvField, manager.get(), &GameManager::importCsvField);
+    connect(this, &Takao::signalImportJsonField, manager.get(), &GameManager::importJsonField);
 
     updateField(std::vector<int>());
 }
@@ -105,4 +107,12 @@ void Takao::on_SendButton_clicked(){
 void Takao::on_GetMatchDataButton_clicked(){
     std::cout << "-------get match data-------" << std::endl;
     std::cout << Com::getMatches() << std::endl;
+}
+
+void Takao::on_ImportCSVButton_clicked(){
+    emit signalImportCsvField(QFileDialog::getOpenFileName(this, tr("Load CSV")).toStdString());
+}
+
+void Takao::on_ImportJSONButton_clicked(){
+    emit signalImportJsonField(QFileDialog::getOpenFileName(this, tr("Load JSON")).toStdString());
 }
