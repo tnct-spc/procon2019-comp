@@ -1,6 +1,8 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+#include <QTimer>
+#include <QTimerEvent>
 #include "visualizer.h"
 #include "gamesimulator.h"
 
@@ -35,14 +37,23 @@ public slots:
     void recieveField();
     void sendMove();
 
+    void setAutoUpdate(bool is_update, double send_interval, double update_interval);
+
 private:
+
+    void timerEvent(QTimerEvent *event) override;
 
     void setAlgorithms();
 
     procon::ConnectionSettings setting;
 
+    std::string prev_field_json;
     std::shared_ptr<GameSimulator> game;
     Visualizer visualizer;
+
+    bool auto_update = false;
+    int send_timer_id = -1;
+    int update_timer_id = -1;
 
     std::shared_ptr<const procon::Field> field;
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
