@@ -239,8 +239,22 @@ void GameManager::importJsonField(std::string path){
     std::cout << "import json field" << std::endl;
     std::ifstream stream(path);
     std::string field_json((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+    setting.agent_id = procon::json::getAgentIds(field_json, setting.team_id);
+    std::cout << "agent_id read" << std::endl;
+    for(auto& x : setting.agent_id)
+        std::cout << x << " ";
+    std::cout << std::endl;
     std::cout << field_json << std::endl;
     std::string field_csv = procon::json::translateToFieldCsv(field_json, setting.team_id, setting.agent_id, setting.end_turn);
+    if(field_csv == "team_error"){
+        std::cout << "team id error" << std::endl;
+        return ;
+    }
+    if(field_csv == "agent_error"){
+        std::cout << "agent id error" << std::endl;
+        return ;
+    }
+    std::cout << field_csv << std::endl;
     procon::Field new_field = procon::csv::csvDecode(field_csv);
 
     game = std::make_shared<GameSimulator>(new_field);

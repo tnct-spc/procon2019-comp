@@ -100,8 +100,7 @@ void Takao::on_SendButton_clicked(){
     double send_interval = ui->SendInterval->value();
     double update_interval = ui->UpdateInterval->value();
     emit signalAutoUpdate(is_auto_update, send_interval, update_interval);
-    if(!agent_ids.empty())
-        updateField(agent_ids);
+    updateField(agent_ids);
 }
 
 void Takao::on_GetMatchDataButton_clicked(){

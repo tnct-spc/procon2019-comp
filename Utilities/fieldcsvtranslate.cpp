@@ -90,7 +90,6 @@ std::vector<int> procon::json::getAgentIds(std::string json_str, int team_id){
     nlohmann::json j = nlohmann::json::parse(json_str);
     bool my_id = (j["teams"][0]["teamID"] != team_id);
     if(j["teams"][my_id]["teamID"] != team_id){
-        std::cout << "team id error" << std::endl;
         return std::vector<int>(0);
     }
     auto agents_json = j["teams"][my_id]["agents"];
