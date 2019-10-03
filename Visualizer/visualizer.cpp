@@ -454,6 +454,25 @@ void Visualizer::paintEvent(QPaintEvent *event){
         painter.drawText(side_1_point, QString::number(scores[1].region));
     };
 
+    auto drawRegions = [&]{
+        for(int x = 0;x < field->getSize().x;x++){
+            for(int y = 0;y < field->getSize().y;y++){
+                QFont text_font;
+                text_font.setPixelSize(grid_size * 0.5);
+                painter.setFont(text_font);
+                QString text = QString::fromStdString("  *");
+                if(field->getRegion(x,y,0)){
+                    painter.setPen(QPen(team_colors[0]));
+                    painter.drawText(horizontal_margin + grid_size * x + (grid_size * 0.2), vertical_margin + grid_size * y + ( grid_size * 0.4 ) , text);
+                }
+                if(field->getRegion(x,y,1)){
+                    painter.setPen(QPen(team_colors[1]));
+                    painter.drawText(horizontal_margin + grid_size * x + (grid_size * 0.2), vertical_margin + grid_size * y + ( grid_size * 1.0 ) , text);
+                }
+            }
+        }
+    };
+
     if(field){
         drawGrid();
         drawTiles();
@@ -467,6 +486,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
         drawAutomode();
         drawScores();
         drawStrategymode();
+        drawRegions();
     }
 }
 
