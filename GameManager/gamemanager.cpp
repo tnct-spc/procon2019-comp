@@ -145,7 +145,11 @@ void GameManager::strategyApplyMove(){
     visualizer.update();
 }
 
-std::vector<int> GameManager::getAgentIDs(int team_id){
+std::vector<int> GameManager::getAgentIDs(QString Address, QString Token, int MatchID, int team_id){
+
+    setting = procon::ConnectionSettings(MatchID, Address.toStdString(), Token.toStdString(), team_id, setting.agent_id, setting.end_turn);
+    Com::setData(setting.address, setting.token);
+
     std::string ret_field = Com::getMatchStatus(setting.match_id);
     std::cout << "-------set agent_id-------" << std::endl;
     std::cout << ret_field << std::endl;
