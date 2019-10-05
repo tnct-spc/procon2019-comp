@@ -146,6 +146,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
 
     auto ret = hungarian(eval_values);
     std::vector<procon::MoveState> ret_state(agent_count);
+
     for(int agent_index = 0; agent_index < agent_count; ++agent_index)
         ret_state.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), field.getAgent(side, agent_index).getMoveIndex(use_point_vec.at(ret.at(agent_index))));
 
