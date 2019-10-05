@@ -60,10 +60,10 @@ std::string procon::json::translateToFieldCsv(std::string json_str, int team_id,
         add_integer (pos);
     }
 
-    for(int y = 0; y < size_y; ++y){
-        for(int x = 0; x < size_x; ++x){
-            int value = j["points"][x][y];
-            int tile_team_id = j["tiled"][x][y];
+    for(int x = 0; x < size_x; ++x){
+        for(int y = 0; y < size_y; ++y){
+            int value = j["points"][y][x];
+            int tile_team_id = j["tiled"][y][x];
             int tile;
             if(tile_team_id == 0){
                 tile=0;// 0
