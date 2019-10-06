@@ -36,6 +36,8 @@ public:
 
     int getAbsSum() const{return score_abs_sum;};
 
+    bool getRegion(int x_index, int y_index, int side) const{return regions[x_index][y_index][side];}
+
     const std::array<Score, 2>& getScores() const{return scores;}
     const Score& getScore(bool side) const{return scores[side];}
 
