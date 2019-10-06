@@ -462,11 +462,15 @@ void Visualizer::paintEvent(QPaintEvent *event){
                 painter.setFont(text_font);
                 QString text = QString::fromStdString("  *");
                 if(field->getRegion(x,y,0)){
-                    painter.setPen(QPen(team_colors[0]));
+                    auto color = team_colors[0];
+                    color.setAlpha(120);
+                    painter.setPen(QPen(color));
                     painter.drawText(horizontal_margin + grid_size * x + (grid_size * 0.2), vertical_margin + grid_size * y + ( grid_size * 0.4 ) , text);
                 }
                 if(field->getRegion(x,y,1)){
-                    painter.setPen(QPen(team_colors[1]));
+                    auto color = team_colors[1];
+                    color.setAlpha(120);
+                    painter.setPen(QPen(color));
                     painter.drawText(horizontal_margin + grid_size * x + (grid_size * 0.2), vertical_margin + grid_size * y + ( grid_size * 1.0 ) , text);
                 }
             }

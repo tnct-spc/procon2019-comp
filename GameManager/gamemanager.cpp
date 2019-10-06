@@ -164,6 +164,7 @@ void GameManager::recieveField(){
     std::cout << ret_field << std::endl;
     if(ret_field == "error")
         return ;
+    setting.agent_id = procon::json::getAgentIds(ret_field, setting.team_id);
     std::string field_csv = procon::json::translateToFieldCsv(ret_field, setting.team_id, setting.agent_id, setting.end_turn);
     if(field_csv == "team_error"){
         std::cout << "team id error" << std::endl;
