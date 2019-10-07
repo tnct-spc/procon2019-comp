@@ -426,8 +426,8 @@ void Visualizer::paintEvent(QPaintEvent *event){
         QPoint side_0_point, side_1_point;
         side_0_point.setX(horizontal_margin - grid_size * 2.2);
         side_1_point.setX(horizontal_margin + (size.x + 0.2) * grid_size);
-        side_0_point.setY(window_height - vertical_margin - grid_size * 2);
-        side_1_point.setY(window_height - vertical_margin - grid_size * 2);
+        side_0_point.setY(window_height - vertical_margin - grid_size * 4);
+        side_1_point.setY(window_height - vertical_margin - grid_size * 4);
 
         QColor paint_color = team_colors.at(0);
         paint_color.setAlpha(100);
@@ -438,20 +438,28 @@ void Visualizer::paintEvent(QPaintEvent *event){
             painter.setFont(font);
         }
         painter.drawText(side_0_point, QString::fromStdString(" ") + QString::number(scores[0].tile));
-        side_0_point.setY(window_height - vertical_margin - grid_size);
+        side_0_point.setY(window_height - vertical_margin - grid_size * 3);
         painter.drawText(side_0_point, QString::fromStdString(" ") + QString::fromStdString("+"));
-        side_0_point.setY(window_height - vertical_margin);
+        side_0_point.setY(window_height - vertical_margin - grid_size * 2);
         painter.drawText(side_0_point, QString::fromStdString(" ") + QString::number(scores[0].region));
+        side_0_point.setY(window_height - vertical_margin - grid_size);
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::fromStdString("="));
+        side_0_point.setY(window_height - vertical_margin);
+        painter.drawText(side_0_point, QString::fromStdString(" ") + QString::number(scores[0].tile+scores[0].region));
 
         paint_color = team_colors.at(1);
         paint_color.setAlpha(100);
         painter.setPen(QPen(QBrush(paint_color), 0.3));
 
         painter.drawText(side_1_point, QString::number(scores[1].tile));
-        side_1_point.setY(window_height - vertical_margin - grid_size);
+        side_1_point.setY(window_height - vertical_margin - grid_size * 3);
         painter.drawText(side_1_point, QString::fromStdString("+"));
-        side_1_point.setY(window_height - vertical_margin);
+        side_1_point.setY(window_height - vertical_margin - grid_size * 2);
         painter.drawText(side_1_point, QString::number(scores[1].region));
+        side_1_point.setY(window_height - vertical_margin - grid_size);
+        painter.drawText(side_1_point, QString::fromStdString("="));
+        side_1_point.setY(window_height - vertical_margin);
+        painter.drawText(side_1_point, QString::number(scores[1].tile+scores[1].region));
     };
 
     auto drawRegions = [&]{
