@@ -1,4 +1,5 @@
 #include "newalgorithm.h"
+#include <functional>
 
 std::vector<procon::MoveState> NewAlgorithm::agentAct(){
     // do not use
