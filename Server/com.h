@@ -1,6 +1,12 @@
 #ifndef COM_H
 #define COM_H
 
+#include <fstream>
+#include <streambuf>
+#include <string>
+#include <nlohmann/json.hpp>
+#include <iostream>
+
 #pragma push_macro("slots")
 #undef slots
 #include <boost/python.hpp>
@@ -16,6 +22,8 @@ namespace Com{
     std::string getMatchStatus(int);
     std::string sendAction(int, std::string);
     std::string checkConnection();
+
+    std::string parseJson(std::string& str);
 };
 
 #endif // COM_H
