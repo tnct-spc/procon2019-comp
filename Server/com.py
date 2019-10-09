@@ -24,16 +24,8 @@ def postRequest(address, token, data = None):
     ret = {}
     try:
         content = urllib.request.urlopen(req)
-    except HTTPError as e:
-        ret['code'] = e.code
-        ret['reason'] = e.reason
-        #return json.dumps(ret)
-        # return e.read().decode('utf-8')
-        return "error"
-    except URLError as e:
-        ret['reason'] = e.reason
-        return "error"
-        # e.reason#json.dumps(ret)
+    except Exception as e:
+        return str(e) + "$"
     else:
         return content.read().decode('utf-8')
 

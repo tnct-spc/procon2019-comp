@@ -1,6 +1,3 @@
-#include <fstream>
-#include <streambuf>
-#include <string>
 #include "com.h"
 
 namespace bp = boost::python;
@@ -35,30 +32,43 @@ std::string Com::getMatches(){
     //get data
     auto ret = matches(address, token);
     //parse pyobj
-    return bp::extract<std::string>(ret);
+    std::string str = bp::extract<std::string>(ret);
+    return parseJson(str);
 }
 
 std::string Com::getMatchStatus(int id){
     //get data
     auto ret = matchstatus(address, token, id);
     //parse pyobj
-    return bp::extract<std::string>(ret);
+    std::string str = bp::extract<std::string>(ret);
+    return parseJson(str);
 }
 
 std::string Com::sendAction(int id, std::string arg){
     //get data
     auto ret = action(address, token, id, arg);
     //parse pyobj
-    return bp::extract<std::string>(ret);
+    std::string str = bp::extract<std::string>(ret);
+    return parseJson(str);
 }
 
 std::string Com::checkConnection(){
     //get data
     auto ret = connection(address, token);
     //parse pyobj
-    return bp::extract<std::string>(ret);
+    std::string str = bp::extract<std::string>(ret);
+    return parseJson(str);
 }
 
+std::string Com::parseJson(std::string& str){
+    if(str.back() == '$'){
+        std::cout << "----error----" << std::endl;
+        std::cout << str.substr(0, str.size() - 1) << std::endl;
+        std::cout << "-------------" << std::endl;
+        return "error";
+    }
+    return str;
+}
 
 
 
