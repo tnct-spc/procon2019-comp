@@ -7,7 +7,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(){
     return std::vector<procon::MoveState>();
 }
 
-std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bool>>& select_flag){
+std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<int>>& select_flag){
 
     int agent_count = field.getAgentCount();
 

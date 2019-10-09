@@ -30,7 +30,7 @@ public slots:
     void runSimulator();
     bool simulateNextTurn();
     void moveAgents(const std::vector<procon::Point>& inp_vec, std::vector<int> is_delete, bool manual_team);
-    void strategy(std::vector<std::vector<bool>> strategy);
+    void strategy(std::vector<std::vector<int>> strategy);
     std::vector<int> getAgentIDs(QString Address, QString Token, int MatchID, int team_id);
     void strategyApplyMove();
     void reverseField();
@@ -64,7 +64,7 @@ private:
     std::vector<std::shared_ptr<AlgorithmWrapper>> algo;
 
     std::shared_ptr<NewAlgorithm> strategy_algo;
-    std::vector<std::vector<bool>> clicked;
+    std::vector<std::vector<int>> clicked;
     std::vector<procon::MoveState> moves;
 
     unsigned int now_field = 0;
