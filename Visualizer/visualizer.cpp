@@ -9,7 +9,7 @@ Visualizer::Visualizer(std::shared_ptr<const procon::Field> field, QWidget *pare
     ui->setupUi(this);
     is_delete = std::vector<int>(field->getAgentCount());
     move_agent = std::vector<procon::Point>(field->getAgentCount(),{-1,-1});
-    strategy = std::vector<std::vector<bool>>(field->getSize().x,std::vector<bool>(field->getSize().y));
+    strategy = std::vector<std::vector<int>>(field->getSize().x,std::vector<int>(field->getSize().y, 0));
     emit signalStrategy(strategy);
 }
 
@@ -70,7 +70,10 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
         procon::Point clicked_grid;
         clicked_grid.x = (point.x() - horizontal_margin) / grid_size;
         clicked_grid.y = (point.y() - vertical_margin) / grid_size;
-        strategy[clicked_grid.x][clicked_grid.y] = !strategy[clicked_grid.x][clicked_grid.y];
+        if(right_flag)
+            strategy[clicked_grid.x][clicked_grid.y] = (strategy[clicked_grid.x][clicked_grid.y] ? 0 : 2);
+        else
+            strategy[clicked_grid.x][clicked_grid.y] = !strategy[clicked_grid.x][clicked_grid.y];
         emit signalStrategy(strategy);
         this->update();
         this->repaint();
@@ -188,7 +191,7 @@ void Visualizer::resetAgentAct(){
 }
 
 void Visualizer::resetStrategy(bool setState){
-    strategy = std::vector<std::vector<bool>>(field->getSize().x,std::vector<bool>(field->getSize().y));
+    strategy = std::vector<std::vector<int>>(field->getSize().x,std::vector<int>(field->getSize().y, 0));
     for(int x = 0;x < field->getSize().x;x++){
         for(int y = 0;y < field->getSize().y;y++){
             strategy[x][y] = setState;
@@ -392,9 +395,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
     auto drawStrategyGrid = [&]{
         for(int x = 0;x < field->getSize().x;x++){
             for(int y = 0;y < field->getSize().y;y++){
-                QColor paint_color = ( strategy[x][y] == true
-                                       ? strategy_grid_color[1]
-                                       : strategy_grid_color[0]);
+                QColor paint_color = strategy_grid_color[strategy[x][y]];
                 paint_color.setAlpha(100);
                 painter.setBrush(QBrush(paint_color));
                 painter.drawRect(horizontal_margin + x * grid_size, vertical_margin + y * grid_size, grid_size, grid_size);

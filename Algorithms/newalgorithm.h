@@ -12,7 +12,7 @@ public:
     // NewAlgorithm(const procon::Field& field, bool side);
 public:
     std::vector<procon::MoveState> agentAct() override;
-    std::vector<procon::MoveState> agentAct(std::vector<std::vector<bool>>& select_flag);
+    std::vector<procon::MoveState> agentAct(std::vector<std::vector<int>>& select_flag);
 
 private:
     const int max_depth = 5;

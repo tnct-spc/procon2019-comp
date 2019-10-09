@@ -32,7 +32,7 @@ void GameManager::setAlgorithms(){
     algo.at(0) = std::make_shared<SimpleBeamSearch>(*field, 0);
     algo.at(1) = std::make_shared<SimpleBeamSearch>(*field, 1);
     strategy_algo = std::make_shared<NewAlgorithm>(*field, 0);
-    clicked = std::vector<std::vector<bool>>(field->getSize().x, std::vector<bool>(field->getSize().y, false));
+    clicked = std::vector<std::vector<int>>(field->getSize().x, std::vector<int>(field->getSize().y, 0));
     moves = strategy_algo->agentAct(clicked);
 }
 
@@ -126,7 +126,7 @@ void GameManager::moveAgents(const std::vector<procon::Point>& move, std::vector
 
 }
 
-void GameManager::strategy(std::vector<std::vector<bool>> strategy){
+void GameManager::strategy(std::vector<std::vector<int>> strategy){
     clicked = strategy;
     moves = strategy_algo->agentAct(clicked);
     visualizer.setMoves(moves);
@@ -136,7 +136,7 @@ void GameManager::strategyApplyMove(){
     if(game->isSimulationEnded())
         return ;
     if(moves.empty())
-        strategy(std::vector<std::vector<bool>>(field->getSize().x, std::vector<bool>(field->getSize().y, false)));
+        strategy(std::vector<std::vector<int>>(field->getSize().x, std::vector<int>(field->getSize().y, 0)));
     game->addAgentAct(0, moves);
     game->addAgentAct(1, algo.at(1)->agentAct());
     game->changeTurn(true);
