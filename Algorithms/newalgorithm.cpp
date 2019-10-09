@@ -46,8 +46,11 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
             if(select_points.find(start_pos) != select_points.end())
                 return 1e9;
             std::set<procon::Point> first_set;
+            bool conflict_flag = false;
+            for(int enemy_index = 0; enemy_index < agent_count; ++enemy_index)
+                conflict_flag |= (start_pos == field.getAgent(!side, enemy_index));
             first_set.emplace(start_pos);
-            state_que.emplace(BsState{static_cast<double>(field.getState(start_pos).equalSide(side) ? 0 : field.getState(start_pos).value), start_pos, first_set});
+            state_que.emplace(BsState{static_cast<double>(field.getState(start_pos).equalSide(side) ? 0 : field.getState(start_pos).value * (conflict_flag ? 0.6 : 1.0)), start_pos, first_set});
         }
 
         for(int depth = 0; depth < max_depth; ++depth){
@@ -59,9 +62,12 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<bo
                     auto nex_pos = state.pos.getAppliedPosition(move_index);
                     if(field.outOfRangeCheck(nex_pos).first)
                         continue;
+                    bool conflict_flag = false;
+                    for(int enemy_index = 0; enemy_index < agent_count; ++enemy_index)
+                        conflict_flag |= (nex_pos == field.getAgent(!side, enemy_index));
                     auto nex_state = field.getState(nex_pos);
                     bool add_flag = (state.used.find(nex_pos) == state.used.end()) && !nex_state.equalSide(side);
-                    nex_que.emplace(state.make(nex_pos, add_flag ? nex_state.value : 0));
+                    nex_que.emplace(state.make(nex_pos, add_flag ? nex_state.value * (conflict_flag ? 0.6 : 1.0) : 0));
                     if(static_cast<int>(nex_que.size()) > max_depth)
                         nex_que.pop();
                 }
