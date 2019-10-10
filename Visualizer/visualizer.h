@@ -44,6 +44,7 @@ private:
 
     void paintEvent(QPaintEvent* event);
     void keyPressEvent(QKeyEvent* event);
+    void keyReleaseEvent(QKeyEvent* event);
     void mousePressEvent(QMouseEvent *event);
     void checkClickedAgent(procon::Point mass);
     void checkClickGrid(procon::Point mass, bool right_flag);
@@ -69,6 +70,7 @@ private:
     const double margin = 2;
 
     bool is_strategy = true;
+    bool show_minimap = false;
     std::vector<std::vector<bool>> strategy;
 
     const QColor font_color = QColor(0, 0, 0, 64);
@@ -77,6 +79,7 @@ private:
     const QColor score_color = QColor(250, 80, 80, 120);
     const QColor strategy_color = QColor(0, 200, 170);
     const std::array<QColor, 2> strategy_grid_color = {QColor(200, 200, 200), QColor(100, 200, 170)};
+    const std::array<QColor, 5> heatmap_color = {QColor(0, 0, 255), QColor(100, 150, 255), QColor(100, 255, 100), QColor(255, 255, 0), QColor(255, 0, 0)};
     const QColor checked_color_a = QColor(255,120,0);
     const QColor checked_color_b = QColor(0,120,255);
     const std::array<QColor, 2> team_colors = {QColor(255, 0, 0), QColor(0, 0, 255)};
