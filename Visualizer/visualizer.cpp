@@ -71,7 +71,7 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
         clicked_grid.x = (point.x() - horizontal_margin) / grid_size;
         clicked_grid.y = (point.y() - vertical_margin) / grid_size;
         if(right_flag)
-            strategy[clicked_grid.x][clicked_grid.y] = 2;
+            strategy[clicked_grid.x][clicked_grid.y] = (strategy[clicked_grid.x][clicked_grid.y] ? 0 : 2);
         else
             strategy[clicked_grid.x][clicked_grid.y] = !strategy[clicked_grid.x][clicked_grid.y];
         emit signalStrategy(strategy);

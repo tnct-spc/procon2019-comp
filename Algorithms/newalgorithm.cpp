@@ -12,9 +12,10 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<in
     int agent_count = field.getAgentCount();
 
     std::set<procon::Point> select_points;
+    std::vector<procon::Point> delete_points;
     for(int x_index = 0; x_index < field.getSize().x; ++x_index)
-        for(int y_index = 0; y_index < field.getSize().y; ++y_index)
-            if(select_flag.at(x_index).at(y_index)){
+        for(int y_index = 0; y_index < field.getSize().y; ++y_index){
+            if(select_flag.at(x_index).at(y_index) == 1){
                 procon::Point select_point(x_index, y_index);
                 for(int agent_index = 0; agent_index < agent_count; ++agent_index){
                     auto agent_point = field.getAgent(side, agent_index);
@@ -25,6 +26,9 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<in
                     }
                 }
             }
+            if(select_flag.at(x_index).at(y_index) == 2)
+                delete_points.emplace_back(x_index, y_index);
+        }
 
     struct BsState{
         double value;
@@ -91,7 +95,7 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<in
     sort(use_point_vec.begin(), use_point_vec.end());
     use_point_vec.erase(unique(use_point_vec.begin(), use_point_vec.end()), use_point_vec.end());
 
-    int matrix_size = std::max(agent_count, static_cast<int>(use_point_vec.size()));
+    int matrix_size = std::max(agent_count, static_cast<int>(use_point_vec.size() + delete_points.size()));
     std::vector<std::vector<double>> eval_values(matrix_size, std::vector<double>(matrix_size, 0.0));
 
     auto get_index = [&use_point_vec](procon::Point p){return std::distance(use_point_vec.begin(), std::lower_bound(use_point_vec.begin(), use_point_vec.end(), p));};
@@ -102,6 +106,12 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<in
             if(field.outOfRangeCheck(nex_pos).first == false){
                 int point_index = get_index(nex_pos);
                 eval_values.at(agent_index).at(point_index) = calc(agent_index, move_index) + 1e-3;
+
+                auto it = std::find(delete_points.begin(), delete_points.end(), nex_pos);
+                if(it != delete_points.end()){
+                    int idx = distance(delete_points.begin(), it);
+                    eval_values.at(agent_index).at(use_point_vec.size() + idx) = 1e9;
+                }
             }
         }
     }
@@ -154,8 +164,14 @@ std::vector<procon::MoveState> NewAlgorithm::agentAct(std::vector<std::vector<in
     auto ret = hungarian(eval_values);
     std::vector<procon::MoveState> ret_state(agent_count);
 
-    for(int agent_index = 0; agent_index < agent_count; ++agent_index)
-        ret_state.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), field.getAgent(side, agent_index).getMoveIndex(use_point_vec.at(ret.at(agent_index))));
+    for(int agent_index = 0; agent_index < agent_count; ++agent_index){
+        {
+            if(ret.at(agent_index) >= static_cast<int>(use_point_vec.size()))
+                ret_state.at(agent_index) = procon::MoveState(field.getAgent(side, agent_index).getMoveIndex(delete_points.at(ret.at(agent_index) - use_point_vec.size())), true);
+            else
+                ret_state.at(agent_index) = field.makeMoveState(side, field.getAgent(side, agent_index), field.getAgent(side, agent_index).getMoveIndex(use_point_vec.at(ret.at(agent_index))));
+        }
+    }
 
     return ret_state;
 }
