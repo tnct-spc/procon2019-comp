@@ -23,7 +23,7 @@ def postRequest(address, token, data = None):
 
     ret = {}
     try:
-        content = urllib.request.urlopen(req)
+        content = urllib.request.urlopen(req,timeout=1)
     except Exception as e:
         return str(e) + "$"
     else:
