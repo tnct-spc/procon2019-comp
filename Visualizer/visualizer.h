@@ -71,7 +71,7 @@ private:
 
     bool is_strategy = true;
 
-    bool show_minimap = false;
+    bool show_minimap = true;
     std::vector<std::vector<int>> strategy;
 
     const QColor font_color = QColor(0, 0, 0, 64);
