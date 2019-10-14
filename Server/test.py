@@ -23,7 +23,7 @@ def postRequest(address, token, data = None):
 
     ret = {}
     try:
-        content = urllib.request.urlopen(req,timeout=1)
+        content = urllib.request.urlopen(req)
     except Exception as e:
         return str(e) + "$"
     else:
@@ -63,9 +63,12 @@ def sendAction(ip, token = 'procon30_example_token', matchid = 1, json = json_de
 
 
 if __name__ == '__main__':
-	'''
-	print('-----checkConnection()-----\n')
-    print(checkConnection('localhost', 8888))
+    print('-----checkConnection()-----\n')
+    print(checkConnection('http://10.10.52.252', token='9cefb39772ebe2a31374ed9ea51c057e1a65307c747295b469204041b3f48058'))
+    print('\n\n-----getMatches()-----\n')
+    print(getMatches('http://10.10.52.252', token='9cefb39772ebe2a31374ed9ea51c057e1a65307c747295b469204041b3f48058'))
+
+    '''
     print('\n\n-----getMatches()-----\n')
     print(getMatches('localhost', 8888))
     print('\n\n-----getMatchStatus(id=1)-----\n')
@@ -76,5 +79,5 @@ if __name__ == '__main__':
     print(getMatchStatus('localhost', 8888, matchid=6))
     print('\n\n-----sendAction()-----\n')
     print(sendAction('localhost', 8888))
-	'''
+    '''
 
