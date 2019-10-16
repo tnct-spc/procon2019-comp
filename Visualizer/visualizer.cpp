@@ -41,10 +41,13 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
         procon::Point clicked_grid;
 
         // xを座標からマスへ
-        clicked_grid.x = (point.x() - horizontal_margin) / grid_size;
+        clicked_grid.x = (point.x() - horizontal_margin) / grid_size*2;
 
         // yを座標からマスへ
         clicked_grid.y = (point.y() - vertical_margin) / grid_size;
+        if(clicked_grid.x >= grid_size){
+            return;
+        }
         // 移動を入力するエージェントが選ばれているか
         if(selected){
             std::vector<std::vector<procon::Point>> agents (2,std::vector<procon::Point>(agent_count));
@@ -70,6 +73,9 @@ void Visualizer::mousePressEvent(QMouseEvent *event){
         procon::Point clicked_grid;
         clicked_grid.x = (point.x() - horizontal_margin) / grid_size;
         clicked_grid.y = (point.y() - vertical_margin) / grid_size;
+        if(clicked_grid.x >= grid_size){
+            return;
+        }
         if(right_flag)
             strategy[clicked_grid.x][clicked_grid.y] = (strategy[clicked_grid.x][clicked_grid.y] ? 0 : 2);
         else
@@ -212,7 +218,8 @@ void Visualizer::paintEvent(QPaintEvent *event){
     procon::Point size = field ? field->getSize() : procon::Point(10, 10);
 
     grid_size = std::min(1.0 * window_width / ( (margin * 2) + size.x), 1.0 * window_height / ( (margin * 0.5) + size.y));
-    horizontal_margin = (window_width - grid_size * size.x) / 2;
+    grid_size /= 2;
+    horizontal_margin = (window_width - grid_size * size.x*2) / 2;
     vertical_margin = (window_height - grid_size * size.y) / 2;
 
     painter.setBrush(QBrush(background_color));
@@ -230,20 +237,35 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     auto drawTiles = [&]{
         painter.setPen(QPen(QBrush(Qt::black), 0.3));
-        for(int x_pos = 0; x_pos < size.x; ++x_pos)
+        for(int x_pos = 0; x_pos < size.x*2; ++x_pos)
             for(int y_pos = 0; y_pos < size.y; ++y_pos){
+                if(x_pos < size.x){
+                    if(field->getState(x_pos, y_pos).isEmpty() == false){
+                        QColor paint_color = team_colors.at(field->getState(x_pos, y_pos).getDecrementedSide());
+                        paint_color.setAlpha(64);
 
-                if(field->getState(x_pos, y_pos).isEmpty() == false){
-                    QColor paint_color = team_colors.at(field->getState(x_pos, y_pos).getDecrementedSide());
-                    paint_color.setAlpha(64);
+                        painter.setBrush(QBrush(paint_color));
+                        painter.drawRect(horizontal_margin + grid_size * x_pos, vertical_margin + grid_size * y_pos, grid_size, grid_size);
+                    }else{
+                        QColor paint_color = grid_color;
 
+                        painter.setBrush(QBrush(paint_color));
+                        painter.drawRect(horizontal_margin + grid_size * x_pos, vertical_margin + grid_size * y_pos, grid_size, grid_size);
+                    }
+                }
+                else{
+                    QColor paint_color;
+                    std::vector<std::vector<int>> valuation (size.x,std::vector<int>(size.y));
+                    painter.setPen(QPen(QBrush(Qt::black), 0.3));
+                    valuation[x_pos-size.x][y_pos] = field->getState(x_pos-size.x, y_pos).value;
+                    if(valuation[x_pos-size.x][y_pos] < -7)paint_color = heatmap_color[0];
+                    else if(valuation[x_pos-size.x][y_pos] < 0)paint_color = heatmap_color[1];
+                    else if(valuation[x_pos-size.x][y_pos] < 5)paint_color = heatmap_color[2];
+                    else if(valuation[x_pos-size.x][y_pos] < 10)paint_color = heatmap_color[3];
+                    else paint_color = heatmap_color[4];
+                    paint_color.setAlpha(255);
                     painter.setBrush(QBrush(paint_color));
-                    painter.drawRect(horizontal_margin + grid_size * x_pos, vertical_margin + grid_size * y_pos, grid_size, grid_size);
-                }else{
-                    QColor paint_color = grid_color;
-
-                    painter.setBrush(QBrush(paint_color));
-                    painter.drawRect(horizontal_margin + grid_size * x_pos, vertical_margin + grid_size * y_pos, grid_size, grid_size);
+                    painter.drawRect(horizontal_margin + grid_size * (x_pos), vertical_margin + grid_size * y_pos, grid_size, grid_size);
                 }
             }
     };
@@ -360,7 +382,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
     auto drawTurnCount = [&]{
         QPoint text_point;
-        text_point.setX(horizontal_margin + (size.x + 0.2) * grid_size);
+        text_point.setX(horizontal_margin + (size.x*2 + 0.2) * grid_size);
         text_point.setY(vertical_margin + grid_size);
 
         painter.setPen(QPen(QBrush(score_color), 0.3));
@@ -426,7 +448,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
 
         QPoint side_0_point, side_1_point;
         side_0_point.setX(horizontal_margin - grid_size * 2.2);
-        side_1_point.setX(horizontal_margin + (size.x + 0.2) * grid_size);
+        side_1_point.setX(horizontal_margin + (size.x*2 + 0.2) * grid_size);
         side_0_point.setY(window_height - vertical_margin - grid_size * 4);
         side_1_point.setY(window_height - vertical_margin - grid_size * 4);
 
@@ -486,6 +508,27 @@ void Visualizer::paintEvent(QPaintEvent *event){
         }
     };
 
+    auto drawMinimap = [&]{
+        if(!show_minimap){
+            QColor paint_color;
+            std::vector<std::vector<int>> valuation (size.x,std::vector<int>(size.y));
+            painter.setPen(QPen(QBrush(Qt::black), 0.3));
+            for(int x_pos = 0; x_pos < size.x; ++x_pos){
+                for(int y_pos = 0; y_pos < size.y; ++y_pos){
+                    valuation[x_pos][y_pos] = field->getState(x_pos, y_pos).value;
+                    if(valuation[x_pos][y_pos] < -7)paint_color = heatmap_color[0];
+                    else if(valuation[x_pos][y_pos] < 0)paint_color = heatmap_color[1];
+                    else if(valuation[x_pos][y_pos] < 6)paint_color = heatmap_color[2];
+                    else if(valuation[x_pos][y_pos] < 10)paint_color = heatmap_color[3];
+                    else paint_color = heatmap_color[4];
+                    paint_color.setAlpha(255);
+                    painter.setBrush(QBrush(paint_color));
+                    painter.drawRect(horizontal_margin + grid_size * x_pos, vertical_margin + grid_size * y_pos, grid_size, grid_size);
+                }
+            }
+        }
+    };
+
     if(field){
         drawGrid();
         drawTiles();
@@ -500,6 +543,7 @@ void Visualizer::paintEvent(QPaintEvent *event){
         drawScores();
         drawStrategymode();
         drawRegions();
+        drawMinimap();
     }
 }
 
@@ -573,9 +617,22 @@ void Visualizer::keyPressEvent(QKeyEvent *event){
             emit signalSendMove();
             resetStrategy(false);
         }
+        if(event->key() == Qt::Key_Z){
+            show_minimap = true;
+            this->update();
+            this->repaint();
+        }
         if(event->key() == Qt::Key_N)
             emit signalGetField();
         if(event->key() == Qt::Key_M)
             emit signalSetMove();
+    }
+}
+
+void Visualizer::keyReleaseEvent(QKeyEvent* event){//Archlinuxの設定からキーリピートをオフにすれば変になりません。オンにしているとM長押しで変になります。
+    if(event->key() == Qt::Key_Z){
+        //show_minimap = false;
+        this->update();
+        this->repaint();
     }
 }
