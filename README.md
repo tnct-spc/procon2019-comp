@@ -9,7 +9,7 @@
 ### 開発環境
 
 C++, Qt, boost(boost.Python), Python   
-jsonファイルの処理には[これ](https://github.com/nlohmann/json)を使用しています
+jsonファイルの処理には[このライブラリ](https://github.com/nlohmann/json)を使用しています
 
 ### フォルダ構成
 |フォルダ名|内容|  
